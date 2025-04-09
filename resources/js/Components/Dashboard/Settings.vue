@@ -12,8 +12,8 @@
     >
     <div class="px-6 pt-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
   <div class="float-left">
-    <h5 class="mt-4 mb-0 dark:text-white text-slate-800">Argon Configurator</h5>
-    <p class="dark:text-white text-slate-800 dark:opacity-80 opacity-80">See our dashboard options.</p>
+    <h5 class="mt-4 mb-0 dark:text-white text-slate-800">Configurar Tema de panel</h5>
+    <p class="dark:text-white text-slate-800 dark:opacity-80 opacity-80">Active la opcion</p>
   </div>
   <div class="float-right mt-6">
     <button @click.stop="toggleSettings"
@@ -23,71 +23,10 @@
   </div>
 </div>
 
-      <hr
-        class="h-px mx-0 my-1 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
+      
 
       <div class="flex-auto p-6 pt-0 overflow-auto sm:pt-4">
-        <!-- Sidebar Colors -->
-        <div>
-  <h6 class="mb-0 dark:text-white text-slate-800">Sidebar Colors</h6>
-</div>
-        <a href="javascript:void(0)">
-          <div class="my-2 text-left" sidenav-colors>
-            <span
-              v-for="(color, index) in sidebarColors" 
-              :key="index"
-              @click.stop="changeSidebarColor(color.value)"
-              :class="[
-                'py-2.2 text-xs rounded-circle h-5.6 mr-1.25 w-5.6 ease-in-out relative inline-block cursor-pointer whitespace-nowrap border border-solid text-center align-baseline font-bold uppercase leading-none text-white transition-all duration-200 hover:border-slate-700',
-                color.gradient,
-                { 'border-slate-700': color.value === currentSidebarColor, 'border-white': color.value !== currentSidebarColor }
-              ]"
-              :data-color="color.value"
-            ></span>
-          </div>
-        </a>
 
-        <!-- Sidenav Type -->
-        <div class="mt-4">
-  <h6 class="mb-0 dark:text-white text-slate-800">Sidenav Type</h6>
-  <p class="text-sm leading-normal dark:text-white text-slate-800 dark:opacity-80 opacity-80">Choose between 2 different sidenav types.</p>
-</div>
-        <div class="flex">
-          <button @click.stop="changeSidenavType('white')"
-  :class="[
-    'inline-block w-full px-4 py-2.5 mb-2 font-bold leading-normal text-center capitalize align-middle transition-all border border-solid rounded-lg cursor-pointer text-sm xl-max:cursor-not-allowed xl-max:opacity-65 xl-max:pointer-events-none xl-max:bg-gradient-to-tl xl-max:from-blue-500 xl-max:to-violet-500 xl-max:text-white xl-max:border-0 hover:-translate-y-px dark:cursor-not-allowed dark:opacity-65 dark:pointer-events-none dark:bg-gradient-to-tl dark:from-blue-500 dark:to-violet-500 dark:text-white dark:border-0 hover:shadow-xs active:opacity-85 ease-in tracking-tight-rem shadow-md bg-150 bg-x-25 hover:border-blue-500',
-    { 
-      'bg-blue-500 text-white border-transparent bg-gradient-to-tl from-blue-500 to-violet-500': sidenavType === 'white',
-      'bg-transparent dark:text-white text-slate-800 border-blue-500': sidenavType !== 'white'
-    }
-  ]"
->
-  White
-</button>
-
-<button @click.stop="changeSidenavType('dark')"
-  :class="[
-    'inline-block w-full px-4 py-2.5 mb-2 ml-2 font-bold leading-normal text-center capitalize align-middle transition-all border border-solid rounded-lg cursor-pointer text-sm xl-max:cursor-not-allowed xl-max:opacity-65 xl-max:pointer-events-none xl-max:bg-gradient-to-tl xl-max:from-blue-500 xl-max:to-violet-500 xl-max:text-white xl-max:border-0 hover:-translate-y-px dark:cursor-not-allowed dark:opacity-65 dark:pointer-events-none dark:bg-gradient-to-tl dark:from-blue-500 dark:to-violet-500 dark:text-white dark:border-0 hover:shadow-xs active:opacity-85 ease-in tracking-tight-rem shadow-md bg-150 bg-x-25 hover:border-blue-500',
-    { 
-      'bg-transparent dark:text-white text-slate-800 border-blue-500': sidenavType === 'dark',
-      'bg-blue-500 text-white border-transparent bg-gradient-to-tl from-blue-500 to-violet-500': sidenavType !== 'dark'
-    }
-  ]"
->
-  Dark
-</button>
-        </div>
-        <p class="block mt-2 text-sm leading-normal dark:text-white text-slate-800 dark:opacity-80 opacity-80 xl:hidden">You can change the sidenav type just on desktop view.</p>
-        <!-- Navbar Fixed -->
-        <div class="flex my-4">
-  <h6 class="mb-0 dark:text-white text-slate-800">Navbar Fixed</h6>
-          <div class="block pl-0 ml-auto min-h-6">
-            <input v-model="navbarFixed"
-              navbarFixed
-              class="rounded-10 duration-250 ease-in-out after:rounded-circle after:shadow-2xl after:duration-250 checked:after:translate-x-5.3 h-5 relative float-left mt-1 ml-auto w-10 cursor-pointer appearance-none border border-solid border-gray-200 bg-slate-800/10 bg-none bg-contain bg-left bg-no-repeat align-top transition-all after:absolute after:top-px after:h-4 after:w-4 after:translate-x-px after:bg-white after:content-[''] checked:border-blue-500/95 checked:bg-blue-500/95 checked:bg-none checked:bg-right"
-              type="checkbox" />
-          </div>
-        </div>
 
         <!-- Dark Mode Toggle -->
         <hr
