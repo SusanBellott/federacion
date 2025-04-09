@@ -7,20 +7,24 @@
       :class="{ 'translate-x-0': props.sidebarOpen }"
       aria-expanded="false">
 
-      <div class="h-19">
-        <i class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden"
-          @click="toggleSidebar"></i>
-        <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap dark:text-white text-slate-700"
-          href="/" target="_blank">
-          <img src="/assets/img/logo-ct-dark.png"
-            class="inline h-full max-w-full transition-all duration-200 dark:hidden ease-nav-brand max-h-8"
-            alt="main_logo" />
-          <img src="/assets/img/logo-ct.png"
-            class="hidden h-full max-w-full transition-all duration-200 dark:inline ease-nav-brand max-h-8"
-            alt="main_logo" />
-          <span class="ml-1 font-semibold transition-all duration-200 ease-nav-brand">Argon Dashboard 2</span>
-        </a>
-      </div>
+      <div class="h-32">
+  <i class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden"
+    @click="toggleSidebar"></i>
+  <a class="flex items-center px-8 py-6 m-0 text-base whitespace-nowrap dark:text-white text-slate-700"
+    href="/" target="_blank">
+    <img src="/assets/img/logo_instituto.png"
+      class="inline h-full max-w-full transition-all duration-200 dark:hidden ease-nav-brand max-h-24"
+      alt="main_logo" />
+    <img src="/assets/img/logo_instituto.png"
+      class="hidden h-full max-w-full transition-all duration-200 dark:inline ease-nav-brand max-h-24"
+      alt="main_logo" />
+    <span class="ml-3 text-xl font-semibold transition-all duration-200 ease-nav-brand">SISEMCE</span>
+  </a>
+</div>
+
+
+
+
 
       <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
 
