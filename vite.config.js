@@ -18,13 +18,13 @@ export default defineConfig({
             },
         }),
     ],
-   server: {
-       host: '192.168.2.8', // IP de la red
-       port: 3000, // Puerto para el servidor de Vite
-       cors: {
-           origin: 'http://192.168.2.8:8000', // Permite solicitudes desde este origen
-           methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-           allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
-       },
-   },
+//    server: {
+//        host: '192.168.2.8', // IP de la red
+//        port: 3000, // Puerto para el servidor de Vite
+//        cors: {
+//            origin: 'http://192.168.2.8:8000', // Permite solicitudes desde este origen
+//            methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+//            allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+//        },
+//    },
 });
