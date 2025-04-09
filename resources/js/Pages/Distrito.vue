@@ -238,7 +238,7 @@ const submitForm = () => {
 
                     <div class="mt-6 flex justify-end space-x-3">
                         <button type="button" @click="closeModal"
-                            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md transition duration-200">
+                        class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-slate-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
                             Cancelar
                         </button>
                         <button type="submit"

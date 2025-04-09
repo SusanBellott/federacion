@@ -418,7 +418,7 @@ const enviarfotos = () => {
 
                     <div class="mt-6 flex justify-end space-x-3">
                         <button type="button" @click="closeModal"
-                        class="rounded-md border border-transparent py-2 px-4 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                        class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-slate-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
                             Cancelar
                         </button>
                         <button type="submit"
@@ -502,10 +502,7 @@ const enviarfotos = () => {
                     <div class="flex items-center space-x-4">
                         <BuscadorCursos :filters="filters" ruta="cursos.index" />
 
-
-                    </div>
-                </div>
-                <button v-if="$page.props.permissions.includes('cursos.create')"
+                        <button v-if="$page.props.permissions.includes('cursos.create')"
                             class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
@@ -518,6 +515,10 @@ const enviarfotos = () => {
                                 Agregar Nuevo Curso
                             </span>
                         </button>
+                    </div>
+                    
+                </div>
+               
                 <!-- Alerts & Notifications -->
                 <div class="px-6 pt-4">
                     <div v-if="flash.success">
