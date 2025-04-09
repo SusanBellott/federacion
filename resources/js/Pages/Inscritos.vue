@@ -1,5 +1,6 @@
 <template>
     <AppLayout title="Inscritos">
+
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Inscritos
@@ -14,9 +15,14 @@
 
             <!-- Table Container with Modern Styling -->
             <div class="flex-none w-full max-w-full px-3">
-                <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-                    <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
-                        <h6 class="dark:text-white">Inscritos</h6>
+
+
+
+                <div
+                    class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                    <h6 class="text-gray-800 dark:text-white">Inscritos</h6>
+                    <div
+                        class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
 
                         <!-- Search & Add Button Row -->
                         <div class="flex items-center space-x-4">
@@ -26,9 +32,8 @@
                             </div>
 
                             <!-- Add Button -->
-                            <button
-                                v-if="$page.props.permissions.includes('inscritos.create')"
-                                class="px-6 py-3 bg-gradient-to-r from-blue-800 to-sky-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-50"
+                            <button v-if="$page.props.permissions.includes('inscritos.create')"
+                                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
                                 @click="handleClick">
                                 <span class="flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
@@ -45,44 +50,72 @@
 
                     <div class="flex-auto px-0 pt-0 pb-2">
                         <div class="p-0 overflow-x-auto">
-                            <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
+                            <table
+                                class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                                 <thead class="align-bottom">
                                     <tr>
-                                        <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Usuario</th>
-                                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Curso</th>
-                                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Fecha de Inscripción</th>
-                                        <th v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update')" class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Estado</th>
-                                        <th v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update') || $page.props.permissions.includes('inscritoeditar.update') || $page.props.permissions.includes('curso.inscrito.reporte')" class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400 opacity-70">Acciones</th>
+                                        <th
+                                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                            Usuario</th>
+                                        <th
+                                            class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                            Curso</th>
+                                        <th
+                                            class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                            Fecha de Inscripción</th>
+                                        <th v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update')"
+                                            class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                            Estado</th>
+                                        <th v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update') || $page.props.permissions.includes('inscritoeditar.update') || $page.props.permissions.includes('curso.inscrito.reporte')"
+                                            class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                            Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="inscrito in inscritos.data" :key="inscrito.id_inscripcion" class="border-b dark:border-white/40">
-                                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                    <tr v-for="inscrito in inscritos.data" :key="inscrito.id_inscripcion"
+                                        class="border-b dark:border-white/40">
+                                        <td
+                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                             <div class="flex px-2 py-1">
                                                 <div>
                                                     <!-- User Initial Circle -->
-                                                    <div class="inline-flex items-center justify-center mr-4 text-white transition-all duration-200 ease-in-out text-sm h-9 w-9 rounded-xl bg-slate-700 dark:bg-slate-600">
+                                                    <div
+                                                        class="inline-flex items-center justify-center mr-4 text-white transition-all duration-200 ease-in-out text-sm h-9 w-9 rounded-xl bg-slate-700 dark:bg-slate-600">
                                                         {{ inscrito.user.name.charAt(0) }}
                                                     </div>
                                                 </div>
                                                 <div class="flex flex-col justify-center">
-                                                    <h6 class="mb-0 text-sm leading-normal dark:text-white">{{ inscrito.user.name }}</h6>
-                                                    <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">
-                                                        {{ inscrito.user.primer_apellido }} {{ inscrito.user.segundo_apellido }}
+                                                    <h6
+                                                        class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
+                                                        {{ inscrito.user.name }}</h6>
+                                                    <p
+                                                        class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">
+                                                        {{ inscrito.user.primer_apellido }} {{
+                                                        inscrito.user.segundo_apellido }}
                                                     </p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                            <p class="mb-0 text-xs font-semibold leading-tight dark:text-white dark:opacity-80">
-                                                <span v-if="inscrito.id_curso === null">No asignado</span>
-                                                <span v-else>{{ inscrito.curso.nombre }}</span>
+                                        <td
+                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            <p
+                                                class="mb-0 text-xs font-semibold leading-tight dark:text-white dark:opacity-80">
+                                                <span
+                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                                    v-if="inscrito.id_curso === null">No asignado</span>
+                                                <span
+                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                                    v-else>{{ inscrito.curso.nombre }}</span>
                                             </p>
                                         </td>
-                                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                            <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ inscrito.fecha_inscripcion }}</span>
+                                        <td
+                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            <span
+                                                class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{
+                                                inscrito.fecha_inscripcion }}</span>
                                         </td>
-                                        <td v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update')" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                        <td v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update')"
+                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                             <span v-if="inscrito.estado == 'activo'"
                                                 class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
                                                 @click="handleDelete(inscrito.uuid_inscripcion, 2, '¿Estás seguro de que deseas deshabilitar este registro?')">
@@ -99,21 +132,49 @@
                                                 Registrar
                                             </span>
                                         </td>
-                                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                            <div class="flex">
-                                                <a v-if="$page.props.permissions.includes('curso.inscrito.reporte')" :href="route('curso.inscrito.reporte', inscrito.uuid_inscripcion)" target="_blank"
-                                                    class="font-semibold leading-tight text-xs text-slate-400 dark:text-white dark:opacity-80 mr-2">
-                                                    Certificado
+                                        <td
+                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            <div class="flex space-x-3">
+                                                <!-- Certificado (PDF) -->
+                                                <a v-if="$page.props.permissions.includes('curso.inscrito.reporte')"
+                                                    :href="route('curso.inscrito.reporte', inscrito.uuid_inscripcion)"
+                                                    target="_blank"
+                                                    class="p-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors duration-200"
+                                                    title="Descargar certificado">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
                                                 </a>
-                                                <button v-if="inscrito.estado != 'eliminado' && inscrito.estado != 'inactivo' && $page.props.permissions.includes('inscritoeditar.update')"
+
+                                                <!-- Editar -->
+                                                <button
+                                                    v-if="inscrito.estado != 'eliminado' && inscrito.estado != 'inactivo' && $page.props.permissions.includes('inscritoeditar.update')"
                                                     @click="handleClickEditar(inscrito.uuid_inscripcion, inscrito.id_user, inscrito.user.name, inscrito.user.primer_apellido, inscrito.user.segundo_apellido, inscrito.id_curso, inscrito.curso.nombre)"
-                                                    class="font-semibold leading-tight text-xs text-slate-400 dark:text-white dark:opacity-80 mr-2">
-                                                    Editar
+                                                    class="p-1.5 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 rounded-full hover:bg-green-50 dark:hover:bg-green-900/30 transition-colors duration-200"
+                                                    title="Editar">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
                                                 </button>
-                                                <button v-if="inscrito.estado != 'eliminado' && inscrito.estado != 'inactivo' && $page.props.permissions.includes('editarestadodeleteinscritos.update')"
+
+                                                <!-- Eliminar -->
+                                                <button
+                                                    v-if="inscrito.estado != 'eliminado' && inscrito.estado != 'inactivo' && $page.props.permissions.includes('editarestadodeleteinscritos.update')"
                                                     @click="handleDelete(inscrito.uuid_inscripcion, 3, '¿Estás seguro de que deseas eliminar este registro de forma permanente?')"
-                                                    class="font-semibold leading-tight text-xs text-red-400 dark:text-red-300">
-                                                    Eliminar
+                                                    class="p-1.5 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors duration-200"
+                                                    title="Eliminar">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
                                                 </button>
                                             </div>
                                         </td>
@@ -133,33 +194,33 @@
             <!-- Modal with Form -->
             <Modal :show="showModal" @close="closeModal" max-width="2xl">
                 <form @submit.prevent="submitForm">
-                    <div class="p-6">
-                        <h2 class="text-xl font-bold mb-6 text-gray-800 dark:text-gray-200">
-                            Agregar Nuevo Inscrito
-                        </h2>
+                    <div class="p-6 ">
+                        <h2 class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+    Agregar Nuevo Inscrito
+</h2>
 
                         <div class="space-y-4">
                             <!-- Campo Nombre -->
                             <div>
-                                <label class="block text-sm font-medium text-yellow-500 mb-1">
+                                <label class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
                                     Usuario a Inscribir
                                 </label>
                                 <Buscadoruser v-if="valorbusqueda" ref="inscritosComponent" :filters2="filters2"
                                     ruta="inscritos.index" />
                                 <div v-if="user_nombre != '' && valorbusqueda">
                                     <!-- Contenedor con scroll cuando hay más de 5 registros -->
-                                    <div class="max-h-60 overflow-y-auto">
-                                        <table class="min-w-full">
+                                    <div class="p-0 overflow-x-auto">
+                                        <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                                             <tbody>
                                                 <tr v-for="usuario in usuarios.data" :key="usuario.id"
-                                                    class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                class="border-b dark:border-white/40">
                                                     <td
-                                                        class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
+                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
                                                         {{ usuario.name }} {{ usuario.primer_apellido }} {{
                                                             usuario.segundo_apellido }}
                                                     </td>
                                                     <td
-                                                        class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
+                                                    class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                                         <button type="button"
                                                             @click="getSearchTerm(usuario.name, usuario.primer_apellido, usuario.segundo_apellido, usuario.id)"
                                                             class="px-4 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white rounded-md transition duration-200">
@@ -189,7 +250,7 @@
                         <div class="space-y-4">
                             <!-- Campo Nombre -->
                             <div>
-                                <label class="block text-sm font-medium text-yellow-500 mb-1">
+                                <label class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
                                     Seleccionar Curso
                                 </label>
                                 <Buscadorcurso v-if="valorbusquedacurso" ref="inscritosComponent2" :filters="filters3"
@@ -197,16 +258,16 @@
                                 <div v-if="curso_nombre != '' && valorbusquedacurso">
                                     <!-- Contenedor con scroll cuando hay más de 5 registros -->
                                     <div class="max-h-60 overflow-y-auto">
-                                        <table class="min-w-full">
+                                        <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                                             <tbody>
                                                 <tr v-for="curso in cursos.data" :key="curso.id_cursos"
-                                                    class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                class="border-b dark:border-white/40">
                                                     <td
-                                                        class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
+                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
                                                         {{ curso.nombre }} {{ curso.descripcion }}
                                                     </td>
                                                     <td
-                                                        class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
+                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
                                                         <button type="button"
                                                             @click="getSearchTerm2(curso.nombre, curso.descripcion, curso.id_curso)"
                                                             class="px-4 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white rounded-md transition duration-200">
@@ -235,7 +296,7 @@
                         </div>
                         <div class="mt-6 flex justify-end space-x-3">
                             <button type="button" @click="closeModal"
-                                class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md transition duration-200">
+                                class="rounded-md border border-transparent py-2 px-4 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
                                 Cancelar
                             </button>
                             <button type="submit"
@@ -365,9 +426,9 @@ const closeModal = () => {
             replace: true, // No añade nueva entrada al historial
             preserveScroll: true // Mantiene la posición del scroll
         });
-  } else {
-    console.warn('No hay ruta anterior definida.');
-  }
+    } else {
+        console.warn('No hay ruta anterior definida.');
+    }
 };
 
 const resetForm = () => {

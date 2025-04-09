@@ -39,7 +39,7 @@
             </InertiaLink>
           </li>
 
-          <li class="w-full mt-4">
+          <!-- <li class="w-full mt-4">
             <h6 class="pl-6 ml-2 text-xs font-bold leading-tight uppercase text-slate-500 dark:text-white dark:opacity-60">Account pages</h6>
           </li>
 
@@ -53,7 +53,7 @@
                 </div>
                 <span class="ml-1 duration-300 opacity-100 pointer-events-none ease">{{ item.name }}</span>
                 </InertiaLink>
-          </li>
+          </li> -->
         </ul>
       </div>
     </aside>
@@ -150,16 +150,16 @@ const menuItems = [
   }
 ];
 
-const accountMenuItems = [
-  {
-    name: 'Profile',
-    icon: 'text-slate-700 ni ni-single-02',
-    link: '/user/profile',
-  },
-  {
-    name: 'Sign In',
-    icon: 'text-orange-500 ni ni-single-copy-04',
-    link: '/login'
-  }
-];
+// const accountMenuItems = [
+//   {
+//     name: 'Profile',
+//     icon: 'text-slate-700 ni ni-single-02',
+//     link: '/user/profile',
+//   },
+//   {
+//     name: 'Sign In',
+//     icon: 'text-orange-500 ni ni-single-copy-04',
+//     link: '/login'
+//   }
+// ];
 </script>

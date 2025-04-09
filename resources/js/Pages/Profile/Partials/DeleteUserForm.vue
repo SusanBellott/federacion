@@ -2,34 +2,42 @@
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 
+// Desactivamos la herencia automática de atributos
+defineOptions({
+  inheritAttrs: false,
+});
+
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
 
 const form = useForm({
-    password: '',
+  password: '',
 });
 
 const confirmUserDeletion = () => {
-    confirmingUserDeletion.value = true;
-    setTimeout(() => passwordInput.value.focus(), 250);
+  confirmingUserDeletion.value = true;
+  setTimeout(() => passwordInput.value.focus(), 250);
 };
 
 const deleteUser = () => {
-    form.delete(route('current-user.destroy'), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
-        onFinish: () => form.reset(),
-    });
+  form.delete(route('current-user.destroy'), {
+    preserveScroll: true,
+    onSuccess: () => closeModal(),
+    onError: () => passwordInput.value.focus(),
+    onFinish: () => form.reset(),
+  });
 };
 
 const closeModal = () => {
-    confirmingUserDeletion.value = false;
-    form.reset();
+  confirmingUserDeletion.value = false;
+  form.reset();
 };
 </script>
 
 <template>
+  <!-- Contenedor raíz que heredará los atributos (como class) -->
+  <div v-bind="$attrs">
+    <!-- Contenido principal -->
     <div class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
       <!-- Header -->
       <div class="p-6 px-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
@@ -108,4 +116,5 @@ const closeModal = () => {
         </div>
       </div>
     </div>
+  </div>
 </template>

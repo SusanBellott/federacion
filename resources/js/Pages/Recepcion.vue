@@ -258,10 +258,6 @@ const submitForm = () => {
                 </div>
                 
                 <div class="flex justify-end mt-6 space-x-3">
-                    <button type="button" @click="closeModal"
-                        class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md transition duration-200">
-                        Cancelar
-                    </button>
                     <button type="submit"
                         class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200">
                         Guardar Datos

@@ -310,7 +310,7 @@ const enviarfotos = () => {
 </script>
 
 <template>
-    <AppLayout title="Crusos">
+    <AppLayout title="Cursos">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Cursos Molquino
@@ -321,61 +321,61 @@ const enviarfotos = () => {
         <Modal :show="showModal" @close="closeModal" max-width="2xl">
             <form @submit.prevent="submitForm">
                 <div class="p-6">
-                    <h2 class="text-xl font-bold mb-6 text-gray-800 dark:text-gray-200">
+                    <h2 class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                         {{ id_curso ? 'Editar Curso' : 'Agregar Nuevo Curso' }}
                     </h2>
 
                     <div class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Campo Nombre -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                                 Nombre
                             </label>
                             <input v-model="form.nombre" type="text" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-gray-800" />
+                            class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                         </div>
 
                         <!-- Campo Descripción -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                                 Descripción
                             </label>
                             <input v-model="form.descripcion" type="text" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-gray-800" />
+                            class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                         </div>
 
                         <!-- Campo Fecha de Inicio -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                                 Fecha de Inicio
                             </label>
                             <input v-model="form.fecha_inicio" type="date" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-gray-800" />
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
                         </div>
 
                         <!-- Campo Fecha de Culminación -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                                 Fecha de Culminación
                             </label>
                             <input v-model="form.fecha_fin" type="date" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-gray-800" />
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
                         </div>
 
                         <!-- Campo Carga Horaria -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                                 Carga Horaria
                             </label>
                             <input v-model="form.carga_horaria" type="number" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-gray-800" />
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
                         </div>
 
                         <!-- Imagen del Curso -->
                         <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagen del curso</label>
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Imagen del curso</label>
                             <input type="file" @change="handleImageChange" accept="image/*"
-                                class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white text-gray-800">
+                            class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
 
                             <!-- Vista previa -->
                             <div v-if="imagenPreview" class="mt-2">
@@ -390,35 +390,35 @@ const enviarfotos = () => {
 
                         <!-- Campo Encargado -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                                 Encargado
                             </label>
                             <input v-model="form.encargado" type="text" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-gray-800" />
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
                         </div>
 
                         <!-- Campo Grado Académico -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                                 Grado Académico
                             </label>
                             <input v-model="form.grado_academico" type="text" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-gray-800" />
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
                         </div>
 
                         <!-- Campo Estado del Curso -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                                 Estado del Curso
                             </label>
                             <input v-model="form.estado_curso" type="text" required
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-gray-800" />
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
                         </div>
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-3">
                         <button type="button" @click="closeModal"
-                            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md transition duration-200">
+                        class="rounded-md border border-transparent py-2 px-4 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
                             Cancelar
                         </button>
                         <button type="submit"
@@ -435,10 +435,10 @@ const enviarfotos = () => {
             <div class="p-6">
                 <div class="mt-2 flex items-start gap-0 group">
                     <div class="flex-grow">
-                        <label class="block text-sm font-medium text-pink-700">Añadir imagenes</label>
+                        <label class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Añadir imagenes</label>
                         <div class="flex items-center space-x-4">
                             <input ref="inputFile" type="file" @change="handleImagenesChange" accept="image/*" multiple
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
 
                             <button v-if="imagenesPreviews && imagenesPreviews.length > 0" type="button"
                                 @click="enviarfotos()"
@@ -473,7 +473,7 @@ const enviarfotos = () => {
             </div>
 
             <div class="p-6">
-                <h2 class="text-xl font-bold mb-6 text-gray-800 dark:text-gray-200">
+                <h2 class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                     Todas las imagenes
                 </h2>
                 <Carousel v-bind="config" class="carousel">
@@ -502,8 +502,11 @@ const enviarfotos = () => {
                     <div class="flex items-center space-x-4">
                         <BuscadorCursos :filters="filters" ruta="cursos.index" />
 
-                        <button v-if="$page.props.permissions.includes('cursos.create')"
-                            class="px-6 py-3 bg-gradient-to-r from-blue-800 to-sky-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-50"
+
+                    </div>
+                </div>
+                <button v-if="$page.props.permissions.includes('cursos.create')"
+                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
@@ -515,9 +518,6 @@ const enviarfotos = () => {
                                 Agregar Nuevo Curso
                             </span>
                         </button>
-                    </div>
-                </div>
-
                 <!-- Alerts & Notifications -->
                 <div class="px-6 pt-4">
                     <div v-if="flash.success">
@@ -545,15 +545,15 @@ const enviarfotos = () => {
                             <tbody>
                                 <tr v-for="curso in cursos.data" :key="curso.id" class="border-b dark:border-white/40">
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="mb-0 text-sm leading-normal text-gray-700 dark:text-white">{{ curso.nombre }}</p>
+                                        <p class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ curso.nombre }}</p>
                                     </td>
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="mb-0 text-xs leading-tight text-gray-600 dark:text-white dark:opacity-80">{{ curso.descripcion }}</p>
+                                        <p class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ curso.descripcion }}</p>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <div class="flex flex-col">
-                                            <span class="text-xs font-semibold leading-tight text-gray-600 dark:text-white dark:opacity-80">Inicio: {{ curso.fecha_inicio }}</span>
-                                            <span class="text-xs font-semibold leading-tight text-gray-600 dark:text-white dark:opacity-80">Fin: {{ curso.fecha_fin }}</span>
+                                            <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">Inicio: {{ curso.fecha_inicio }}</span>
+                                            <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">Fin: {{ curso.fecha_fin }}</span>
                                         </div>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">

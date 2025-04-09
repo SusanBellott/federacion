@@ -45,11 +45,6 @@
                   </Link>
                 </li>
                 <li>
-                  <Link href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900">
-                    <i class="mr-2 fa fa-cog"></i> Settings
-                  </Link>
-                </li>
-                <li>
                   <Link href="/logout" method="post" as="button" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900">
                     <i class="mr-2 fa fa-sign-out"></i> Logout
                   </Link>
@@ -74,41 +69,6 @@
             <a href="javascript:;" class="p-0 text-sm dark:text-white text-slate-800 transition-all ease-nav-brand" @click="toggleSettings">
               <i class="cursor-pointer fa fa-cog"></i>
             </a>
-          </li>
-
-          <!-- Notificaciones -->
-          <li class="relative flex items-center pr-2">
-            <a href="javascript:;" class="block p-0 text-sm dark:text-white text-slate-800 transition-all ease-nav-brand" @click="toggleNotifications">
-              <i class="cursor-pointer fa fa-bell"></i>
-              <span v-if="unreadNotifications" class="absolute top-0 right-0 inline-block w-2 h-2 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full"></span>
-            </a>
-
-            <div v-show="notificationsOpen" class="absolute right-0 z-50 w-64 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-slate-850">
-              <div class="px-4 py-2 text-sm font-medium text-gray-700 border-b dark:text-white dark:border-gray-800">
-                Notifications ({{ notifications.length }})
-              </div>
-              <div class="overflow-y-auto max-h-96">
-                <a v-for="(notification, index) in notifications" :key="index" href="javascript:;" 
-                  class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900"
-                  :class="{ 'bg-gray-50 dark:bg-slate-800': !notification.read }">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                      <img v-if="notification.image" :src="notification.image" class="w-8 h-8 rounded-full">
-                      <div v-else class="flex items-center justify-center w-8 h-8 rounded-full" :class="notification.iconBg">
-                        <i :class="notification.icon"></i>
-                      </div>
-                    </div>
-                    <div class="ml-3">
-                      <p class="font-medium">{{ notification.title }}</p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">{{ notification.time }}</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <a href="javascript:;" class="block px-4 py-2 text-sm font-medium text-center text-blue-500 border-t dark:border-gray-800">
-                View all notifications
-              </a>
-            </div>
           </li>
         </ul>
       </div>

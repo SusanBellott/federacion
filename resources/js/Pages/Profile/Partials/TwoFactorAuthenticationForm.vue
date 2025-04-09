@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { router, useForm, usePage } from '@inertiajs/vue3';
+import axios from 'axios';
 
 const props = defineProps({
     requiresConfirmation: Boolean,
@@ -13,6 +14,7 @@ const disabling = ref(false);
 const qrCode = ref(null);
 const setupKey = ref(null);
 const recoveryCodes = ref([]);
+const error = ref(null); // Nuevo: Para manejo de errores
 
 const confirmationForm = useForm({
     code: '',
@@ -31,14 +33,23 @@ watch(twoFactorEnabled, () => {
 
 const enableTwoFactorAuthentication = () => {
     enabling.value = true;
+    error.value = null; // Resetear error
 
     router.post(route('two-factor.enable'), {}, {
         preserveScroll: true,
-        onSuccess: () => Promise.all([
-            showQrCode(),
-            showSetupKey(),
-            showRecoveryCodes(),
-        ]),
+        onSuccess: () => {
+            return Promise.all([
+                showQrCode().catch(handleError),
+                showSetupKey().catch(handleError),
+                showRecoveryCodes().catch(handleError)
+            ]).catch(err => {
+                console.error('Error fetching 2FA data:', err);
+                error.value = 'Failed to load 2FA data. Please try again.';
+            });
+        },
+        onError: (errors) => {
+            error.value = errors.message || 'Failed to enable 2FA';
+        },
         onFinish: () => {
             enabling.value = false;
             confirming.value = props.requiresConfirmation;
@@ -46,25 +57,50 @@ const enableTwoFactorAuthentication = () => {
     });
 };
 
+const handleError = (err) => {
+    if (err.response?.status === 423) {
+        error.value = 'Please verify your account or confirm your password before enabling 2FA';
+    } else {
+        error.value = err.response?.data?.message || err.message || 'An error occurred';
+    }
+    throw err; // Re-lanzar para manejo superior
+};
+
 const showQrCode = () => {
-    return axios.get(route('two-factor.qr-code')).then(response => {
+    return axios.get(route('two-factor.qr-code'), {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    }).then(response => {
         qrCode.value = response.data.svg;
-    });
+    }).catch(handleError);
 };
 
 const showSetupKey = () => {
-    return axios.get(route('two-factor.secret-key')).then(response => {
+    return axios.get(route('two-factor.secret-key'), {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    }).then(response => {
         setupKey.value = response.data.secretKey;
-    });
-}
+    }).catch(handleError);
+};
 
 const showRecoveryCodes = () => {
-    return axios.get(route('two-factor.recovery-codes')).then(response => {
+    return axios.get(route('two-factor.recovery-codes'), {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    }).then(response => {
         recoveryCodes.value = response.data;
-    });
+    }).catch(handleError);
 };
 
 const confirmTwoFactorAuthentication = () => {
+    error.value = null;
     confirmationForm.post(route('two-factor.confirm'), {
         errorBag: "confirmTwoFactorAuthentication",
         preserveScroll: true,
@@ -74,23 +110,40 @@ const confirmTwoFactorAuthentication = () => {
             qrCode.value = null;
             setupKey.value = null;
         },
+        onError: (errors) => {
+            error.value = errors.code || 'Invalid verification code';
+        },
     });
 };
 
 const regenerateRecoveryCodes = () => {
-    axios
-        .post(route('two-factor.recovery-codes'))
-        .then(() => showRecoveryCodes());
+    error.value = null;
+    axios.post(route('two-factor.recovery-codes'), {}, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(() => showRecoveryCodes())
+    .catch(handleError);
 };
 
 const disableTwoFactorAuthentication = () => {
     disabling.value = true;
+    error.value = null;
 
     router.delete(route('two-factor.disable'), {
         preserveScroll: true,
         onSuccess: () => {
             disabling.value = false;
             confirming.value = false;
+            qrCode.value = null;
+            setupKey.value = null;
+            recoveryCodes.value = [];
+        },
+        onError: (errors) => {
+            error.value = errors.message || 'Failed to disable 2FA';
+            disabling.value = false;
         },
     });
 };
