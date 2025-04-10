@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Distrito as ModelIDistrito;
 use Illuminate\Support\Str;
+use App\Http\Requests\Distritos;
 
 class Distrito extends Controller
 {
@@ -35,12 +36,9 @@ class Distrito extends Controller
             ]
         ]);
     }
-    public function store(Request $request)
+    public function store(Distritos $request)
     {
-        $validated = $request->validate([
-            'codigo' => 'required',
-            'descripcion' => 'required',
-        ]);
+        $validated = $request->validated();
         $distrito = ModelIDistrito::create([
             'uuid_distrito' => Str::uuid(),
             'codigo' => $request->codigo,
@@ -53,15 +51,10 @@ class Distrito extends Controller
             ->with('datos_array', [$validated]);
     }
 
-    // App/Http/Controllers/InstitucionController.php
-    public function update(Request $request, $id)
+    public function update(Distritos $request, $id)
     {
         $institucion = ModelIDistrito::where('uuid_distrito', $id)->firstOrFail();
-        //dd($id, $request->id_distrito);
-        $validated = $request->validate([
-            'codigo' => 'required',
-            'descripcion' => 'required',
-        ]);
+        $validated = $request->validated();
         $institucion->update($validated);
         return back()
             ->with('success', 'Distrito editada correctamente')

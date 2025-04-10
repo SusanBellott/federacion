@@ -163,23 +163,30 @@
                                     :key="distrito.id_distrito"
                                     :value="distrito.id_distrito"
                                 >
-                                    {{ distrito.descripcion }}
+                                {{ distrito.codigo }} - {{ distrito.descripcion }}
                                 </option>
                             </select>
+                            <validacioens :message="erroresinstitucion?.value?.id_distrito" />
                         </div>
 
-                        <!-- Campo Subsistema -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Subsistema
-                            </label>
-                            <input
-                                v-model="form.subsistema"
-                                type="text"
-                                required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                            />
-                        </div>
+    <div>
+      <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+        Subsistema
+      </label>
+      <select 
+        v-model="form.subsistema" 
+        required 
+        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+        <option value="">Seleccione un subsistema</option>
+        <option value="EDUCACION SUPERIOR">Educación Superior</option>
+        <option value="REGULAR">Regular</option>
+        <option value="ALTERNATIVA">Alternativa</option>
+        <option value="ESPECIAL PERMANENTE">Especial Permanente</option>
+
+      </select>
+      <validacioens :message="erroresinstitucion?.value?.subsistema" />
+
+    </div>
 
                         <!-- Campo Servicio -->
                         <div>
@@ -192,6 +199,8 @@
                                 required
                                 class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                             />
+                            <validacioens :message="erroresinstitucion?.value?.servicio" />
+
                         </div>
 
                         <!-- Campo Servicio Generado -->
@@ -202,23 +211,31 @@
                             <input
                                 v-model="form.servicio_generado"
                                 type="number"
-                                required
+                                required  disabled
                                 class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                             />
                         </div>
 
                         <!-- Campo Nivel -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Nivel
-                            </label>
-                            <input
-                                v-model="form.nivel"
-                                type="text"
-                                required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                            />
-                        </div>
+                        <!-- Campo Nivel (Select) -->
+    <div>
+      <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+        Nivel
+      </label>
+      <select 
+        v-model="form.nivel" 
+        required 
+        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+        <option value="">Seleccione un nivel</option>
+        <option value="ALTERNATIVA">Alternativa</option>
+        <option value="ESPECIAL">Especial</option>
+        <option value="INICIAL">Inicial</option>
+        <option value="PERMANENTE">Permanente</option>
+        <option value="PRIMARIA">Primaria</option>
+        <option value="SECUNDARIA">Secundaria</option>
+      </select>
+      <validacioens :message="erroresinstitucion?.value?.nivel" />
+    </div>
 
                         <!-- Campo Programa -->
                         <div>
@@ -231,6 +248,7 @@
                                 required
                                 class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                             />
+                            <validacioens :message="erroresinstitucion?.value?.programa" />
                         </div>
 
                         <!-- Campo Unidad Educativa -->
@@ -244,6 +262,7 @@
                                 required
                                 class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                             />
+                            <validacioens :message="erroresinstitucion?.value?.unidad_educativa" />
                         </div>
                     </div>
 
@@ -278,13 +297,14 @@
 <script setup>
 import AppLayout from "@/Layouts/MainLayout.vue";
 import Modal from "@/Components/Modal.vue";
-import { ref, computed } from "vue";
+import {reactive, ref, computed,watch } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
 import ConfirmDelete from "@/Components/ConfirmDelete.vue";
 import Pagination from "@/Components/Pagination.vue";
 import useSweetAlert from "@/Components/SweetAlert.vue";
 import editaralerta from "@/Components/AlertaEditada.vue";
 import BuscadorInstituciones from "@/Components/Buscador.vue";
+import validacioens from "@/Components/InputError.vue";
 
 const props = defineProps({
     instituciones: Object,
@@ -296,6 +316,7 @@ const page = usePage();
 const flash = computed(() => page.props.flash || {});
 const deleteDialog = ref(null);
 const id_institucion = ref(null);
+const erroresinstitucion = reactive({});
 
 const showModal = ref(false);
 const form = ref({
@@ -357,6 +378,9 @@ const submitForm = () => {
         onSuccess: () => {
             closeModal();
         },
+        onError: (errors) => {
+            erroresinstitucion.value = errors;
+        },
     };
 
     if (!id_institucion.value) {
@@ -381,4 +405,19 @@ const getDistritoNombre = (id_distrito) => {
     const distrito = props.distritos.find(d => d.id_distrito === id_distrito);
     return distrito ? distrito.descripcion : 'Desconocido';
 };
+watch(() => form.value.servicio, (newServicio) => {
+  // Convertir el valor de servicio a cadena, por si es un número
+  const servicioStr = newServicio.toString();
+
+  // Comprobar si la longitud de la cadena es mayor o igual a 2
+  if (servicioStr && servicioStr.length >= 2) {
+    // Extraer los últimos dos caracteres
+    const lastTwoChars = servicioStr.slice(-2);
+    form.value.servicio_generado = lastTwoChars; // Generar un valor basado en los dos últimos caracteres
+  } else {
+    form.value.servicio_generado = ""; // Limpiar si el valor no cumple
+  }
+});
+
+
 </script>

@@ -1,14 +1,14 @@
 <script setup>
 import AppLayout from "@/Layouts/MainLayout.vue";
 import Modal from "@/Components/Modal.vue";
-import { ref, computed } from "vue";
+import { reactive, ref, computed } from "vue";
 import { router, usePage,useForm } from "@inertiajs/vue3";
 import ConfirmDelete from "@/Components/ConfirmDelete.vue";
 import Pagination from "@/Components/Pagination.vue";
 import useSweetAlert from "@/Components/SweetAlert.vue";
 import editaralerta from "@/Components/AlertaEditada.vue";
 import BuscadorDistritos from "@/Components/Buscador.vue";
-import InputError from "@/Components/InputError.vue";
+import validaciones from "@/Components/InputError.vue";
 
 
 const props = defineProps({
@@ -18,6 +18,7 @@ const props = defineProps({
 // Acceso a flashes
 const page = usePage();
 const flash = computed(() => page.props.flash || {});
+const erroresdistrito = reactive({});
 
 const deleteDialog = ref(null);
 const id_distrito = ref(null);
@@ -59,6 +60,8 @@ const resetForm = () => {
         descripcion: "",
     };
     id_distrito.value = null;
+    erroresdistrito.value ={};
+
 };
 const submitForm = () => {
     // 1. Log de datos enviados
@@ -67,13 +70,14 @@ const submitForm = () => {
             onSuccess: () => {
                 closeModal();
                 // 2. Log de respuesta
-                console.log("Respuesta recibida - Mensajes flash:", {
+               /*  console.log("Respuesta recibida - Mensajes flash:", {
                     success: flash.value.success,
                     datos_array: flash.value.datos_array,
-                });
+                }); */
             },
             onError: (errors) => {
                 // 3. Log de errores
+                erroresdistrito.value=errors;
                 console.error("Errores de validación:", errors);
             },
             preserveScroll: true,
@@ -87,6 +91,7 @@ const submitForm = () => {
                 //console.log("Institución actualizada");
             },
             onError: (errors) => {
+                erroresdistrito.value=errors;
                 console.error("Errores de validación:", errors);
             },
             preserveScroll: true,
@@ -222,7 +227,7 @@ const submitForm = () => {
                             </label>
                             <input id="codigo" v-model="form.codigo" type="number"
                                 class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                            <InputError :message="errors" class="mt-2" />
+                            <validaciones :message="erroresdistrito?.value?.codigo" />
                         </div>
 
                         <!-- Campo Descripción -->
@@ -232,7 +237,8 @@ const submitForm = () => {
                             </label>
                             <input v-model="form.descripcion" type="text" required
                                 class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                            <InputError :message="form.descripcion" class="mt-2" />
+                            <validaciones :message="erroresdistrito?.value?.descripcion" />
+
                         </div>
                     </div>
 

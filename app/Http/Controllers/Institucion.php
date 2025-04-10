@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Models\Institucion as ModelInstitucion;
 use App\Models\Distrito as ModelIDistrito;
+use App\Http\Requests\Instituciones;
 
 use function Termwind\render;
 
@@ -42,17 +43,9 @@ class Institucion extends Controller
             ]
         ]);
     }
-    public function store(Request $request)
+    public function store(Instituciones $request)
     {
-        $validated = $request->validate([
-            'id_distrito' => 'required',
-            'subsistema' => 'required',
-            'servicio' => 'required',
-            'servicio_generado' => 'required',
-            'nivel' => 'required',
-            'programa' => 'required',
-            'unidad_educativa' => 'required'
-        ]);
+        $validated = $request->validated();
         $institucion = ModelInstitucion::create([
             'id_distrito' => $request->id_distrito,
             'uuid_institucion' => Str::uuid(),
@@ -70,19 +63,11 @@ class Institucion extends Controller
     }
 
     // App/Http/Controllers/InstitucionController.php
-    public function updateinstitutucion(Request $request, $id)
+    public function updateinstitutucion(Instituciones $request, $id)
     {
         $institucion = ModelInstitucion::where('uuid_institucion', $id)->firstOrFail();
         //dd($id, $request->id_distrito);
-        $validated = $request->validate([
-            'id_distrito' => 'required',
-            'subsistema' => 'required',
-            'servicio' => 'required',
-            'servicio_generado' => 'required',
-            'nivel' => 'required',
-            'programa' => 'required',
-            'unidad_educativa' => 'required'
-        ]);
+        $validated = $request->validated();
         $institucion->update($validated);
         return back()
             ->with('success', 'Institución editada correctamente')
