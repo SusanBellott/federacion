@@ -49,7 +49,7 @@ watch([() => form.value.ci, () => form.value.name], ([newCi, newName]) => {
   const initial = newName ? newName.charAt(0).toUpperCase() : '';
   
   if (newCi && newCi.toString().length >= 7) {
-    form.value.email = `${initial}_${newCi}@gmail.com`;
+    form.value.email = `${initial}_${newCi}@fdteulp.com`;
   } else {
     form.value.email = ''; // Limpiar el email si el CI no es válido
   }
