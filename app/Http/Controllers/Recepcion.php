@@ -58,7 +58,7 @@ class Recepcion extends Controller
             'cargo' => $request->cargo,
             'horas' => $request->horas,
             'email' => $request->email,
-            'password' => bcrypt($request->ci)
+            'password' => bcrypt($request->rda)
 
         ])->assignRole('Estudiante');
         $registroId = $registroguardar->id;
