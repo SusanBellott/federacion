@@ -18,14 +18,21 @@ const photoPreview = ref(null);
 const photoInput = ref(null);
 
 const updateProfileInformation = () => {
-    if (photoInput.value) {
+    // Asegurarse de que el archivo se adjunte correctamente
+    if (photoInput.value?.files[0]) {
         form.photo = photoInput.value.files[0];
     }
 
     form.post(route('user-profile-information.update'), {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
-        onSuccess: () => clearPhotoFileInput(),
+        onSuccess: () => {
+            clearPhotoFileInput();
+            // Resetear la vista previa después de guardar
+            photoPreview.value = null;
+        },
+        // Forzar el envío como multipart/form-data
+        forceFormData: true,
     });
 };
 
@@ -38,7 +45,7 @@ const selectNewPhoto = () => {
 };
 
 const updatePhotoPreview = () => {
-    const photo = photoInput.value.files[0];
+    const photo = photoInput.value?.files[0];
 
     if (!photo) return;
 
@@ -122,8 +129,8 @@ const clearPhotoFileInput = () => {
             @click="updateProfileInformation"
             :disabled="form.processing"
           >
-            <span v-if="form.processing">Saving...</span>
-            <span v-else>Save Changes</span>
+            <span v-if="form.processing">Guardando...</span>
+            <span v-else>Guardar Cambios</span>
           </button>
           
           <button 
@@ -141,7 +148,7 @@ const clearPhotoFileInput = () => {
             class="hidden px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in border-0 rounded-lg shadow-md cursor-pointer text-xs bg-slate-700 lg:block tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85"
             @click.prevent="deletePhoto"
           >
-            Remove Photo
+            Eliminar Foto
           </button>
           
           <button 
@@ -161,12 +168,12 @@ const clearPhotoFileInput = () => {
         <div class="mt-6">
           <!-- Name Field -->
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nombre</label>
             <input
               id="name"
               v-model="form.name"
               type="text"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-100"
+              class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
               required
               autocomplete="name"
               :class="{ 'border-red-500': form.errors.name }"
@@ -176,12 +183,12 @@ const clearPhotoFileInput = () => {
 
           <!-- Email Field -->
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Correo</label>
             <input
               id="email"
               v-model="form.email"
               type="email"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-100"
+              class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
               required
               autocomplete="email"
               :class="{ 'border-red-500': form.errors.email }"
@@ -190,7 +197,7 @@ const clearPhotoFileInput = () => {
 
             <!-- Email Verification -->
             <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null" class="mt-2">
-              <p class="text-sm text-gray-600 dark:text-gray-300">
+              <p class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                 Su dirección de correo electrónico no está verificada.
                 <Link
                   :href="route('verification.send')"

@@ -3,7 +3,7 @@
     <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
 
     <aside
-      class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0"
+      class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 sidebar-no-scrollbar"
       :class="{ 'translate-x-0': props.sidebarOpen }" aria-expanded="false">
 
       <div class="h-32">
@@ -24,7 +24,7 @@
       <hr
         class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
 
-      <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+      <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full sidebar-no-scrollbar">
         <ul class="flex flex-col pl-0 mb-0">
           <li v-for="(item, index) in menuItems.filter(item => hasPermission(item.permissions))" :key="index">
             <InertiaLink :href="item.link"
@@ -37,22 +37,6 @@
               <span class="ml-1 duration-300 opacity-100 pointer-events-none ease">{{ item.name }}</span>
             </InertiaLink>
           </li>
-
-          <!-- <li class="w-full mt-4">
-            <h6 class="pl-6 ml-2 text-xs font-bold leading-tight uppercase text-slate-500 dark:text-white dark:opacity-60">Account pages</h6>
-          </li>
-
-          <li v-for="(item, index) in accountMenuItems" :key="`account-${index}`">
-                <InertiaLink
-                class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white text-slate-800"
-                :class="activeClass(item.link)"
-                >
-                <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
-                    <i :class="`relative top-0 text-sm leading-normal ${item.icon}`"></i>
-                </div>
-                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease">{{ item.name }}</span>
-                </InertiaLink>
-          </li> -->
         </ul>
       </div>
     </aside>
@@ -148,17 +132,15 @@ const menuItems = [
     permissions: ['usuarios.index']
   }
 ];
-
-// const accountMenuItems = [
-//   {
-//     name: 'Profile',
-//     icon: 'text-slate-700 ni ni-single-02',
-//     link: '/user/profile',
-//   },
-//   {
-//     name: 'Sign In',
-//     icon: 'text-orange-500 ni ni-single-copy-04',
-//     link: '/login'
-//   }
-// ];
 </script>
+
+<style scoped>
+.sidebar-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+</style>

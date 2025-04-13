@@ -2,19 +2,23 @@
     <AppLayout title="Instituciones">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Institucion Molquino
+                Instituciones
             </h2>
         </template>
 
         <div class="flex-none w-full max-w-full px-3">
+            <h6 class="text-gray-800 dark:text-white">Instituciones</h6>
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
-                    <h6 class="text-gray-800 dark:text-white">Instituciones</h6>
-
                     <div class="flex items-center space-x-4">
-                        <BuscadorInstituciones :filters="filters" ruta="instituciones.index" />
+                        <div class="relative">
+                            <BuscadorInstituciones :filters="filters" ruta="instituciones.index" />
+                        </div>
+                        
 
-                        <button v-if="$page.props.permissions.includes('instituciones.create')"
+                    </div>
+
+                    <button v-if="$page.props.permissions.includes('instituciones.create')"
                             class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
@@ -24,10 +28,9 @@
                                         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                         clip-rule="evenodd" />
                                 </svg>
-                                Agregar Nueva Institución
+                                Nueva Institución
                             </span>
                         </button>
-                    </div>
                 </div>
 
                 <!-- Alerts & Notifications -->

@@ -101,7 +101,7 @@ const submitForm = () => {
 </script>
 
 <template>
-    <AppLayout title="Instituciones">
+    <AppLayout title="Distritos">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Distrito
@@ -109,14 +109,15 @@ const submitForm = () => {
         </template>
 
         <div class="flex-none w-full max-w-full px-3">
+            <h6 class="text-gray-800 dark:text-white">Distritos</h6>
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
-                    <h6 class="text-gray-800 dark:text-white">Distritos</h6>
-
                     <div class="flex items-center space-x-4">
-                        <BuscadorDistritos :filters="filters" ruta="distritos.index" />
-
-                        <button v-if="$page.props.permissions.includes('distritos.create')"
+                        <div class="relative">
+                            <BuscadorDistritos :filters="filters" ruta="distritos.index" />
+                        </div> 
+                    </div>
+                    <button v-if="$page.props.permissions.includes('distritos.create')"
                             class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
@@ -129,7 +130,6 @@ const submitForm = () => {
                                 Agregar Nuevo Distrito
                             </span>
                         </button>
-                    </div>
                 </div>
 
                 <!-- Alerts & Notifications -->

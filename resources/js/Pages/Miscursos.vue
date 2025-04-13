@@ -72,15 +72,19 @@ const tomarmateria = (uuid_curso) => {
         </template>
 
         <div class="flex-none w-full max-w-full px-3">
+            <h6 class="text-gray-800 dark:text-white">Mis Cursos</h6>
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
-                    <h6 class="text-gray-800 dark:text-white">Mis Cursos</h6>
+                    
                     
                     <div class="flex items-center space-x-4">
+                       <div class="relative"> 
                         <BuscadorDistritos :filters="filters" ruta="estudiantes.index" />
+                    </div>
                         
-                        <button
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+
+                    </div>
+                    <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
@@ -92,7 +96,6 @@ const tomarmateria = (uuid_curso) => {
                                 Agregar Nueva Inscripción
                             </span>
                         </button>
-                    </div>
                 </div>
 
                 <!-- Alerts & Notifications -->

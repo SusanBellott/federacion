@@ -31,10 +31,10 @@ const currentYear = computed(() => {
   return new Date().getFullYear();
 });
 
-// const footerLinks = ref([
-//   { text: 'f', url: 'https://www.creative-tim.com' },
-//   { text: 'About Us', url: 'https://www.creative-tim.com/presentation' },
-//   { text: 'Blog', url: 'https://creative-tim.com/blog' },
-//   { text: 'License', url: 'https://www.creative-tim.com/license' }
-// ]);
+const footerLinks = ref([
+  { text: 'f', url: 'https://www.creative-tim.com' },
+  { text: 'About Us', url: 'https://www.creative-tim.com/presentation' },
+  { text: 'Blog', url: 'https://creative-tim.com/blog' },
+  { text: 'License', url: 'https://www.creative-tim.com/license' }
+]);
 </script>

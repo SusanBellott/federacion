@@ -89,7 +89,7 @@ const getBrowserIcon = (browser) => {
     <div :class="containerClasses">
       <!-- Header -->
       <div class="p-6 px-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
-        <h6 class="mb-0 dark:text-white">Sesiones Activas</h6>
+        <h6 class="mb-0 text-slate-700 dark:text-white/80">Sesiones Activas</h6>
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Administra y cierra sesión en otros navegadores y dispositivos.</p>
       </div>
 
@@ -175,7 +175,7 @@ const getBrowserIcon = (browser) => {
           class="inline-block align-bottom bg-white dark:bg-slate-850 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
         >
           <div class="bg-white dark:bg-slate-850 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <h3 id="modal-title" class="text-lg font-medium text-gray-900 dark:text-white mb-4">Cerrar Otras Sesiones</h3>
+            <h3 id="modal-title" class="text-lg font-medium text-slate-700 dark:text-white/80 mb-4">Cerrar Otras Sesiones</h3>
             <p id="modal-description" class="text-sm text-gray-600 dark:text-gray-400">
               Por favor ingresa tu contraseña para confirmar que deseas cerrar sesión en tus otros navegadores en todos tus dispositivos.
             </p>

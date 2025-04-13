@@ -87,15 +87,15 @@ const updatePassword = () => {
                     class="h-px mx-0 my-4 bg-transparent border-0 opacity-25 bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
 
                 <!-- Sección de Actualización de Contraseña -->
-                <p class="leading-normal uppercase dark:text-white dark:opacity-60 text-sm">Update Password</p>
+                <p class="leading-normal uppercase text-gray-700 dark:text-white dark:opacity-80 text-sm">Actualizar contraseña</p>
                 <div class="flex flex-wrap -mx-3">
                     <div class="w-full max-w-full px-3 shrink-0 md:w-full md:flex-0">
                         <form @submit.prevent="updatePassword">
                             <!-- Contraseña Actual -->
                             <div class="mb-4">
                                 <label for="current_password"
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Current
-                                    Password</label>
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Actual
+                                    Contraseña</label>
                                 <input id="current_password" ref="currentPasswordInput" v-model="form.current_password"
                                     type="password"
                                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
@@ -108,8 +108,8 @@ const updatePassword = () => {
                             <!-- Nueva Contraseña -->
                             <div class="mb-4">
                                 <label for="password"
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">New
-                                    Password</label>
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nueva
+                                    Contraseña</label>
                                 <input id="password" ref="passwordInput" v-model="form.password" type="password"
                                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                                     :class="{ 'border-red-500': form.errors.password }" autocomplete="new-password" />
@@ -120,8 +120,8 @@ const updatePassword = () => {
                             <!-- Confirmar Contraseña -->
                             <div class="mb-4">
                                 <label for="password_confirmation"
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Confirm
-                                    Password</label>
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Confirmar
+                                    Contraseña</label>
                                 <input id="password_confirmation" v-model="form.password_confirmation" type="password"
                                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                                     :class="{ 'border-red-500': form.errors.password_confirmation }"
@@ -135,8 +135,8 @@ const updatePassword = () => {
                                 <button type="submit"
                                     class="px-6 py-2.5 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer hover:shadow-xs hover:-translate-y-px active:opacity-85 leading-pro text-xs ease-in tracking-tight-rem shadow-md bg-gradient-to-tl from-blue-500 to-violet-500"
                                     :disabled="form.processing" :class="{ 'opacity-50': form.processing }">
-                                    <span v-if="form.processing">Updating...</span>
-                                    <span v-else>Update Password</span>
+                                    <span v-if="form.processing">Actualizando...</span>
+                                    <span v-else>Actualizar contraseña</span>
                                 </button>
                             </div>
                         </form>
@@ -161,7 +161,7 @@ const updatePassword = () => {
     color: rgba(255, 255, 255, 0.8) !important;
 }
 
-.swal-confirm-button {
-    /* Estilos personalizados para el botón si los necesitas */
-}
+/*.swal-confirm-button {
+    /* Estilos personalizados para el botón si los necesitas 
+}*/
 </style>

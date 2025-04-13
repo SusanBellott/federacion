@@ -313,122 +313,122 @@ const enviarfotos = () => {
     <AppLayout title="Cursos">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Cursos Molquino
+                Cursos
             </h2>
         </template>
 
         <!-- Modal con Formulario -->
         <Modal :show="showModal" @close="closeModal" max-width="2xl">
-            <form @submit.prevent="submitForm">
-                <div class="p-6">
-                    <h2 class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                        {{ id_curso ? 'Editar Curso' : 'Agregar Nuevo Curso' }}
-                    </h2>
+    <form @submit.prevent="submitForm">
+        <div class="p-4 sm:p-6">
+            <h2 class="px-4 sm:px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                {{ id_curso ? 'Editar Curso' : 'Agregar Nuevo Curso' }}
+            </h2>
 
-                    <div class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Campo Nombre -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Nombre
-                            </label>
-                            <input v-model="form.nombre" type="text" required
-                            class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                        </div>
+            <div class="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <!-- Campo Nombre -->
+                <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+                        Nombre
+                    </label>
+                    <input v-model="form.nombre" type="text" required
+                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                </div>
 
-                        <!-- Campo Descripción -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Descripción
-                            </label>
-                            <input v-model="form.descripcion" type="text" required
-                            class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                        </div>
+                <!-- Campo Descripción -->
+                <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+                        Descripción
+                    </label>
+                    <input v-model="form.descripcion" type="text" required
+                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                </div>
 
-                        <!-- Campo Fecha de Inicio -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Fecha de Inicio
-                            </label>
-                            <input v-model="form.fecha_inicio" type="date" required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                        </div>
+                <!-- Campo Fecha de Inicio -->
+                <div>
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+                        Fecha de Inicio
+                    </label>
+                    <input v-model="form.fecha_inicio" type="date" required
+                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
+                </div>
 
-                        <!-- Campo Fecha de Culminación -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Fecha de Culminación
-                            </label>
-                            <input v-model="form.fecha_fin" type="date" required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                        </div>
+                <!-- Campo Fecha de Culminación -->
+                <div>
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+                        Fecha de Culminación
+                    </label>
+                    <input v-model="form.fecha_fin" type="date" required
+                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
+                </div>
 
-                        <!-- Campo Carga Horaria -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Carga Horaria
-                            </label>
-                            <input v-model="form.carga_horaria" type="number" required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                        </div>
+                <!-- Campo Carga Horaria -->
+                <div>
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+                        Carga Horaria
+                    </label>
+                    <input v-model="form.carga_horaria" type="number" required
+                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
+                </div>
 
-                        <!-- Imagen del Curso -->
-                        <div class="col-span-2">
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Imagen del curso</label>
-                            <input type="file" @change="handleImageChange" accept="image/*"
-                            class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+                <!-- Imagen del Curso -->
+                <div class="col-span-1 sm:col-span-2">
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Imagen del curso</label>
+                    <input type="file" @change="handleImageChange" accept="image/*"
+                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
 
-                            <!-- Vista previa -->
-                            <div v-if="imagenPreview" class="mt-2">
-                                <img :src="imagenPreview" class="h-40 w-auto object-cover rounded">
-                            </div>
-
-                            <!-- Mostrar imagen existente al editar -->
-                            <div v-else-if="form.img_curso" class="mt-2">
-                                <img :src="form.img_curso" class="h-40 w-auto object-cover rounded">
-                            </div>
-                        </div>
-
-                        <!-- Campo Encargado -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Encargado
-                            </label>
-                            <input v-model="form.encargado" type="text" required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                        </div>
-
-                        <!-- Campo Grado Académico -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Grado Académico
-                            </label>
-                            <input v-model="form.grado_academico" type="text" required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                        </div>
-
-                        <!-- Campo Estado del Curso -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Estado del Curso
-                            </label>
-                            <input v-model="form.estado_curso" type="text" required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                        </div>
+                    <!-- Vista previa -->
+                    <div v-if="imagenPreview" class="mt-2">
+                        <img :src="imagenPreview" class="h-40 w-auto object-cover rounded">
                     </div>
 
-                    <div class="mt-6 flex justify-end space-x-3">
-                        <button type="button" @click="closeModal"
-                        class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-slate-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
-                            Cancelar
-                        </button>
-                        <button type="submit"
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200">
-                            {{ id_curso ? 'Actualizar' : 'Guardar' }} curso
-                        </button>
+                    <!-- Mostrar imagen existente al editar -->
+                    <div v-else-if="form.img_curso" class="mt-2">
+                        <img :src="form.img_curso" class="h-40 w-auto object-cover rounded">
                     </div>
                 </div>
-            </form>
-        </Modal>
+
+                <!-- Campo Encargado -->
+                <div>
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+                        Encargado
+                    </label>
+                    <input v-model="form.encargado" type="text" required
+                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
+                </div>
+
+                <!-- Campo Grado Académico -->
+                <div>
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+                        Grado Académico
+                    </label>
+                    <input v-model="form.grado_academico" type="text" required
+                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
+                </div>
+
+                <!-- Campo Estado del Curso -->
+                <div>
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+                        Estado del Curso
+                    </label>
+                    <input v-model="form.estado_curso" type="text" required
+                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" @click="closeModal"
+                class="inline-block px-4 sm:px-6 py-2 sm:py-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-slate-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200">
+                    {{ id_curso ? 'Actualizar' : 'Guardar' }} curso
+                </button>
+            </div>
+        </div>
+    </form>
+</Modal>
 
         <!-- Modal para imágenes -->
         <Modal :show="showModalimagen" @close="closemodaliamgenes" max-width="2xl">
@@ -495,15 +495,21 @@ const enviarfotos = () => {
         </Modal>
 
         <div class="flex-none w-full max-w-full px-3">
+            <h6 class="text-gray-700 dark:text-white">Cursos</h6>
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
-                    <h6 class="text-gray-700 dark:text-white">Cursos</h6>
+                   
 
                     <div class="flex items-center space-x-4">
-                        <BuscadorCursos :filters="filters" ruta="cursos.index" />
+                        <div class="relative">
+                            <BuscadorCursos :filters="filters" ruta="cursos.index" />
+                        </div>
 
-                        <button v-if="$page.props.permissions.includes('cursos.create')"
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                    </div>
+                                            
+
+                    <button v-if="$page.props.permissions.includes('cursos.create')"
+                            class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
@@ -515,8 +521,6 @@ const enviarfotos = () => {
                                 Agregar Nuevo Curso
                             </span>
                         </button>
-                    </div>
-                    
                 </div>
                
                 <!-- Alerts & Notifications -->

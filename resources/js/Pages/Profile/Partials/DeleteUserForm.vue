@@ -41,15 +41,15 @@ const closeModal = () => {
     <div class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
       <!-- Header -->
       <div class="p-6 px-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
-        <h6 class="mb-0 dark:text-white">Delete Account</h6>
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Permanently delete your account.</p>
+        <h6 class="mb-0 text-slate-700 dark:text-white/80">Eliminar cuenta</h6>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Eliminar permanentemente su cuenta.</p>
       </div>
 
       <!-- Content -->
       <div class="flex-auto p-4 pt-6">
         <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          Once your account is deleted, all of its resources and data will be permanently deleted. 
-          Before deleting your account, please download any data or information that you wish to retain.
+          Una vez eliminada su cuenta, todos sus recursos y datos se eliminarán permanentemente.
+Antes de eliminar su cuenta, descargue cualquier dato o información que desee conservar.
         </div>
 
         <!-- Delete Button -->
@@ -58,7 +58,7 @@ const closeModal = () => {
             @click="confirmUserDeletion"
             class="px-6 py-2.5 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer hover:shadow-xs hover:-translate-y-px active:opacity-85 leading-pro text-xs ease-in tracking-tight-rem shadow-md bg-gradient-to-tl from-red-600 to-orange-600"
           >
-            Delete Account
+          Eliminar cuenta
           </button>
         </div>
       </div>
@@ -75,15 +75,13 @@ const closeModal = () => {
         <!-- Modal content -->
         <div class="inline-block align-bottom bg-white dark:bg-slate-850 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div class="bg-white dark:bg-slate-850 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Delete Account</h3>
+            <h3 class="text-lg font-medium text-slate-700 dark:text-white/80 mb-4">Eliminar cuenta</h3>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Are you sure you want to delete your account? Once your account is deleted, 
-              all of its resources and data will be permanently deleted. 
-              Please enter your password to confirm you would like to permanently delete your account.
+              ¿Seguro que quieres eliminar tu cuenta? Una vez eliminada, todos sus recursos y datos se eliminarán permanentemente. Introduce tu contraseña para confirmar que deseas eliminar tu cuenta permanentemente.
             </p>
             
             <div class="mt-4">
-              <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Password</label>
+              <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Contraseña</label>
               <input
                 ref="passwordInput"
                 v-model="form.password"
@@ -104,13 +102,13 @@ const closeModal = () => {
               :class="{ 'opacity-50': form.processing }"
               :disabled="form.processing"
             >
-              Delete Account
+            Eliminar cuenta
             </button>
             <button
               @click="closeModal"
               class="px-6 py-2.5 mr-3 font-bold text-center text-gray-700 uppercase align-middle transition-all rounded-lg cursor-pointer hover:shadow-xs hover:-translate-y-px active:opacity-85 leading-pro text-xs ease-in tracking-tight-rem shadow-md bg-gray-200 dark:bg-gray-700 dark:text-white"
             >
-              Cancel
+              Cancelar
             </button>
           </div>
         </div>
