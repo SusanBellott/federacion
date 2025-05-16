@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 
 class Curso extends Model
 {
@@ -16,8 +17,12 @@ class Curso extends Model
     protected $keyType = 'int';
     protected $fillable = [
         'uuid_curso',
+        'tipo_actividad_id',
+        'codigo_curso',
         'nombre',
         'descripcion',
+        'fecha_inicio_inscripcion',
+        'fecha_fin_inscripcion',
         'fecha_inicio',
         'fecha_fin',
         'carga_horaria',
@@ -50,4 +55,32 @@ class Curso extends Model
     {
         return $this->belongsTo(Imagencertificado::class, 'id_curso','id_curso');
     } */
+    public function tipoActividad()
+    {
+        return $this->belongsTo(TipoActividad::class, 'tipo_actividad_id')->withTrashed();
+    }
+    
+    
+    public function scopeInscripcionesDisponibles(Builder $query)
+    {
+        return $query
+            ->whereDate('fecha_inicio_inscripcion', '<=', now())
+            ->whereDate('fecha_fin_inscripcion', '>=', now());
+    }
+    
+    public function getEstadoCursoAttribute()
+    {
+        $fecha_actual = now();
+        $inicio_insc = $this->fecha_inicio_inscripcion ? Carbon::parse($this->fecha_inicio_inscripcion) : null;
+        $fin_insc = $this->fecha_fin_inscripcion ? Carbon::parse($this->fecha_fin_inscripcion) : null;
+        $inicio_curso = $this->fecha_inicio ? Carbon::parse($this->fecha_inicio) : null;
+        $fin_curso = $this->fecha_fin ? Carbon::parse($this->fecha_fin) : null;
+
+        if ($inicio_insc && $fecha_actual->lt($inicio_insc)) return 'no iniciado';
+        if ($inicio_insc && $fin_insc && $fecha_actual->between($inicio_insc, $fin_insc)) return 'abierto';
+        if ($inicio_curso && $fin_curso && $fecha_actual->between($inicio_curso, $fin_curso)) return 'curso';
+        if ($fin_curso && $fecha_actual->gt($fin_curso)) return 'terminado';
+
+        return 'cerrado';
+    }
 }

@@ -9,15 +9,15 @@
       <div class="h-32">
         <i class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden"
           @click="toggleSidebar"></i>
-        <a class="flex items-center px-8 py-6 m-0 text-base whitespace-nowrap dark:text-white text-slate-700" href="/"
-          target="_blank">
+        <a class="flex items-center px-8 py-6 m-0 text-base whitespace-nowrap dark:text-white text-slate-700" href="/dashboard"
+          >
           <img src="/assets/img/logo_instituto.png"
             class="inline h-full max-w-full transition-all duration-200 dark:hidden ease-nav-brand max-h-24"
             alt="main_logo" />
           <img src="/assets/img/logo_instituto.png"
             class="hidden h-full max-w-full transition-all duration-200 dark:inline ease-nav-brand max-h-24"
             alt="main_logo" />
-          <span class="ml-3 text-xl font-semibold transition-all duration-200 ease-nav-brand">SISEMCE</span>
+          <span class="ml-3 text-xl font-semibold transition-all duration-200 ease-nav-brand">FDTEULP</span>
         </a>
       </div>
 
@@ -102,35 +102,48 @@ const menuItems = [
     permissions: ['inscritos.index']
   },
   {
+    name: 'Mis Actividades',
+    icon: 'text-blue-500 ni ni-collection',
+    link: '/estudiantes',
+    permissions: ['estudiantes.index']
+  },
+  {
     name: 'Cursos',
     icon: 'text-cyan-500 ni ni-app',
     link: '/cursos',
     permissions: ['cursos.index']
   },
   {
-    name: 'Institucion',
+  name: 'Tipos de Actividad',
+  icon: 'ni ni-bullet-list-67 text-purple-600',
+  link: '/tipos-actividad',
+  permissions: ['tiposactividad.index']
+},
+  {
+    name: 'Usuarios',
+    icon: 'text-slate-700 ni ni-single-02',
+    link: '/usuarios',
+    permissions: ['usuarios.index']
+  },
+  {
+    name: 'Institución',
     icon: 'text-cyan-500 ni ni-app',
     link: '/instituciones',
     permissions: ['instituciones.index']
+  },
+  {
+    name: 'Códigos SIE',
+    icon: 'text-green-500 ni ni-key-25',
+    link: '/codigo-sie',
+    permissions: ['codigosie.index']
   },
   {
     name: 'Distritos',
     icon: 'text-red-600 ni ni-world-2',
     link: '/distritos',
     permissions: ['distritos.index']
-  },
-  {
-    name: 'Mis Cursos',
-    icon: 'text-blue-500 ni ni-collection',
-    link: '/estudiantes',
-    permissions: ['estudiantes.index']
-  },
-  {
-    name: 'Usuarios',
-    icon: 'text-slate-700 ni ni-single-02',
-    link: '/usuarios',
-    permissions: ['usuarios.index']
   }
+
 ];
 </script>
 

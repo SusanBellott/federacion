@@ -35,6 +35,15 @@
 
     <!-- Popper JS -->
     <script src="https://unpkg.com/@popperjs/core@2"></script>
-    
+    <script>
+        window.canvaConfig = {
+          devKey: 'AAGmc1iy5yQ',
+          origin: 'https://app-aagmc1iy5yq.canva-apps.com'
+        }
+      </script>
+      
+    <!-- Y justo después, carga el SDK de Canva -->
+    <script src="https://sdk.canva.com/v1/embed.js"></script>
+
 </body>
 </html>

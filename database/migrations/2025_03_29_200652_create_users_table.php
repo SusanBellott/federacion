@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_institucion');
             $table->uuid('uuid_user');
-            $table->bigInteger('ci');
-            $table->bigInteger('rda')->nullable();
+            $table->bigInteger('ci')->unique();;
+            $table->bigInteger('rda')->unique();;
             $table->string('name');
-            $table->string('primer_apellido');
-            $table->string('segundo_apellido');
+            $table->string('primer_apellido')->nullable();
+            $table->string('segundo_apellido')->nullable();
             $table->bigInteger('item')->nullable();
             $table->bigInteger('cargo')->nullable();
             $table->integer('horas')->nullable();
@@ -30,8 +29,19 @@ return new class extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->string('estado')->default('activo');
-            $table->foreign('id_institucion')->references('id_institucion')->on('institucions')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
+
+             // Relaciones correctas con las tablas
+            $table->unsignedBigInteger('distrito_id')->nullable();
+            $table->unsignedBigInteger('institucion_id')->nullable();
+            $table->unsignedBigInteger('codigo_sie_id')->nullable();
+
+            // Referencias correctas a las columnas ID específicas
+            $table->foreign('distrito_id')->references('id_distrito')->on('distritos')->onDelete('set null');
+            $table->foreign('institucion_id')->references('id_institucion')->on('instituciones')->onDelete('set null');
+            $table->foreign('codigo_sie_id')->references('id_codigo_sie')->on('codigo_sies')->onDelete('set null');
+
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

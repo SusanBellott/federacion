@@ -14,7 +14,7 @@ class Inscripcion extends Model
     protected $primaryKey = 'id_inscripcion';
     public $incrementing = true;
     protected $keyType = 'int';
-    protected $fillable = ['id_user', 'id_curso', 'uuid_inscripcion', 'fecha_inscripcion', 'estado_ins', 'estado'];
+    protected $fillable = ['id_user', 'id_curso', 'uuid_inscripcion', 'fecha_inscripcion', 'estado_ins', 'estado',  'certificado_numero'];
 
     public function user()
     {

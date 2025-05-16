@@ -14,8 +14,12 @@ return new class extends Migration
         Schema::create('cursos', function (Blueprint $table) {
             $table->id('id_curso');
             $table->uuid('uuid_curso');
+            $table->string('codigo_curso')->nullable();
             $table->string('nombre');
+            $table->foreignId('tipo_actividad_id')->constrained('tipos_actividad')->onDelete('cascade');
             $table->string('descripcion');
+            $table->date('fecha_inicio_inscripcion')->nullable();
+            $table->date('fecha_fin_inscripcion')->nullable();
             $table->string('fecha_inicio')->default(date('Y-m-d'));
             $table->string('fecha_fin')->default(date('Y-m-d'));
             $table->integer('carga_horaria');

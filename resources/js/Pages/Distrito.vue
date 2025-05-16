@@ -19,13 +19,22 @@ const props = defineProps({
 const page = usePage();
 const flash = computed(() => page.props.flash || {});
 const erroresdistrito = reactive({});
-
+const currentPage = computed(() => props.distritos.current_page);
+const perPage = computed(() => props.distritos.per_page);
 const deleteDialog = ref(null);
 const id_distrito = ref(null);
-const handleDelete = (id, cod, texto) => {
-    //console.log("hola este es el id ", id);
-    deleteDialog.value?.show(id, cod, texto);
+const distritoSeleccionado = ref(null);
+
+const deleteCode = ref(null);
+// Computed para determinar si estamos editando
+const editing = computed(() => !!id_distrito.value);
+
+const handleDelete = (distrito, cod, texto) => {
+    distritoSeleccionado.value = distrito;
+    deleteCode.value = cod;
+    deleteDialog.value?.show(distrito.uuid_distrito, cod, texto);
 };
+
 // Estado del modal
 const showModal = ref(false);
 
@@ -77,7 +86,7 @@ const submitForm = () => {
             },
             onError: (errors) => {
                 // 3. Log de errores
-                erroresdistrito.value=errors;
+                Object.assign(erroresdistrito, errors);
                 console.error("Errores de validación:", errors);
             },
             preserveScroll: true,
@@ -85,19 +94,22 @@ const submitForm = () => {
     } else {
         //console.log("listo para editar");
         // Editar registro existente (PUT)
-        router.put(`/distritoseditar/${id_distrito.value}`, form.value, {
+        router.put(route('distritoseditar.update', { uuid: id_distrito.value }), form.value, {
             onSuccess: () => {
-                closeModal();
+    router.visit('/distritos', { preserveScroll: true });
+
+
                 //console.log("Institución actualizada");
             },
             onError: (errors) => {
-                erroresdistrito.value=errors;
+                Object.assign(erroresdistrito, errors);
                 console.error("Errores de validación:", errors);
             },
             preserveScroll: true,
         });
     }
 };
+
 </script>
 
 <template>
@@ -145,34 +157,38 @@ const submitForm = () => {
                         <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                             <thead class="align-bottom">
                                 <tr>
-                                    <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Código</th>
-                                    <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Descripción</th>
-                                    <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Estado</th>
-                                    <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update') || $page.props.permissions.includes('distritoseditar.update')" class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400 opacity-70">Acciones</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th> 
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Código</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Descripción</th>
+                                    <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado</th>
+                                    <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update') || $page.props.permissions.includes('distritoseditar.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="distrito in distritos.data" :key="distrito.id" class="border-b dark:border-white/40">
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="mb-0 text-sm leading-normal text-gray-700 dark:text-white font-semibold">{{ distrito.codigo }}</p>
+                                <tr v-for="(distrito, index) in distritos.data" :key="distrito.id" class="border-b dark:border-white/40">
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words">
+                                        {{ (currentPage - 1) * perPage + index + 1 }}</td>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words">
+                                            {{ distrito.codigo }}
                                     </td>
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="mb-0 text-sm leading-normal text-gray-700 dark:text-white">{{ distrito.descripcion }}</p>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                            {{ distrito.descripcion }}
                                     </td>
                                     <td  v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span v-if="distrito.estado == 'activo'"
                                             class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                            @click="handleDelete(distrito.uuid_distrito, 2, '¿Estás seguro de que deseas deshabilitar este registro?')">
+                                            @click="handleDelete(distrito, 2, '¿Estás seguro de que deseas deshabilitar este registro?')"
+>
                                             Activo
                                         </span>
                                         <span v-else-if="distrito.estado == 'inactivo'"
                                             class="bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                            @click="handleDelete(distrito.uuid_distrito, 1, '¿Estás seguro de que deseas activar este registro?')">
+                                            @click="handleDelete(distrito,1, '¿Estás seguro de que deseas activar este registro?')">
                                             Inactivo
                                         </span>
                                         <span v-else
                                             class="bg-gradient-to-tl from-gray-400 to-gray-600 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                            @click="handleDelete(distrito.uuid_distrito, 1, '¿Estás seguro de que deseas registrar nuevamente?')">
+                                            @click="handleDelete(distrito, 1, '¿Estás seguro de que deseas registrar nuevamente?')">
                                             Registrar
                                         </span>
                                     </td>
@@ -190,7 +206,7 @@ const submitForm = () => {
                                                 </svg>
                                             </button>
                                             <button v-if="distrito.estado != 'eliminado' && distrito.estado != 'inactivo' && $page.props.permissions.includes('editarestadodeletedistrito.update')"
-                                                @click="handleDelete(distrito.uuid_distrito, 3, '¿Estás seguro de que deseas eliminar este registro de forma permanente?')"
+                                                @click="handleDelete(distrito, 3, '¿Estás seguro de que deseas eliminar este registro de forma permanente?')"
                                                 class="p-2 text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
@@ -205,7 +221,8 @@ const submitForm = () => {
 
                     <!-- Pagination -->
                     <div class="px-4 py-3 border-t border-gray-200 dark:border-white/10">
-                        <Pagination :pagination="distritos" />
+                        <Pagination :pagination="distritos" :filters="filters" />
+
                     </div>
                 </div>
             </div>
@@ -223,22 +240,23 @@ const submitForm = () => {
                         <!-- Campo Código -->
                         <div>
                             <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Código
+                                Código de Distrito <span class="text-red-500">*</span>
                             </label>
                             <input id="codigo" v-model="form.codigo" type="number"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                            <validaciones :message="erroresdistrito?.value?.codigo" />
+                            placeholder="Ingrese código de distrito" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                            <validaciones :message="erroresdistrito.codigo" />
                         </div>
 
                         <!-- Campo Descripción -->
                         <div>
                             <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Descripción
+                                Nombre de Distrito <span class="text-red-500">*</span>
                             </label>
                             <input v-model="form.descripcion" type="text" required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                            <validaciones :message="erroresdistrito?.value?.descripcion" />
-
+                            placeholder="Ingrese nombre de distrito" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                            <validaciones :message="erroresdistrito.descripcion" />
                         </div>
                     </div>
 
@@ -256,7 +274,14 @@ const submitForm = () => {
             </form>
         </Modal>
 
-        <ConfirmDelete ref="deleteDialog" :method="'patch'" route-name="editarestadodeletedistrito.update"
-            title="¿Eliminar este registro?" />
+        <ConfirmDelete
+  ref="deleteDialog"
+  :method="'patch'"
+  route-name="editarestadodeletedistrito.update"
+  :params="{ uuid: distritoSeleccionado?.uuid_distrito || '', code: deleteCode || '' }"
+
+
+  title="¿Eliminar este registro?" />
+
     </AppLayout>
 </template>

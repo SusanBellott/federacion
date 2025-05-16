@@ -1,89 +1,63 @@
 <script setup>
 import Swal from "sweetalert2";
-import { defineProps, watchEffect } from "vue";
+import { defineProps, defineEmits, onMounted, watch } from "vue";
 
 const props = defineProps({
-    data: {
-        type: [Array, Object],
-        required: true,
-        validator: (value) => {
-            // Valida que tenga los campos mínimos requeridos
-            const item = Array.isArray(value) ? value[0] : value;
-            return item;
-        },
-    },
-    title: {
-        type: String,
-        default: "✓ Datos Registrados o Actualizados",
-    },
-    timer: {
-        type: Number,
-        default: 2000,
-    },
-    showButton: {
-        type: Boolean,
-        default: false,
-    },
-    buttonText: {
-        type: String,
-        default: "OK",
-    },
+    data: { type: Object, required: true },
+    action: { type: String, default: "actualizado" },
+    timer: { type: Number, default: 2000 },
 });
-
 const emit = defineEmits(["closed"]);
 
+let alreadyShown = false;
+
 const showAlert = () => {
-    try {
-        const item = Array.isArray(props.data) ? props.data[0] : props.data;
-        //console.log("los ítems-------------------", item);
+    let mensaje = "✓ Acción completada.";
 
-        // Construcción del HTML con un foreach
-        let itemsHtml = "<div class='text-left p-6'>";
-        Object.entries(item).forEach(([key, value]) => {
-            itemsHtml += `<p class="mb-3 text-white"><strong class="font-bold">${key}:</strong> ${value}</p>`;
-        });
-        itemsHtml += "</div>";
-
-        Swal.fire({
-            title: props.title,
-            html: itemsHtml,
-            icon: "success",
-            showConfirmButton: props.showButton,
-            confirmButtonText: props.buttonText,
-            timer: props.timer,
-            customClass: {
-                popup: "bg-gradient-to-r from-emerald-600 to-teal-400 shadow-xl rounded-3xl p-8",
-                title: "text-2xl font-bold text-white",
-                htmlContainer: "text-lg text-gray-100 mt-2",
-                icon: "text-white",
-                confirmButton:
-                    "bg-white text-teal-600 px-4 py-2 rounded-lg hover:bg-gray-100",
-            },
-            showClass: {
-                popup: "animate__animated animate__fadeInDown",
-            },
-            hideClass: {
-                popup: "animate__animated animate__fadeOutUp",
-            },
-        }).then(() => {
-            emit("closed");
-        });
-    } catch (error) {
-        console.error("Error al mostrar alerta:", error);
-        Swal.fire({
-            title: "Error",
-            text: "Ocurrió un error al mostrar los datos",
-            icon: "error",
-        });
+    switch (props.action) {
+        case "creado":
+            mensaje = "✓ Dato creado correctamente.";
+            break;
+        case "actualizado":
+            mensaje = "✓ Datos actualizados correctamente.";
+            break;
+        case "eliminado":
+            mensaje = "✓ Dato eliminado correctamente.";
+            break;
     }
+
+    Swal.fire({
+        position: 'top-end',
+        html: mensaje,
+        icon: props.action === "eliminado" ? "warning" : "success",
+        showConfirmButton: false,
+        timer: props.timer,
+        customClass: {
+            popup: "bg-gradient-to-r from-emerald-600 to-teal-400 shadow-xl rounded-2xl px-6 py-4 w-auto max-w-sm",
+            htmlContainer: "text-white text-left text-sm",
+            icon: "text-white",
+        },
+        showClass: {
+            popup: "animate__animated animate__fadeInRight",
+        },
+        hideClass: {
+            popup: "animate__animated animate__fadeOutRight",
+        },
+    }).then(() => emit("closed"));
 };
 
-// Muestra automáticamente al montar (opcional)
-watchEffect(() => {
-    if (props.data) {
-        showAlert();
-        props.data.value = null;
-    }
+onMounted(() => {
+    watch(
+        () => props.data,
+        (newVal) => {
+            if (newVal && !alreadyShown) {
+                showAlert();
+                alreadyShown = true;
+            }
+        },
+        { immediate: true }
+    );
 });
 </script>
+
 <template></template>

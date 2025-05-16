@@ -10,6 +10,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -21,14 +23,13 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRoles;
-
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'id_institucion',
         'uuid_user',
         'ci',
         'rda',
@@ -40,15 +41,43 @@ class User extends Authenticatable
         'horas',
         'email',
         'password',
-        'estado'
+        'estado',
+
+        'distrito_id',
+        'institucion_id',
+        'codigo_sie_id',
     ];
 
-
+    public function distrito()
+    {
+        return $this->belongsTo(Distrito::class, 'distrito_id', 'id_distrito');
+    }
+    
     public function institucion()
     {
-        return $this->belongsTo(Institucion::class, 'id_institucion', 'id_institucion');
+        return $this->belongsTo(Institucion::class, 'institucion_id', 'id_institucion');
     }
-
+    
+    public function codigoSie()
+    {
+        return $this->belongsTo(CodigoSie::class, 'codigo_sie_id', 'id_codigo_sie');
+    }
+    public function getNivelAttribute()
+    {
+        return $this->institucion ? $this->institucion->nivel : null;
+    }
+    public function pertenecerADistrito($distritoId)
+    {
+        return $this->distrito_id == $distritoId;
+    }
+    public function pertenecerAInstitucion($institucionId)
+    {
+        return $this->institucion_id == $institucionId;
+    }
+    public function tenerCodigoSie($codigoSieId)
+    {
+        return $this->codigo_sie_id == $codigoSieId;
+    }
     public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'id', 'id_user');
@@ -64,6 +93,10 @@ class User extends Authenticatable
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'email_verified_at',
     ];
 
     /**
@@ -86,5 +119,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid_user = Str::uuid();
+        });
     }
 }

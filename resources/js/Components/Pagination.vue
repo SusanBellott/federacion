@@ -5,9 +5,11 @@ defineProps({
     pagination: {
         type: Object,
         required: true,
-        validator: (value) => {
-            return value.links !== undefined;
-        },
+        validator: (value) => value.links !== undefined,
+    },
+    filters: {
+        type: Object,
+        default: () => ({}), 
     },
 });
 </script>
@@ -21,7 +23,10 @@ defineProps({
         <template v-if="pagination.links[0].url">
             <Link
                 :href="pagination.links[0].url"
+                :data="filters"
                 preserve-scroll
+                preserve-state
+                replace
                 class="px-3 py-1 bg-gradient-to-r from-blue-800 to-sky-600 text-white rounded-lg hover:from-blue-700 hover:to-sky-500 transition-colors flex items-center"
             >
                 <svg
@@ -63,7 +68,10 @@ defineProps({
                     index > 0 && index < pagination.links.length - 1 && link.url
                 "
                 :href="link.url"
+                 :data="filters"
                 preserve-scroll
+                preserve-state
+                replace
                 class="px-3 py-1 rounded-md transition-colors"
                 :class="{
                     'bg-gradient-to-r from-sky-900 to-sky-500 text-white':
@@ -86,7 +94,10 @@ defineProps({
         <template v-if="pagination.links[pagination.links.length - 1].url">
             <Link
                 :href="pagination.links[pagination.links.length - 1].url"
+                  :data="filters"
                 preserve-scroll
+                preserve-state
+                replace
                 class="px-3 py-1 bg-gradient-to-r from-blue-800 to-sky-600 text-white rounded-lg hover:from-blue-700 hover:to-sky-500 transition-colors flex items-center"
             >
                 <svg

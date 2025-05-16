@@ -46,46 +46,45 @@
                         <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                             <thead class="align-bottom">
                                 <tr>
-                                    <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Distrito</th>
-                                    <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Subsistema</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Servicio</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Servicio Generado</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Nivel</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Programa</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Unidad Educativa</th>
-                                    <th v-if="$page.props.permissions.includes('editarestadodelete.update')" class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Estado</th>
-                                    <th v-if="$page.props.permissions.includes('institucioneseditar.update') && $page.props.permissions.includes('editarestadodelete.update')" class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400 opacity-70">Acciones</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th> 
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Distrito</th>
+                                    <th class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Unidad educativa</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Subsistema</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Servicio</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Servicio Generado</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nivel</th>
+                                    <th v-if="$page.props.permissions.includes('editarestadodelete.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado</th>
+                                    <th v-if="$page.props.permissions.includes('institucioneseditar.update') && $page.props.permissions.includes('editarestadodelete.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="institucion in instituciones.data" :key="institucion.id" class="border-b dark:border-white/40">
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="mb-0 text-sm leading-normal text-gray-700 dark:text-white">
-                                            {{ getDistritoNombre(institucion.id_distrito) }}
-                                        </p>
+                                <tr v-for="(institucion, index) in instituciones.data" :key="institucion.id" class="border-b dark:border-white/40">
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                    >{{ (currentPage - 1) * perPage + index + 1 }}</td>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                        {{ institucion.distrito?.descripcion || 'Desconocido' }}
                                     </td>
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="mb-0 text-sm leading-normal text-gray-700 dark:text-white">{{ institucion.subsistema }}</p>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                        {{ institucion.codigo_sie?.unidad_educativa || 'Desconocido' }}
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ institucion.servicio }}</span>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                       {{ institucion.subsistema }}
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ institucion.servicio_generado }}</span>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                        {{ institucion.servicio }}
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ institucion.nivel }}</span>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                       {{ institucion.servicio_generado }}
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ institucion.programa }}</span>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                        {{ institucion.nivel }}
                                     </td>
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="mb-0 text-sm leading-normal text-gray-700 dark:text-white">{{ institucion.unidad_educativa }}</p>
-                                    </td>
+    
+                                    
                                     <td v-if="$page.props.permissions.includes('editarestadodelete.update')" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span v-if="institucion.estado == 'activo'"
                                             class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                            @click="handleDelete(institucion.uuid_institucion, 2, '¿Estás seguro de que deseas deshabilitar este registro?')">
+                                            @click="handleDelete(institucion.uuid_institucion,2,  '¿Estás seguro de que deseas deshabilitar este registro?')">
                                             Activo
                                         </span>
                                         <span v-else-if="institucion.estado == 'inactivo'"
@@ -109,8 +108,7 @@
                                                     institucion.servicio,
                                                     institucion.servicio_generado,
                                                     institucion.nivel,
-                                                    institucion.programa,
-                                                    institucion.unidad_educativa
+                                                    institucion.unidad_educativa_id,
                                                 )"
                                                 class="p-2 text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -133,7 +131,7 @@
 
                     <!-- Pagination -->
                     <div class="px-4 py-3 border-t border-gray-200 dark:border-white/10">
-                        <Pagination :pagination="instituciones" />
+                        <Pagination :pagination="instituciones" :filters="filters" />
                     </div>
                 </div>
             </div>
@@ -149,32 +147,38 @@
 
                     <div class="space-y-4">
                         <!-- Campo Distrito -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Distrito
-                            </label>
-                            <select
-                                v-model="form.id_distrito"
-                                required
-                               class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                            >
-                                <option disabled value="">
-                                    Selecciona un distrito
-                                </option>
-                                <option
-                                    v-for="distrito in distritos"
-                                    :key="distrito.id_distrito"
-                                    :value="distrito.id_distrito"
-                                >
-                                {{ distrito.codigo }} - {{ distrito.descripcion }}
-                                </option>
-                            </select>
-                            <validacioens :message="erroresinstitucion?.value?.id_distrito" />
-                        </div>
+                        <!-- Campo Distrito -->
+<div>
+  <label class="px-6 inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+    Distrito <span class="text-red-500">*</span>
+  </label>
+  <SearchableSelect
+    v-model="form.id_distrito"
+    :options="distritosOptions"
+    placeholder="Buscar distrito..."
+  />
+  <validacioens :message="erroresinstitucion?.value?.id_distrito" />
+</div>
+
+
+    <!-- Campo Unidad Educativa (Nuevo) -->
+<!-- Campo Unidad Educativa -->
+<div>
+  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+    Unidad Educativa
+  </label>
+  <SearchableSelect
+    v-model="form.unidad_educativa_id"
+    :options="unidadEducativaOptions"
+    placeholder="Buscar unidad educativa..."
+  />
+  <validacioens :message="erroresinstitucion?.value?.unidad_educativa_id" />
+</div>
+
 
     <div>
       <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-        Subsistema
+        Subsistema <span class="text-red-500">*</span>
       </label>
       <select 
         v-model="form.subsistema" 
@@ -194,14 +198,14 @@
                         <!-- Campo Servicio -->
                         <div>
                             <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Servicio
+                                Servicio <span class="text-red-500">*</span>
                             </label>
                             <input
                                 v-model="form.servicio"
                                 type="number"
                                 required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                            />
+                                placeholder="Ingrese número de servicio" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
                             <validacioens :message="erroresinstitucion?.value?.servicio" />
 
                         </div>
@@ -209,21 +213,21 @@
                         <!-- Campo Servicio Generado -->
                         <div>
                             <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Servicio Generado
+                                Servicio Generado <span class="text-red-500">*</span>
                             </label>
                             <input
                                 v-model="form.servicio_generado"
                                 type="number"
                                 required  disabled
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                            />
+                                placeholder="Número de servicio generado" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
                         </div>
 
                         <!-- Campo Nivel -->
                         <!-- Campo Nivel (Select) -->
     <div>
       <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-        Nivel
+        Nivel <span class="text-red-500">*</span>
       </label>
       <select 
         v-model="form.nivel" 
@@ -241,32 +245,10 @@
     </div>
 
                         <!-- Campo Programa -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Programa
-                            </label>
-                            <input
-                                v-model="form.programa"
-                                type="number"
-                                required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                            />
-                            <validacioens :message="erroresinstitucion?.value?.programa" />
-                        </div>
+
 
                         <!-- Campo Unidad Educativa -->
-                        <div>
-                            <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                Unidad Educativa
-                            </label>
-                            <input
-                                v-model="form.unidad_educativa"
-                                type="text"
-                                required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                            />
-                            <validacioens :message="erroresinstitucion?.value?.unidad_educativa" />
-                        </div>
+
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-3">
@@ -289,11 +271,13 @@
         </Modal>
 
         <ConfirmDelete
-            ref="deleteDialog"
-            :method="'patch'"
-            route-name="editarestadodelete.update"
-            title="¿Eliminar este registro?"
-        />
+    ref="deleteDialog"
+    :method="'patch'"
+    route-name="editarestadodelete.update"
+    :params="{ uuid: institucionSeleccionada?.uuid_institucion || '', code: deleteCode || '' }"
+    title="¿Eliminar este registro?"
+/>
+
     </AppLayout>
 </template>
 
@@ -308,16 +292,25 @@ import useSweetAlert from "@/Components/SweetAlert.vue";
 import editaralerta from "@/Components/AlertaEditada.vue";
 import BuscadorInstituciones from "@/Components/Buscador.vue";
 import validacioens from "@/Components/InputError.vue";
+import SearchableSelect from "@/Components/SearchableSelect.vue";
 
 const props = defineProps({
     instituciones: Object,
     distritos: Array,
+    codigosSie: Array, // Añadido para recibir los códigos SIE
     filters: Object,
 });
+const unidadesEducativas = ref([]);
+
+
+const currentPage = computed(() => props.instituciones.current_page);
+const perPage = computed(() => props.instituciones.per_page);
 
 const page = usePage();
 const flash = computed(() => page.props.flash || {});
 const deleteDialog = ref(null);
+const institucionSeleccionada = ref(null);
+const deleteCode = ref(null);
 const id_institucion = ref(null);
 const erroresinstitucion = reactive({});
 
@@ -328,9 +321,31 @@ const form = ref({
     servicio: "",
     servicio_generado: "",
     nivel: "",
-    programa: "",
-    unidad_educativa: "",
+    unidad_educativa_id: "",
 });
+
+// Modifica la función cargarUnidadesEducativas para que devuelva la promesa de axios
+const cargarUnidadesEducativas = () => {
+    console.log("Cargando unidades para distrito:", form.value.id_distrito);
+
+    if (form.value.id_distrito) {
+        return axios.get(`/api/distritos/${form.value.id_distrito}/unidades-educativas`)
+            .then(response => {
+                unidadesEducativas.value = response.data;
+                console.log("Unidades cargadas:", unidadesEducativas.value);
+                return response.data;
+            })
+            .catch(error => {
+                console.error("Error al cargar unidades educativas:", error);
+                return [];
+            });
+    } else {
+        unidadesEducativas.value = [];
+        return Promise.resolve([]);
+    }
+};
+
+
 
 const handleClick = () => {
     showModal.value = true;
@@ -348,65 +363,114 @@ const resetForm = () => {
         servicio: "",
         servicio_generado: "",
         nivel: "",
-        programa: "",
-        unidad_educativa: "",
+        unidad_educativa_id: "", 
     };
     id_institucion.value = null;
+    unidadesEducativas.value = []; 
 };
 
-const handleClickEditar = (
+// Modifica la función handleClickEditar para manejar correctamente la asincronía
+const handleClickEditar = async (
     uuid,
     id_distrito,
     subsistema,
     servicio,
     servicio_generado,
     nivel,
-    programa,
-    unidad_educativa
+    unidad_educativa_id = "",
 ) => {
     showModal.value = true;
     id_institucion.value = uuid;
+    
+    // Primero establece el distrito para que la carga de unidades funcione
     form.value.id_distrito = id_distrito;
+    
+    // Carga los datos restantes
     form.value.subsistema = subsistema;
     form.value.servicio = servicio;
     form.value.servicio_generado = servicio_generado;
     form.value.nivel = nivel;
-    form.value.programa = programa;
-    form.value.unidad_educativa = unidad_educativa;
-};
 
-const submitForm = () => {
-    const config = {
-        preserveScroll: true,
-        onSuccess: () => {
-            closeModal();
-        },
-        onError: (errors) => {
-            erroresinstitucion.value = errors;
-        },
-    };
-
-    if (!id_institucion.value) {
-        router.post("/instituciones", form.value, config);
-    } else {
-        router.post(`/institucioneseditar/${id_institucion.value}`, form.value, {
-            ...config,
-            method: 'post',
-            headers: {
-                'X-HTTP-Method-Override': 'PUT'
-            }
-        });
+    try {
+        // Espera a que las unidades educativas se carguen completamente
+        const unidades = await cargarUnidadesEducativas();
+        
+        // Verifica si existe la unidad educativa en las opciones cargadas
+        const match = unidades.find(u => u.id_codigo_sie == unidad_educativa_id);
+        
+        // Establece el valor solo después de confirmar que las unidades se cargaron
+        form.value.unidad_educativa_id = match ? unidad_educativa_id : "";
+        
+        console.log("Unidad educativa seleccionada:", form.value.unidad_educativa_id);
+    } catch (error) {
+        console.error("Error al cargar unidades educativas:", error);
+        form.value.unidad_educativa_id = "";
     }
 };
 
-const handleDelete = (id, cod, texto) => {
-    deleteDialog.value?.show(id, cod, texto);
+const submitForm = () => {
+  const config = {
+    preserveScroll: true,
+    onSuccess: () => {
+      closeModal();
+      router.reload({ only: ['instituciones'] }); // no más setTimeout ni onFinish
+    },
+    onError: (errors) => {
+      erroresinstitucion.value = errors;
+    },
+  };
+
+  if (!id_institucion.value) {
+    router.post("/instituciones", form.value, config);
+  } else {
+    router.put(`/instituciones/${id_institucion.value}`, form.value, config);
+  }
 };
+
+
+const distritosOptions = computed(() =>
+  props.distritos.map(d => ({
+    value: d.id_distrito,
+    label: `${d.codigo} - ${d.descripcion}`,
+  }))
+);
+
+const unidadEducativaOptions = computed(() =>
+  unidadesEducativas.value.map(u => ({
+    value: u.id_codigo_sie,
+    label: u.unidad_educativa,
+  }))
+);
+
+watch(() => form.value.id_distrito, async (nuevoDistrito) => {
+  if (nuevoDistrito) {
+    await cargarUnidadesEducativas(); // llama tu función
+  } else {
+    unidadesEducativas.value = [];
+    form.value.unidad_educativa_id = "";
+  }
+});
+
+
+const handleDelete = (uuid, code, mensaje) => {
+    institucionSeleccionada.value = { uuid_institucion: uuid };
+    deleteCode.value = code;
+    deleteDialog.value?.show(uuid, code, mensaje);
+};
+
+
 
 // Función para obtener el nombre del distrito
 const getDistritoNombre = (id_distrito) => {
     const distrito = props.distritos.find(d => d.id_distrito === id_distrito);
     return distrito ? distrito.descripcion : 'Desconocido';
+};
+// Función para obtener la unidad educativa vinculada a una institución
+const getUnidadEducativa = (institucion) => {
+    if (institucion.codigosSie && institucion.codigosSie.length > 0) {
+        return institucion.codigosSie[0].unidad_educativa;
+    }
+    return 'No asignada';
 };
 watch(() => form.value.servicio, (newServicio) => {
   // Convertir el valor de servicio a cadena, por si es un número
@@ -422,5 +486,14 @@ watch(() => form.value.servicio, (newServicio) => {
   }
 });
 
+watch(flash, (nuevoFlash) => {
+  if (nuevoFlash.success && nuevoFlash.datos_array) {
+    useSweetAlert({
+      title: nuevoFlash.datos_array.title || '¡Actualizado!',
+      text: nuevoFlash.datos_array.text || 'Se actualizó correctamente.',
+      icon: nuevoFlash.datos_array.icon || 'success',
+    });
+  }
+});
 
 </script>

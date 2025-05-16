@@ -11,23 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('institucions', function (Blueprint $table) {
+        Schema::create('instituciones', function (Blueprint $table) {
             $table->id('id_institucion');
-            $table->unsignedBigInteger('id_distrito');
             $table->uuid('uuid_institucion');
+            $table->unsignedBigInteger('id_distrito');
+            $table->unsignedBigInteger('unidad_educativa_id');
+            $table->bigInteger('servicio')->unique();
+            $table->integer('servicio_generado');
             $table->string('subsistema');
-            $table->bigInteger('servicio');
-            $table->Integer('servicio_generado');
             $table->string('nivel');
-            $table->bigInteger('programa');
-            $table->string('unidad_educativa');
             $table->string('estado')->default('activo');
-            $table->foreign('id_distrito')->references('id_distrito')->on('distritos')->onDelete('cascade');
-
-
             $table->timestamps();
+            $table->softDeletes();
+            
+            $table->foreign('id_distrito')->references('id_distrito')->on('distritos')->onDelete('cascade');
+            $table->foreign('unidad_educativa_id')->references('id_codigo_sie')->on('codigo_sies')->onDelete('cascade');
+
         });
     }
+    
 
     /**
      * Reverse the migrations.

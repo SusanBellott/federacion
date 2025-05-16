@@ -48,26 +48,25 @@
                                 class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                                 <thead class="align-bottom">
                                     <tr>
+                                        <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words" >Nro</th> 
                                         <th
-                                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Usuario</th>
                                         <th
-                                            class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            Curso</th>
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
+                                            Título de actividad</th>
                                         <th
-                                            class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Fecha de Inscripción</th>
-                                        <th v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update')"
-                                            class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            Estado</th>
-                                        <th v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update') || $page.props.permissions.includes('inscritoeditar.update') || $page.props.permissions.includes('curso.inscrito.reporte')"
-                                            class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                            <th v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update') || $page.props.permissions.includes('inscritoeditar.update') || $page.props.permissions.includes('curso.inscrito.reporte')"
+                                            class="px-3 py-3 w-[200px] max-w-[200px] text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-nowrap">
                                             Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="inscrito in inscritos.data" :key="inscrito.id_inscripcion"
-                                        class="border-b dark:border-white/40">
+                                    <tr v-for="(inscrito, index) in inscritos.data" :key="inscrito.id_inscripcion" class="border-b dark:border-white/40">
+                                        <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words">
+                                            {{ (currentPage - 1) * perPage + index + 1 }}</td>
                                         <td
                                             class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                             <div class="flex px-2 py-1">
@@ -108,42 +107,27 @@
                                                 class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{
                                                 inscrito.fecha_inscripcion }}</span>
                                         </td>
-                                        <td v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update')"
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                            <span v-if="inscrito.estado == 'activo'"
-                                                class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                                @click="handleDelete(inscrito.uuid_inscripcion, 2, '¿Estás seguro de que deseas deshabilitar este registro?')">
-                                                Online
-                                            </span>
-                                            <span v-else-if="inscrito.estado == 'inactivo'"
-                                                class="bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                                @click="handleDelete(inscrito.uuid_inscripcion, 1, '¿Estás seguro de que deseas activar este registro?')">
-                                                Offline
-                                            </span>
-                                            <span v-else
-                                                class="bg-gradient-to-tl from-gray-400 to-gray-600 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                                @click="handleDelete(inscrito.uuid_inscripcion, 1, '¿Estás seguro de que deseas registrar nuevamente?')">
-                                                Registrar
-                                            </span>
-                                        </td>
                                         <td
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                             class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent w-[200px] max-w-[200px]">
                                             <div class="flex space-x-3">
                                                 <!-- Certificado (PDF) -->
-                                                <a v-if="$page.props.permissions.includes('curso.inscrito.reporte')"
-                                                    :href="route('curso.inscrito.reporte', inscrito.uuid_inscripcion)"
-                                                    target="_blank"
-                                                    class="p-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors duration-200"
-                                                    title="Descargar certificado">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                        viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                    </svg>
-                                                </a>
+                                                <a
+  v-if="mostrarCertificado(inscrito.curso.fecha_fin) && $page.props.permissions.includes('curso.inscrito.reporte')"
+  :href="route('curso.inscrito.reporte', inscrito.uuid_inscripcion)"
+  target="_blank"
+  class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-green-600 rounded hover:bg-green-700 transition"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  </svg>
+  Descargar certificado
+</a>
+
+
 
                                                 <!-- Editar -->
+                                                 
                                                 <button
                                                     v-if="inscrito.estado != 'eliminado' && inscrito.estado != 'inactivo' && $page.props.permissions.includes('inscritoeditar.update')"
                                                     @click="handleClickEditar(inscrito.uuid_inscripcion, inscrito.id_user, inscrito.user.name, inscrito.user.primer_apellido, inscrito.user.segundo_apellido, inscrito.id_curso, inscrito.curso.nombre)"
@@ -179,7 +163,9 @@
 
                         <!-- Pagination -->
                         <div class="px-4 py-3 border-t border-gray-200 dark:border-white/10">
-                            <Pagination :pagination="inscritos" />
+                        
+                            <Pagination :pagination="inscritos" :filters="filters" />
+
                         </div>
                     </div>
                 </div>
@@ -247,45 +233,61 @@
                                 <label class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
                                     Seleccionar Curso
                                 </label>
-                                <Buscadorcurso v-if="valorbusquedacurso" ref="inscritosComponent2" :filters="filters3"
-                                    ruta="inscritos.index" />
-                                <div v-if="curso_nombre != '' && valorbusquedacurso">
-                                    <!-- Contenedor con scroll cuando hay más de 5 registros -->
-                                    <div class="max-h-60 overflow-y-auto">
-                                        <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
-                                            <tbody>
-                                                <tr v-for="curso in cursos.data" :key="curso.id_cursos"
-                                                class="border-b dark:border-white/40">
-                                                    <td
-                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
-                                                        {{ curso.nombre }} {{ curso.descripcion }}
-                                                    </td>
-                                                    <td
-                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
-                                                        <button type="button"
-                                                            @click="getSearchTerm2(curso.nombre, curso.descripcion, curso.id_curso)"
-                                                            class="px-4 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white rounded-md transition duration-200">
-                                                            +
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                <Buscadorcurso
+  v-if="valorbusquedacurso"
+  ref="buscadorCursoRef"
+  :filters="filters3"
+  :data="props.cursos"
+  ruta="inscritos.index"
+/>
 
-                                <div v-if="!valorbusquedacurso" class="flex items-center space-x-4">
-                                    <!-- Botón rojo para borrar (degradado rojo) -->
-                                    <button type="button" @click="limipiarcurso"
-                                        class="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white rounded-md transition duration-200">
-                                        -
-                                    </button>
+                                    <div v-if="curso_nombre !== '' && valorbusquedacurso">
+      <div class="max-h-60 overflow-y-auto">
+        <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
+          <tbody>
+            <template v-if="cursos?.data?.length">
+          <tr v-for="curso in cursos.data" :key="curso.id_curso" class="border-b dark:border-white/40">
+            <td class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
+              {{ curso.nombre }} {{ curso.descripcion }}
+            </td>
+              <td class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
+                <button
+                type="button"
+                @click="getSearchTerm2(curso.nombre, curso.descripcion, curso.id_curso)"
+                class="px-4 py-2 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white rounded-md transition duration-200"
+              >
+                +
+              </button>
+              </td>
+            </tr>
+        </template>
+            <tr v-else>
+          <td colspan="2" class="text-center text-sm text-gray-500 dark:text-white/70 py-3">
+            No hay cursos disponibles actualmente para inscripción.
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-                                    <!-- Párrafo con color sky hermoso -->
-                                    <p class="text-xl text-sky-500 dark:text-sky-400">
-                                        {{ curso_nombre }}
-                                    </p>
-                                </div>
+
+    <div v-if="!valorbusquedacurso" class="flex items-center space-x-4">
+      <button
+        type="button"
+        @click="limipiarcurso"
+        class="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white rounded-md transition duration-200"
+      >
+        -
+      </button>
+      <p class="text-xl text-sky-500 dark:text-sky-400">
+        {{ curso_nombre }}
+      </p>
+      <p v-if="errors.id_curso"
+   class="mt-1 text-red-500 text-sm dark:text-red-400">
+   {{ errors.id_curso }}
+</p>
+    </div>
                             </div>
                         </div>
                         <div class="mt-6 flex justify-end space-x-3">
@@ -303,7 +305,7 @@
             </Modal>
 
             <ConfirmDelete ref="deleteDialog" :method="'patch'" route-name="editarestadodeleteinscritos.update"
-                title="¿Eliminar este registro?" />
+                title="¿Eliminar este registro?" @confirm="onConfirmDelete" />
         </div>
     </AppLayout>
 </template>
@@ -329,10 +331,17 @@ const props = defineProps({
     filters2: Object,
     filters3: Object,
 });
+
+const currentPage = computed(() => props.inscritos.current_page)
+const perPage     = computed(() => props.inscritos.per_page)
+const errors = computed(() => page.props.errors || {});
 // Acceso a flashes
 const page = usePage();
 const flash = computed(() => page.props.flash || {});
 const id_inscripcion = ref(null);
+//const inscritosList = ref(
+  //props.inscritos.data.filter(i => i.estado === 'activo')
+//)
 
 //---------------------------busqueda de ususarios -----------------
 const inscritosComponent = ref("");
@@ -341,10 +350,15 @@ const user_nombre_completo = ref('');
 const id_usuariof = ref(null);
 const valorbusqueda = ref(true);
 //---------------------------busqueda de cursos -----------------
-const inscritosComponent2 = ref("");
+const buscadorCursoRef = ref("");
+
 const curso_nombre = ref('');
 const id_cursof = ref(null);
 const valorbusquedacurso = ref(true);
+const cursos = computed(() => {
+  // Asegúrate de que props.cursos existe y tiene una propiedad 'data'
+  return props.cursos || { data: [] };
+});
 
 // Función para acceder a searchTerm2 del componente hijo
 const getSearchTerm = (nombre, mater, pater, id) => {
@@ -356,12 +370,13 @@ const getSearchTerm = (nombre, mater, pater, id) => {
     }
 }
 const getSearchTerm2 = (nom, des, id) => {
-    if (inscritosComponent2.value) {
-        inscritosComponent2.value.searchTerm3 = nom;
+    if (buscadorCursoRef.value) {
+        buscadorCursoRef.value.searchTerm3 = nom;
         valorbusquedacurso.value = false;
         id_cursof.value = id;
     }
 }
+
 const limipiarnombre = () => {
     user_nombre_completo.value = "";
     valorbusqueda.value = true;
@@ -376,9 +391,10 @@ watchEffect(() => {
         // Inicializar searchTerm con el valor de searchTerm2 del hijo
         user_nombre.value = inscritosComponent.value.searchTerm2;
     }
-    if (inscritosComponent2.value) {
+    if (buscadorCursoRef.value) {
         // Inicializar searchTerm con el valor de searchTerm2 del hijo
-        curso_nombre.value = inscritosComponent2.value.searchTerm3;
+        curso_nombre.value = buscadorCursoRef.value.searchTerm3;
+
     }
 });
 const deleteDialog = ref(null);
@@ -434,6 +450,7 @@ const resetForm = () => {
     limipiarnombre();
     limipiarcurso();
 };
+
 const submitForm = () => {
     form.value = {
         id_user: id_usuariof.value,
@@ -461,4 +478,34 @@ const submitForm = () => {
         });
     }
 };
+const mostrarCertificado = (fechaFin) => {
+    if (!fechaFin) return false;
+
+    const fechaActual = new Date();
+    const fechaFinCurso = new Date(fechaFin);
+
+    // Le sumamos 2 días
+    fechaFinCurso.setDate(fechaFinCurso.getDate() + 0);
+
+    return fechaActual >= fechaFinCurso;
+};
+// 2️⃣ Reemplaza aquí tu antiguo handleDelete si quieres, pero lo importante es esto:
+const onConfirmDelete = async (uuid, cod) => {
+  await router.patch(
+    route('editarestadodeleteinscritos.update', uuid),
+    {},
+    {
+      onSuccess: () => {
+        // 3️⃣ Cuando cod sea 2 (desinscribir) o 3 (borrar), filtramos
+        if (cod === 2 || cod === 3) {
+          inscritosList.value = inscritosList.value.filter(
+            i => i.uuid_inscripcion !== uuid
+          )
+        }
+      }
+    }
+  )
+}
+
+
 </script>

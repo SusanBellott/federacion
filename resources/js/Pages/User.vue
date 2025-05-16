@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/MainLayout.vue";
 import Modal from "@/Components/Modal.vue";
-import { ref, computed, toRefs } from "vue";
+import { ref, computed, toRefs,watch  } from "vue";
 import { router, usePage,useForm } from "@inertiajs/vue3";
 import ConfirmDelete from "@/Components/ConfirmDelete.vue";
 import Pagination from "@/Components/Pagination.vue";
@@ -9,34 +9,54 @@ import useSweetAlert from "@/Components/SweetAlert.vue";
 import editaralerta from "@/Components/AlertaEditada.vue";
 import BuscadorUsuarios from "@/Components/Buscador.vue";
 import InputError from "@/Components/InputError.vue";
-
+import SearchableSelect from "@/Components/SearchableSelect.vue";
 
 const props = defineProps({
     usuarios: Object,
+
+    distritos: Array,
+    instituciones: Array,
+    codigosSie: Array,
     roles: Object,
-    instituciones: Object,
     filters: Object,
 });
-// Acceso a flashes
 const page = usePage();
-const flash = computed(() => page.props.flash || {});
+const currentPage = computed(() => props.usuarios.current_page);
+const perPage = computed(() => props.usuarios.per_page);
+const errors = computed(() => page.props.errors || {});
+const erroresrecepcion = ref({}); // ✅ Esto es lo que falta para capturar errores del backend
 
+// Acceso a flashes
+
+const flash = computed(() => page.props.flash || {});
 const deleteDialog = ref(null);
+const usuarioSeleccionado = ref(null);
+const deleteCode = ref(null);
+
+const resetDialog = ref(null);
+
 const id_user = ref(null);
-const handleDelete = (id, cod, texto) => {
-    //console.log("hola este es el id ", id);
-    deleteDialog.value?.show(id, cod, texto);
+
+const handleDelete = (uuid, code, mensaje) => {
+    usuarioSeleccionado.value = { uuid_user: uuid };
+    deleteCode.value = code;
+    deleteDialog.value?.show(uuid, code, mensaje);
 };
 
-const roles = toRefs(props).roles
+
+const roles = props.roles
+
 
 // Estado del modal
 const showModal = ref(false);
-
+const isEditing = ref(false);
 // Datos del formulario
 const form = ref({
-        id_institucion: '',
-        ci: '',
+    distrito_id: '',
+    codigo_sie_id: '',  
+    institucion_id: '', 
+    ci: '',
+
         rda: '',
         name: '',
         primer_apellido: '',
@@ -49,26 +69,58 @@ const form = ref({
 });
 
 const handleClick = () => {
+    isEditing.value = false;
+    resetForm();
     showModal.value = true;
 };
-const handleClickEditar = (uuid, id_institucion, ci, rda, name, primer_apellido, segundo_apellido, item, cargo, horas, email, roles) => {
-    //console.log(id_user, "  ", subsistema);
-    showModal.value = true;
+
+const handleClickEditar = async (uuid, institucion_id, distrito_id, codigo_sie_id, ci, rda, name, primer_apellido, segundo_apellido, item, cargo, horas, email, roles) => {
+    isEditing.value = true;
     id_user.value = uuid;
-    // Aquí modificamos el objeto dentro de ref()
-    form.value.id_institucion = id_institucion;
-    form.value.ci = ci;
-    form.value.rda = rda;
-    form.value.name = name;
-    form.value.primer_apellido = primer_apellido;
-    form.value.segundo_apellido = segundo_apellido;
-    form.value.item = item;
-    form.value.cargo = cargo;
-    form.value.horas = horas;
-    form.value.email = email;
-    form.value.role = roles.length > 0 ? roles[0].id : null;
-    console.log(role)
+
+    // Ensure CI and RDA are strings
+    form.value.ci = String(ci || '');
+    form.value.rda = String(rda || '');
+    
+    // Ensure all other fields are populated
+    form.value.name = name || '';
+    form.value.primer_apellido = primer_apellido || '';
+    form.value.segundo_apellido = segundo_apellido || '';
+    form.value.item = item || '';
+    form.value.cargo = cargo || '';
+    form.value.horas = horas || '';
+    form.value.email = email || '';
+    form.value.role = roles?.length > 0 ? roles[0].id : '';
+    
+    // IMPORTANT: Set distrito_id first
+    form.value.distrito_id = distrito_id || '';
+    
+    // Load related data and wait for it to complete
+    if (distrito_id) {
+        try {
+            const relatedData = await cargarDatosRelacionados(distrito_id);
+            
+            // After data is loaded, set codigo_sie_id and institucion_id with slight delay to ensure the options are populated
+            setTimeout(() => {
+                form.value.codigo_sie_id = codigo_sie_id || '';
+                form.value.institucion_id = institucion_id || '';
+                
+                console.log("Form values after loading:", {
+                    distrito_id: form.value.distrito_id,
+                    codigo_sie_id: form.value.codigo_sie_id,
+                    institucion_id: form.value.institucion_id,
+                    codigos_sie_length: codigos_sie.value.length,
+                    instituciones_length: instituciones.value.length
+                });
+            }, 100);
+        } catch (error) {
+            console.error("Error loading related data:", error);
+        }
+    }
+    
+    showModal.value = true;
 };
+
 const closeModal = () => {
     showModal.value = false;
     resetForm();
@@ -76,7 +128,10 @@ const closeModal = () => {
 
 const resetForm = () => {
     form.value = {
-        id_institucion: "",
+        distrito_id: "",
+      
+        codigo_sie_id: "",
+        institucion_id: "",
         ci: "",
         rda: "",
         name: "",
@@ -89,32 +144,109 @@ const resetForm = () => {
         role: "",
     };
     id_user.value = null;
+    isEditing.value = false;
+    instituciones.value = [];
+    codigos_sie.value = [];
 };
+
+
+const codigos_sie = ref([]);
+const instituciones = ref([]);
+
+const cargarDatosRelacionados = async (distrito_id) => {
+    if (!distrito_id) {
+        instituciones.value = [];
+        codigos_sie.value = [];
+        return;
+    }
+
+    try {
+        console.log("Cargando datos para distrito:", distrito_id);
+        const response = await axios.get(`/api/distritos/${distrito_id}/datos-relacionados`);
+        
+        instituciones.value = response.data.instituciones || [];
+        codigos_sie.value = response.data.codigos_sie || [];
+        
+        console.log("Datos cargados:", { 
+            instituciones: instituciones.value.length, 
+            codigos_sie: codigos_sie.value.length 
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error cargando datos relacionados:", error);
+
+        if (error.response) {
+            console.log("🔥 ERROR DEL BACKEND:");
+            console.log("Mensaje:", error.response.data.message);
+            console.log("Archivo:", error.response.data.file);
+            console.log("Línea:", error.response.data.line);
+            console.log("Traza:", error.response.data.trace);
+        } else {
+            console.log("Error inesperado:", error.message);
+        }
+
+        alert("No se pudieron cargar los datos relacionados. Revisa la consola.");
+        return Promise.reject(error);
+    }
+};
+watch(() => form.value.distrito_id, async (nuevoDistrito, antiguoDistrito) => {
+    console.log("District changed:", nuevoDistrito, antiguoDistrito);
+    
+    if (nuevoDistrito === antiguoDistrito) return;
+    
+    if (nuevoDistrito) {
+        // Only reset related fields when not editing
+        if (!isEditing.value) {
+            form.value.codigo_sie_id = '';
+            form.value.institucion_id = '';
+        }
+        
+        try {
+            await cargarDatosRelacionados(nuevoDistrito);
+            
+            // Log state after loading data
+            console.log("After loading district data:", {
+                isEditing: isEditing.value,
+                codigo_sie_id: form.value.codigo_sie_id,
+                institucion_id: form.value.institucion_id,
+                codigos_sie: codigos_sie.value.length,
+                instituciones: instituciones.value.length
+            });
+        } catch (error) {
+            console.error("Error in district watcher:", error);
+        }
+    } else {
+        instituciones.value = [];
+        codigos_sie.value = [];
+    }
+});
 const submitForm = () => {
-    // 1. Log de datos enviados
-    if (!id_user.value) {
-        router.post("/usuarios", form.value, {
+    // Ensure CI and RDA are strings
+    form.value.ci = String(form.value.ci || '');
+    form.value.rda = String(form.value.rda || '');
+    
+    // Log data being sent
+    console.log("Datos a enviar:", form.value);
+    
+    // For edit mode, only send fields that have been changed
+    if (id_user.value) {
+        router.put(`/usuarios/${id_user.value}`, form.value, {
             onSuccess: () => {
                 closeModal();
-                // 2. Log de respuesta
-                console.log("Respuesta recibida - Mensajes flash:", {
-                    success: flash.value.success,
-                    datos_array: flash.value.datos_array,
-                });
             },
             onError: (errors) => {
-                // 3. Log de errores
                 console.error("Errores de validación:", errors);
             },
             preserveScroll: true,
         });
     } else {
-        //console.log("listo para editar");
-        // Editar registro existente (PUT)
-        router.put(`/usuarioseditar/${id_user.value}`, form.value, {
+        router.post("/usuarios", form.value, {
             onSuccess: () => {
                 closeModal();
-                //console.log("Institución actualizada");
+                console.log("Respuesta recibida - Mensajes flash:", {
+                    success: flash.value.success,
+                    datos_array: flash.value.datos_array,
+                });
             },
             onError: (errors) => {
                 console.error("Errores de validación:", errors);
@@ -123,6 +255,45 @@ const submitForm = () => {
         });
     }
 };
+
+
+// Convertir listas de selección al formato para SearchableSelect
+const distritosOptions = computed(() => {
+  return props.distritos.map(d => ({
+    value: d.id_distrito,
+    label: d.descripcion
+  }));
+});
+
+const codigosSieOptions = computed(() => {
+  return codigos_sie.value.map(c => ({
+    value: c.id_codigo_sie,
+    label: c.unidad_educativa
+  }));
+});
+
+const institucionesOptions = computed(() => {
+  return instituciones.value.map(i => ({
+    value: i.id_institucion,
+    label: i.nivel
+  }));
+});
+
+watch(() => form.value.distrito_id, async (nuevoDistrito, antiguoDistrito) => {
+  if (nuevoDistrito !== antiguoDistrito) {
+    if (!isEditing.value) {
+      form.value.codigo_sie_id = "";
+      form.value.institucion_id = "";
+    }
+    await cargarDatosRelacionados(nuevoDistrito);
+  }
+});
+
+
+const resetPassword = (id, cod, texto) => {
+    resetDialog.value?.show(id, cod, texto);
+};
+
 </script>
 
 <template>
@@ -173,23 +344,29 @@ const submitForm = () => {
                                 class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                                 <thead class="align-bottom">
                                     <tr>
+                                        <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
+                                            Nro</th> 
                                         <th
-                                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Datos Personales</th>
+                                            <th
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
+                                            Datos Institucionales</th>
                                         <th
-                                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Rol</th>
                                         <th v-if="$page.props.permissions.includes('editarestadodeleteusuario.update')"
-                                            class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Estado</th>
-                                        <th v-if="$page.props.permissions.includes('editarestadodeleteusuario.update') || $page.props.permissions.includes('usuarioseditar.update')"
-                                            class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                            <th v-if="$page.props.permissions.includes('editarestadodeleteusuario.update') || $page.props.permissions.includes('usuarioseditar.update')"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="user in usuarios.data" :key="user.id"
+                                    <tr v-for="(user, index) in usuarios.data" :key="user.id"
                                         class="border-b dark:border-white/40">
+                                        <td class="p-6 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent text-center">{{ (currentPage - 1) * perPage + index + 1 }}</td>
                                         <td
                                             class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                             <div class="flex px-2 py-1">
@@ -210,15 +387,15 @@ const submitForm = () => {
                                                         user.segundo_apellido }}
                                                     </p>
                                                     <p class="text-xs text-slate-400">
-                                                        <span class="font-semibold">C.I.:</span> {{ user.ci }} | 
+                                                        <span class="font-semibold">C.I.:</span> {{ user.ci }} |
                                                         <span class="font-semibold">R.D.A.:</span> {{ user.rda }}
                                                     </p>
                                                     <p class="text-xs text-slate-400">
                                                         <span class="font-semibold">Email:</span> {{ user.email }}
                                                     </p>
                                                     <p class="text-xs text-slate-400">
-                                                        <span class="font-semibold">Item:</span> {{ user.item }} | 
-                                                        <span class="font-semibold">Cargo:</span> {{ user.cargo }} | 
+                                                        <span class="font-semibold">Item:</span> {{ user.item }} |
+                                                        <span class="font-semibold">Cargo:</span> {{ user.cargo }} |
                                                         <span class="font-semibold">Horas:</span> {{ user.horas }}
                                                     </p>
                                                 </div>
@@ -226,8 +403,29 @@ const submitForm = () => {
                                         </td>
                                         <td
                                             class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            <div class="flex flex-col justify-center text-xs leading-tight text-gray-700 dark:text-white dark:opacity-80">
+                                                <div class="mb-1">
+                                                    <h6
+                                                        class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
+                                                        <span class="font-semibold">Distrito:</span> <div class="text-slate-400">{{ user.distrito?.descripcion || 'Sin distrito' }}</div>
+                                                    </h6>
+                                                    <h6
+                                                        class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
+                                                        <span class="font-semibold">Unidad Educativa:</span> <div class="text-slate-400">{{ user.codigo_sie?.unidad_educativa || 'Sin unidad educativa' }}</div>
+                                                    </h6>
+                                                    <h6
+                                                        class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
+                                                        <span class="font-semibold">Nivel:</span> <div class="text-slate-400">{{ user.institucion?.nivel || 'Sin institución' }}</div>
+                                                    </h6>
+                                                </div>
+                                    
+                                            </div>
+                                        </td>
+                                    
+                                        <td
+                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                             <div class="flex flex-col space-y-1">
-                                                <span v-for="r in user.roles" :key="r.id" 
+                                                <span v-for="r in user.roles" :key="r.id"
                                                     class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">
                                                     {{ r.name }}
                                                 </span>
@@ -255,11 +453,22 @@ const submitForm = () => {
                                             class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                             <div class="flex space-x-3">
                                                 <!-- Editar -->
+                                                <button v-if="$page.props.permissions.includes('usuarios.resetearpassword')"
+                                                @click="resetPassword(user.uuid_user, 0, '¿Estás seguro de que deseas Resetear Credenciales?')"
+                                                class="p-1.5 text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300 rounded-full hover:bg-yellow-50 dark:hover:bg-yellow-900/30 transition-colors duration-200"
+                                                    title="Reset Credenciales"
+                                                >
+                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+                                                </svg>
+                                                </button>
                                                 <button
                                                     v-if="user.estado != 'eliminado' && user.estado != 'inactivo' && $page.props.permissions.includes('usuarioseditar.update')"
                                                     @click="handleClickEditar(
                                                         user.uuid_user,
-                                                        user.id_institucion,
+                                                        user.institucion_id,
+                                                        user.distrito_id,
+                                                        user.codigo_sie_id,                                                       
                                                         user.ci,
                                                         user.rda,
                                                         user.name,
@@ -303,7 +512,8 @@ const submitForm = () => {
 
                         <!-- Pagination -->
                         <div class="px-4 py-3 border-t border-gray-200 dark:border-white/10">
-                            <Pagination :pagination="usuarios" />
+                
+                            <Pagination :pagination="usuarios" :filters="filters" />
                         </div>
                     </div>
                 </div>
@@ -314,114 +524,164 @@ const submitForm = () => {
                 <form @submit.prevent="submitForm">
                     <div class="p-6">
                         <h2 class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                            {{ editing ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}
+                            {{ id_user ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}
                         </h2>
 
                         <div class="space-y-4">
                             <!-- Campo CI -->
                             <div>
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    Cedula de Identidad
+                                    Carnet <span class="text-red-500">*</span>
                                 </label>
                                 <input id="codigo" v-model="form.ci" type="number"
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                <InputError :message="errors" class="mt-2" />
+                                placeholder="Ingrese cédula de identidad" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                     dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                     <InputError :message="errors.ci" class="mt-2" />
                             </div>
 
                             <!-- Campo RDA -->
                             <div>
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    RDA
+                                    RDA <span class="text-red-500">*</span>
                                 </label>
                                 <input id="codigo" v-model="form.rda" type="number"
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                <InputError :message="errors" class="mt-2" />
+                                placeholder="Ingrese número de RDA" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                                <InputError :message="errors.rda" class="mt-2" />
                             </div>
 
                             <!-- Campo Nombre -->
                             <div>
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    Nombre
+                                    Nombre Completo <span class="text-red-500">*</span>
                                 </label>
                                 <input v-model="form.name" type="text" required
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                <InputError :message="errors" class="mt-2" />
+                                placeholder="Ingrese nombre completo" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                                <InputError :message="errors.name" class="mt-2" />
                             </div>
 
                             <!-- Campo Primer Apellido -->
                             <div>
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    Primer Apellido
+                                    Apellido Paterno <span class="text-red-500">*</span>
                                 </label>
-                                <input v-model="form.primer_apellido" type="text" required
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                    <InputError :message="errors" class="mt-2" />
+                                <input v-model="form.primer_apellido" type="text" 
+                                placeholder="Ingrese apellido paterno" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                                <InputError :message="errors.primer_apellido" class="mt-2" />
                             </div>
 
                             <!-- Campo Segundo Apellido -->
                             <div>
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    Segundo Apellido
+                                    Apellido Materno <span class="text-red-500">*</span>
                                 </label>
-                                <input v-model="form.segundo_apellido" type="text" required
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                    <InputError :message="errors" class="mt-2" />
+                                <input v-model="form.segundo_apellido" type="text" 
+                                placeholder="Ingrese apellido materno" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                                <InputError :message="errors.segundo_apellido" class="mt-2" />
                             </div>
 
                             <!-- Campo Correo -->
-                            <div>
+                            <div v-if="id_user">
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    Correo
+                                    Correo Institucional<span class="text-red-500">*</span>
                                 </label>
                                 <input v-model="form.email" type="email" required
                                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                    <InputError :message="errors" class="mt-2" />
+                                    <InputError :message="errors.email" class="mt-2" />
                             </div>
 
                             <!-- Campo Item -->
                             <div>
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    Item
+                                    Ítem <span class="text-red-500">*</span>
                                 </label>
                                 <input v-model="form.item" type="number" required
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                <InputError :message="errors" class="mt-2" />
+                                placeholder="Ingrese número de ítem" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                                <InputError :message="errors.item" class="mt-2" />
                             </div>
 
                             <!-- Campo Cargo -->
                             <div>
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    Cargo
+                                    Cargo <span class="text-red-500">*</span>
                                 </label>
                                 <input v-model="form.cargo" type="number" required
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                <InputError :message="errors" class="mt-2" />
+                                placeholder="Ingrese número de cargo" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                                <InputError :message="errors.cargo" class="mt-2" />
                             </div>
 
                             <!-- Campo Horas -->
                             <div>
                                 <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                                    Horas
+                                    Horas <span class="text-red-500">*</span>
                                 </label>
                                 <input v-model="form.horas" type="number" required
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                                <InputError :message="errors" class="mt-2" />
+                                placeholder="Ingrese número de horas" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
+                                dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
+                                <InputError :message="errors.horas" class="mt-2" />
                             </div>
 
-                            <div>
-                                <label for="id_institucion" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Institución</label>
-                                <select v-model="form.id_institucion" id="id_institucion" required
-                                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
-                                    <option disabled value="">Selecciona una institución</option>
-                                    <option v-for="institucion in instituciones" :key="institucion.id_institucion"
-                                        :value="institucion.id_institucion">
-                                        {{ institucion.subsistema }}
-                                    </option>
-                                </select>
-                            </div>
+                      <!-- Distrito -->
+  <!-- Distrito -->
+
+    <div class="mb-4">
+      <label for="distrito_id" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+        Distrito <span class="text-red-500">*</span>
+      </label>
+      <SearchableSelect
+        v-model="form.distrito_id"
+        :options="distritosOptions"
+        placeholder="Buscar distrito..."
+        
+      />
+      <InputError :message="errors.distrito_id" />
+
+
+    </div>
+
+  
+  <!-- Código SIE -->
+
+    <div class="mb-4">
+      <label for="codigo_sie_id" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+        Código SIE <span class="text-red-500">*</span>
+      </label>
+      <SearchableSelect
+        v-model="form.codigo_sie_id"
+        :options="codigosSieOptions"
+        placeholder="Buscar código SIE..."
+      />
+      <InputError :message="errors.codigo_sie_id" />
+
+    </div>
+
+  
+  <!-- Institución -->
+
+    <div class="mb-4">
+      <label for="institucion_id" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+        Institución <span class="text-red-500">*</span>
+      </label>
+      <SearchableSelect
+        v-model="form.institucion_id"
+        :options="institucionesOptions"
+        place
+        holder="Buscar institución..."
+        
+      />
+      <InputError :message="errors.institucion_id" />
+
+    </div>
+
+
 
                             <div class="mb-4">
-                                <label for="role" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Roles</label>
+                                <label for="role" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Roles <span class="text-red-500">*</span></label>
                                 <select v-model="form.role" id="id_curso"
                                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                                     <option disabled value="">Selecciona un Rol</option>
@@ -429,6 +689,8 @@ const submitForm = () => {
                                         {{ role.name }}
                                     </option>
                                 </select>
+                                <InputError :message="errors.role" />
+
                             </div>
                         </div>
 
@@ -439,15 +701,21 @@ const submitForm = () => {
                             </button>
                             <button type="submit"
                                 class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200">
-                                {{ editing ? 'Actualizar' : 'Guardar' }} Usuario
+                                {{ id_user ? 'Actualizar' : 'Guardar' }} Usuario
                             </button>
                         </div>
                     </div>
                 </form>
             </Modal>
 
-            <ConfirmDelete ref="deleteDialog" :method="'patch'" route-name="editarestadodeleteusuario.update"
-                title="¿Eliminar este registro?" />
+            <ConfirmDelete
+  ref="deleteDialog"
+  :method="'patch'"
+  route-name="editarestadodeleteusuario.update"
+  :params="{ uuid: usuarioSeleccionado?.uuid_user || '', code: deleteCode || '' }"
+  title="¿Eliminar este registro?" />
+            <ConfirmDelete ref="resetDialog" :method="'patch'" route-name="usuarios.resetearpassword"
+                title="Desea Resetear Credenciales?" />
         </div>
     </AppLayout>
 </template>

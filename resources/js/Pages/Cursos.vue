@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/MainLayout.vue";
 import Modal from "@/Components/Modal.vue";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
 import ConfirmDelete from "@/Components/ConfirmDelete.vue";
 import Pagination from "@/Components/Pagination.vue";
@@ -16,7 +16,15 @@ import { Carousel, Slide, Navigation } from 'vue3-carousel';
 const props = defineProps({
     cursos: Object,
     filters: Object,
+    tipos: Array,
+    cursoEditando: Object
 });
+
+const currentPage = computed(() => props.cursos.current_page);
+const perPage = computed(() => props.cursos.per_page);
+
+const errors = computed(() => page.props.errors || {});
+
 
 const images = computed(() => {
     const cursoSeleccionado = props.cursos.data?.find(curso => curso.uuid_curso === form2.value.uuid_curso)
@@ -52,6 +60,7 @@ const images = computed(() => {
     });
 });
 
+
 const config = {
     height: 400,
     itemsToShow: 2,
@@ -71,6 +80,8 @@ const page = usePage();
 const flash = computed(() => page.props.flash || {});
 const previousRoute = ref(null);
 const deleteDialog = ref(null);
+const deleteDialogEstado = ref(null);
+const showFormModal = ref(false)
 const id_curso = ref(null);
 const imageError = ref(false)
 const inputFile = ref(null);
@@ -107,7 +118,6 @@ const handleImagenesChange = (event) => {
         });
     }
 };
-
 const removePreview = (index) => {
     imagenesPreviews.value.splice(index, 1);
     form2.value.imagenes.splice(index, 1);
@@ -126,21 +136,26 @@ const handleDelete = (id, cod, texto) => {
     deleteDialog.value?.show(id, cod, texto);
 };
 
+const handleEstadoCurso = (id, cod, texto) => {
+    deleteDialogEstado.value?.show(id, cod, texto);
+};
+
 const showModal = ref(false);
 const showModalimagen = ref(false);
 const showModalcertificado = ref(false);
 
 const form = ref({
+    tipo_actividad_id: '',
+    codigo_curso: '',              
     nombre: "",
     descripcion: "",
+    fecha_inicio_inscripcion: "",  // nuevo
+    fecha_fin_inscripcion: "", 
     fecha_inicio: "",
     fecha_fin: "",
     carga_horaria: "",
     img_curso: "",
-    imagen: null,
-    encargado: "",
-    grado_academico: "",
-    estado_curso: "",
+    imagen: null
 });
 
 const imagenPreview = ref(null);
@@ -178,6 +193,7 @@ const closemodaliamgenes = () => {
     resetForm2();
 };
 
+
 const Abrirmmodalcertificados = () => {
     showModalcertificado.value = true;
 };
@@ -188,49 +204,79 @@ const closemodalcertificados = () => {
 
 const handleClickEditar = (
     uuid,
+    tipo,
     nombre,
     descripcion,
+    fecha_inicio_inscripcion,
+    fecha_fin_inscripcion,
     fecha_inicio,
     fecha_fin,
     img_curso,
-    carga_horaria,
-    encargado,
-    grado_academico,
-    estado_curso
+    carga_horaria
 ) => {
+    console.log("tipo editado:", tipo); // <--- Aquí
     showModal.value = true;
     id_curso.value = uuid;
+    form.value.tipo_actividad_id = Number(tipo);
+
+
+// Buscar el tipo exacto desde la lista si existe
+const tipoObjeto = props.tipos.find(t => t.id === tipo);
+
+// Si no está, lo agregamos manualmente desde el curso
+if (!tipoObjeto && props.cursos.data) {
+    const curso = props.cursos.data.find(c => c.uuid_curso === uuid);
+    if (curso && curso.tipoActividad) {
+        props.tipos.push({
+            id: tipo,
+            nombre: curso.tipoActividad.nombre,
+            codigo: curso.tipoActividad.codigo
+        });
+    }
+}
+
+
+
     form.value.nombre = nombre;
     form.value.descripcion = descripcion;
+    form.value.fecha_inicio_inscripcion = fecha_inicio_inscripcion;
+    form.value.fecha_fin_inscripcion = fecha_fin_inscripcion;
     form.value.fecha_inicio = fecha_inicio;
     form.value.fecha_fin = fecha_fin;
     form.value.img_curso = img_curso;
     form.value.carga_horaria = carga_horaria;
-    form.value.encargado = encargado;
-    form.value.grado_academico = grado_academico;
-    form.value.estado_curso = estado_curso;
+
 };
 
-const resetForm = () => {
-    form.value = {
-        nombre: "",
-        descripcion: "",
-        fecha_inicio: "",
-        fecha_fin: "",
-        carga_horaria: "",
-        img_curso: "",
-        encargado: "",
-        grado_academico: "",
-        estado_curso: "",
+function resetForm() {
+  id_curso.value = null;
+  form.value = {
+    tipo_actividad_id: '',
+    nombre: '',
+    descripcion: '',
+    fecha_inicio: '',
+    fecha_fin: '',
+    carga_horaria: '',
+    img_curso: ""
     };
     id_curso.value = null;
-};
+}
+
+function extractDesignId(url) {
+  const match = url.match(/design\/([A-Za-z0-9-_]+)/);
+  return match ? match[1] : '';
+}
 
 const submitForm = () => {
+
     const formData = new FormData();
     for (const [key, value] of Object.entries(form.value)) {
-        formData.append(key, value);
-    }
+  formData.append(key, value);
+}
+
+
+
+
     if (form.value.imagen) {
         formData.append('imagen', form.value.imagen);
     }
@@ -305,7 +351,36 @@ const enviarfotos = () => {
         resetForm2();
         inputFile.value.value = null;
     }
-};
+  }
+
+watch(
+  () => [form.value.tipo_actividad_id, form.value.fecha_inicio, form.value.fecha_fin],
+  ([idTipo, inicio, fin]) => {
+    if (!idTipo || !inicio || !fin) return;
+
+    const tipo = props.tipos.find(t => t.id === parseInt(idTipo));
+    if (!tipo || !tipo.horas_minimas) return;
+
+    const fechaInicio = new Date(inicio);
+    const fechaFin = new Date(fin);
+    if (fechaInicio > fechaFin) return;
+
+    const dias = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24)) + 1;
+    form.value.carga_horaria = dias * tipo.horas_minimas;
+  }
+);
+
+watch(() => props.cursos.data, (nuevosCursos) => {
+  nuevosCursos.forEach((curso, i) => {
+    console.log(`Curso[${i}] tipoActividad:`, curso.tipoActividad);
+  });
+});
+
+
+const cargaRange = computed(() => {
+  const tipo = props.tipos.find(t => t.id === parseInt(form.value.tipo_actividad_id));
+  return tipo ? { min: tipo.horas_minimas, max: tipo.horas_minimas * 60 } : { min: 0, max: 9999 };
+});
 
 </script>
 
@@ -326,54 +401,113 @@ const enviarfotos = () => {
             </h2>
 
             <div class="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+  Tipo de actividad <span class="text-red-500">*</span>
+</label>
+<select
+  v-model.number="form.tipo_actividad_id"
+  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+  required
+>
+<option value="" disabled>Seleccione un tipo de actividad</option>
+
+  <option
+    v-for="tipo in props.tipos"
+    :key="tipo.id"
+    :value="tipo.id"
+  >
+    {{ tipo.codigo }} - {{ tipo.nombre }}
+  </option>
+</select>
+
+
+
+<span v-if="errors.tipo_actividad_id" class="text-red-500 text-xs">{{ errors.tipo_actividad_id }}</span>
+</div>
+<div class="col-span-1 sm:col-span-2 md:col-span-1">
+  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+    Código de Curso <span class="text-red-500">*</span>
+  </label>
+  <input v-model="form.codigo_curso" type="text" required placeholder="Se genera de manera automatica" readonly 
+  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+</div>
                 <!-- Campo Nombre -->
                 <div class="col-span-1 sm:col-span-2 md:col-span-1">
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Nombre
+                        Nombre de la actividad <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="form.nombre" type="text" required
+                    <input v-model="form.nombre" type="text" required placeholder="Ingresa el nombre de la actividad"
                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                    <span v-if="errors.nombre" class="text-red-500 text-xs">{{ errors.nombre }}</span>
                 </div>
 
                 <!-- Campo Descripción -->
                 <div class="col-span-1 sm:col-span-2 md:col-span-1">
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Descripción
+                        Describe la actividad <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="form.descripcion" type="text" required
+                    <input v-model="form.descripcion" type="text" required placeholder="Realiza la descripción de la actividad"
                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                    <span v-if="errors.descripcion" class="text-red-500 text-xs">{{ errors.descripcion }}</span>
                 </div>
+<!-- Campo Fecha Inicio de Inscripción -->
+<div class="col-span-1 sm:col-span-2 md:col-span-1">
+  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+    Fecha de inicio de inscripción <span class="text-red-500">*</span>
+  </label>
+  <input v-model="form.fecha_inicio_inscripcion" type="date" required :min="today"
+  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+  <span v-if="errors.fecha_inicio_inscripcion" class="text-red-500 text-xs">{{ errors.fecha_inicio_inscripcion }}</span>
+</div>
+
+<!-- Campo Fecha Fin de Inscripción -->
+<div class="col-span-1 sm:col-span-2 md:col-span-1">
+  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+    Fecha de fin de inscripción <span class="text-red-500">*</span>
+  </label>
+  <input v-model="form.fecha_fin_inscripcion" type="date" required :min="form.fecha_inicio_inscripcion"
+    max="2040-12-31"
+    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
+    <span v-if="errors.fecha_fin_inscripcion" class="text-red-500 text-xs">{{ errors.fecha_fin_inscripcion }}</span>
+</div>
 
                 <!-- Campo Fecha de Inicio -->
                 <div>
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Fecha de Inicio
+                        Fecha de Inicio de actividad <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="form.fecha_inicio" type="date" required
+                    <input v-model="form.fecha_inicio" type="date" required :min="today" max="2040-12-31"
                         class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                </div>
+                        <span v-if="errors.fecha_inicio" class="text-red-500 text-xs">{{ errors.fecha_inicio }}</span>
+                    </div>
 
                 <!-- Campo Fecha de Culminación -->
                 <div>
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Fecha de Culminación
+                        Fecha de Culminación de actividad <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="form.fecha_fin" type="date" required
+                    <input v-model="form.fecha_fin" type="date" required :min="form.fecha_inicio || today" max="2040-12-31"
                         class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                </div>
+                        <span v-if="errors.fecha_fin" class="text-red-500 text-xs">{{ errors.fecha_fin }}</span>
+                    </div>
 
                 <!-- Campo Carga Horaria -->
                 <div>
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Carga Horaria
+                        Carga Horaria <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="form.carga_horaria" type="number" required
-                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                </div>
+                    <input v-model="form.carga_horaria" type="number" readonly disabled
+  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-gray-200 bg-clip-padding px-3 py-2 font-normal text-gray-500 outline-none transition-all placeholder:text-gray-500 focus:outline-none cursor-not-allowed" />
 
-                <!-- Imagen del Curso -->
-                <div class="col-span-1 sm:col-span-2">
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Imagen del curso</label>
+  <span v-if="errors.carga_horaria" class="text-red-500 text-xs">
+    {{ errors.carga_horaria }}
+</span>
+
+                    </div>
+                  <!-- Imagen del Curso -->
+                  <div class="col-span-1 sm:col-span-2">
+                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Imagen del certificado <span class="text-red-500">*</span></label>
                     <input type="file" @change="handleImageChange" accept="image/*"
                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
 
@@ -388,33 +522,9 @@ const enviarfotos = () => {
                     </div>
                 </div>
 
-                <!-- Campo Encargado -->
-                <div>
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Encargado
-                    </label>
-                    <input v-model="form.encargado" type="text" required
-                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                </div>
+</div>
 
-                <!-- Campo Grado Académico -->
-                <div>
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Grado Académico
-                    </label>
-                    <input v-model="form.grado_academico" type="text" required
-                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                </div>
 
-                <!-- Campo Estado del Curso -->
-                <div>
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Estado del Curso
-                    </label>
-                    <input v-model="form.estado_curso" type="text" required
-                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                </div>
-            </div>
 
             <div class="mt-6 flex justify-end space-x-3">
                 <button type="button" @click="closeModal"
@@ -498,15 +608,13 @@ const enviarfotos = () => {
             <h6 class="text-gray-700 dark:text-white">Cursos</h6>
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
-                   
-
                     <div class="flex items-center space-x-4">
                         <div class="relative">
                             <BuscadorCursos :filters="filters" ruta="cursos.index" />
                         </div>
-
                     </div>
-                                            
+                    
+
 
                     <button v-if="$page.props.permissions.includes('cursos.create')"
                             class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
@@ -533,42 +641,67 @@ const enviarfotos = () => {
 
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
-                        <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
+                        <table class="w-full text-sm text-left border-collapse text-slate-500 dark:border-white/40">
                             <thead class="align-bottom">
                                 <tr>
-                                    <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-700 opacity-70">Nombre</th>
-                                    <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-700 opacity-70">Descripción</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-700 opacity-70">Fechas</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-700 opacity-70">Carga Horaria</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-700 opacity-70">Imagen</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-700 opacity-70">Certificados</th>
-                                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-700 opacity-70">Encargado</th>
-                                    <th v-if="$page.props.permissions.includes('editarestadodeletecursos.update')" class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-700 opacity-70">Estado</th>
-                                    <th v-if="$page.props.permissions.includes('editarestadodeletecursos.update') && $page.props.permissions.includes('cursoseditar.update')" class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-700 opacity-70">Acciones</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th> 
+                                    <th class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Actividad</th>                             
+                                    <th class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Descripción</th>
+                                    <th class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Inscripción</th>
+                                    <th class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Duración de actividad</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Carga Horaria</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Imagen</th>
+                                    <th  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"v-if="false">Certificados</th>
+                                    <th v-if="$page.props.permissions.includes('editarestadodeletecursos.update')"  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado de Curso</th>
+                                    <th v-if="$page.props.permissions.includes('editarestadodeletecursos.update') && $page.props.permissions.includes('cursoseditar.update')"  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="curso in cursos.data" :key="curso.id" class="border-b dark:border-white/40">
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ curso.nombre }}</p>
+                                <tr v-for="(curso, index) in cursos.data" :key="curso.id" class="border-b dark:border-white/40">  {{ console.log(curso.tipoActividad) }}
+                                 
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                    {{ (currentPage - 1) * perPage + index + 1 }}</td>
+                                    <td class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                        <span class="font-semibold">Codigo de actividad: </span> <div class="text-slate-400"> {{ curso.codigo_curso}}</div>
+                                        <span class="font-semibold">Tipo: </span>
+                                        <div class="text-slate-400">
+  {{ curso.tipo_actividad?.codigo && curso.tipo_actividad?.nombre
+      ? `${curso.tipo_actividad.codigo} - ${curso.tipo_actividad.nombre}`
+      : 'SIN TIPO' }}
+</div>
+
+
+                                        <span class="font-semibold">Titulo: </span> <div class="text-slate-400"> {{ curso.nombre }}</div>
                                     </td>
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <p class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ curso.descripcion }}</p>
+                                 
+                                    <td class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                      {{ curso.descripcion }}
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <div class="flex flex-col">
-                                            <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">Inicio: {{ curso.fecha_inicio }}</span>
-                                            <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">Fin: {{ curso.fecha_fin }}</span>
-                                        </div>
+                                    <td class="w-[100px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                        <span class="font-semibold">Fecha de inicio: </span> <div class="text-slate-400">{{ curso.fecha_inicio_inscripcion }} </div>
+                                        <span class="font-semibold">Fecha Fin: </span> <div class="text-slate-400"> {{ curso.fecha_fin_inscripcion }}</div>    
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                        <td class="w-[100px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                            <span class="font-semibold">Fecha de inicio: </span> <div class="text-slate-400">{{ curso.fecha_inicio }}</div>     
+                                            <span class="font-semibold">Fecha Fin: </span> <div class="text-slate-400"> {{ curso.fecha_fin }}</div>   
+                                        </td>
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
                                         <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ curso.carga_horaria }} hrs</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <img v-if="curso.img_curso" :src="curso.img_curso" class="h-16 w-auto object-cover rounded mx-auto">
-                                        <span v-else class="text-xs italic text-gray-500 dark:text-gray-400">Sin imagen</span>
-                                    </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                                        
+  <img
+    v-if="curso.img_curso && curso.img_curso !== 'curso.jpg'"
+    :src="curso.img_curso.startsWith('storage/') ? '/' + curso.img_curso : curso.img_curso"
+    class="h-16 w-auto object-cover rounded mx-auto"
+    alt="Imagen del curso"
+  />
+  <span v-else class="text-xs italic text-gray-500 dark:text-gray-400">Sin imagen</span>
+</td>
+
+
+
+                                    <td v-if="false" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <button v-if="curso.estado != 'eliminado' && curso.estado != 'inactivo'"
                                             @click="Abrirmmodaliamgenes(curso.uuid_curso)"
                                             class="p-2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
@@ -578,43 +711,47 @@ const enviarfotos = () => {
                                             </svg>
                                         </button>
                                     </td>
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <div class="flex flex-col">
-                                            <h6 class="mb-0 text-sm leading-normal text-gray-700 dark:text-white">{{ curso.encargado }}</h6>
-                                            <p class="mb-0 text-xs leading-tight text-gray-600 dark:text-white dark:opacity-80">{{ curso.grado_academico }}</p>
-                                        </div>
-                                    </td>
                                     <td v-if="$page.props.permissions.includes('editarestadodeletecursos.update')" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span v-if="curso.estado == 'activo'"
-                                            class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                            @click="handleDelete(curso.uuid_curso, 2, '¿Estás seguro de que deseas deshabilitar este registro?')">
-                                            Activo
-                                        </span>
-                                        <span v-else-if="curso.estado == 'inactivo'"
-                                            class="bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                            @click="handleDelete(curso.uuid_curso, 1, '¿Estás seguro de que deseas activar este registro?')">
-                                            Inactivo
-                                        </span>
-                                        <span v-else
-                                            class="bg-gradient-to-tl from-gray-400 to-gray-600 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
-                                            @click="handleDelete(curso.uuid_curso, 1, '¿Estás seguro de que deseas registrar nuevamente?')">
-                                            Registrar
-                                        </span>
+                                        <span
+    v-if="curso.estado_curso === 'no iniciado'"
+    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/50"
+  >
+    PRÓXIMAMENTE
+  </span>
+  <span
+    v-else-if="curso.estado_curso === 'abierto'"
+      class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-green-500/10 text-green-400 border border-green-500/50"
+  >
+    INSCRIPCIONES ABIERTAS
+  </span>
+  <span
+    v-else-if="curso.estado_curso === 'curso'"
+     class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/50"
+  >
+    EN CURSO
+  </span>
+  <span
+    v-else-if="curso.estado_curso === 'terminado'"
+    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-gray-500/10 text-gray-300 border border-gray-500/50"
+  >
+    TERMINADO
+  </span>
                                     </td>
+                        
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <div class="flex justify-center space-x-2">
                                             <button v-if="curso.estado != 'eliminado' && curso.estado != 'inactivo' && $page.props.permissions.includes('cursoseditar.update')"
                                                 @click="handleClickEditar(
                                                     curso.uuid_curso,
+                                                    curso.tipo_actividad_id,
                                                     curso.nombre,
                                                     curso.descripcion,
+                                                    curso.fecha_inicio_inscripcion ,
+                                                    curso.fecha_fin_inscripcion ,
                                                     curso.fecha_inicio,
                                                     curso.fecha_fin,
                                                     curso.img_curso,
-                                                    curso.carga_horaria,
-                                                    curso.encargado,
-                                                    curso.grado_academico,
-                                                    curso.estado_curso
+                                                    curso.carga_horaria
                                                 )"
                                                 class="p-2 text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -628,7 +765,7 @@ const enviarfotos = () => {
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                                 </svg>
                                             </button>
-                                            <button v-if="curso.estado != 'eliminado' && curso.estado != 'inactivo' && $page.props.permissions.includes('editarestadodeletecursos.update')"
+                                            <button v-if="false && curso.estado != 'eliminado' && curso.estado != 'inactivo' && $page.props.permissions.includes('editarestadodeletecursos.update')"
                                                 @click="handleClickEditarCertificado(curso.uuid_curso)"
                                                 class="p-2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -644,7 +781,8 @@ const enviarfotos = () => {
 
                     <!-- Pagination -->
                     <div class="px-4 py-3 border-t border-gray-200 dark:border-white/10">
-                        <Pagination :pagination="cursos" />
+
+                        <Pagination :pagination="cursos" :filters="filters" />
                     </div>
                 </div>
             </div>
@@ -652,7 +790,11 @@ const enviarfotos = () => {
 
         <ConfirmDelete ref="deleteDialog" :method="'patch'" route-name="editarestadodeletecursos.update"
             title="¿Eliminar este registro?" />
+
+        <ConfirmDelete ref="deleteDialogEstado" :method="'patch'" route-name="estado.update.curso"
+            title="¿Eliminar este registro?" />
     </AppLayout>
+
 </template>
 
 <!-- <style>

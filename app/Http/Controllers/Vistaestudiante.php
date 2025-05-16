@@ -12,6 +12,19 @@ use Carbon\Carbon;
 
 class Vistaestudiante extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('permission:estudiantes.index', ['only' => ['index']]);
+         $this->middleware('permission:editarestadodeleteestudiantes.update', ['only' => ['updatedelete']]);
+         $this->middleware('permission:estudianteseditar.update', ['only' => ['update']]);
+    }
+     /**
+     * Muestra la página de mis cursos para el usuario autenticado.
+     * Recupera las inscripciones activas del usuario, cargando la información del curso, con opción de búsqueda.
+     * También lista los cursos activos a los que el usuario aún no se ha inscrito, con opción de búsqueda.
+     *
+     * @return \Inertia\Response
+     */
     public function index()
     {
         $user = Auth::user();
@@ -43,7 +56,7 @@ class Vistaestudiante extends Controller
         //---------------------------------------------------------------------------------------------------------
         $searchTerm2 = request()->query('searchuser');
         $perPage2 = request()->query('perPage2', 6);
-        $query2 = ModelCurso::where('estado', 'activo') // 1. Solo cursos activos
+        $query2 = ModelCurso::where('estado', 'activo')->where('estado_curso','!=','terminado') // 1. Solo cursos activos
             ->whereDoesntHave('inscripciones', function ($q) use ($user) {
                 $q->where('id_user', $user->id) // 2. Excluye cursos ya inscritos
                     ->where('estado', 'activo');
@@ -100,6 +113,15 @@ class Vistaestudiante extends Controller
 
 
     }
+
+     /**
+     * Actualiza el estado de una inscripción (activo, inactivo o eliminado) basado en el código proporcionado.
+     * Busca la inscripción por su UUID y actualiza la columna 'estado' según el valor de '$cod'.
+     *
+     * @param  string  $id El UUID único de la inscripción que se va a actualizar.
+     * @param  string  $cod El código que indica el nuevo estado de la inscripción ('1' para activo, '2' para inactivo, otro para eliminado).
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updatedelete($id, $cod)
     {
         //dd($id, $cod);

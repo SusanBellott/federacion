@@ -15,6 +15,10 @@ const props = defineProps({
         type: String,
         default: "put",
     },
+    params: {
+        type: Object,
+        default: () => ({}),
+    }
 });
 
 const show = (id, cod, texto) => {
@@ -36,8 +40,12 @@ const show = (id, cod, texto) => {
         },
     }).then((result) => {
         if (result.isConfirmed) {
-            // Enviar como parámetro en la URL para PUT
-            router[props.method](route(props.routeName, { id: id, cod: cod }));
+            // Use the params prop if provided, otherwise fall back to id and cod
+            const routeParams = props.params && Object.keys(props.params).length > 0 
+                ? props.params 
+                : { id: id, cod: cod };
+                
+            router[props.method](route(props.routeName, routeParams));
         }
     });
 };

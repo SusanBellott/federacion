@@ -34,6 +34,7 @@ watch(searchTerm, () => {
 watch(perPage, buscar);
 
 function buscar() {
+  console.log("Searching with perPage:", perPage.value); // Debug
     router.get(
         route(props.ruta),
         {
@@ -50,32 +51,52 @@ function buscar() {
 </script>
 
 <template>
-<div class="flex items-center md:ml-auto md:pr-4 gap-4">
-    <!-- Barra de búsqueda (con ancho ajustable) -->
-    <div class="relative flex flex-wrap items-stretch w-full max-w-xs transition-all rounded-lg ease">
-        <div class="text-sm ease leading-5.6 absolute z-50 -ml-px flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clip-rule="evenodd" />
-            </svg>
+    <div class="flex items-center space-x-4">
+      <!-- Buscador -->
+      <div class="relative flex-1 max-w-xs">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+          <svg class="h-5 w-5 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clip-rule="evenodd" />
+          </svg>
         </div>
-        <input v-model="searchTerm" type="text"
-            class="pl-9 text-sm focus:shadow-primary-outline ease w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
-            :placeholder="placeholder" />
+        <input
+          v-model="searchTerm"
+          type="text"
+          :placeholder="placeholder"
+          class="
+            block w-full pl-9 pr-3 py-2 
+            bg-white dark:bg-slate-850 
+            border border-gray-300 dark:border-white/40 
+            rounded-lg 
+            text-gray-800 dark:text-white
+            placeholder-gray-500 dark:placeholder-slate-400
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+          "
+        />
+      </div>
+  
+      <!-- Selector “Mostrar” -->
+      <div class="flex items-center space-x-2">
+        <span class="text-sm text-gray-700 dark:text-white">Mostrar:</span>
+        <select
+          v-model="perPage"
+          class="
+            block py-2 pr-8 pl-3  
+            bg-white dark:bg-slate-850 
+            border border-gray-300 dark:border-white/40 
+            rounded-lg 
+            text-gray-800 dark:text-white
+            placeholder-gray-500 dark:placeholder-slate-400
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+          "
+        >
+          <option v-for="opt in perPageOptions" :key="opt" :value="opt">
+            {{ opt }}
+          </option>
+        </select>
+      </div>
     </div>
-
-</div>
- <!-- Selector de items por página (mejorado) -->
- <div class="flex items-center gap-2">
-    <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">Mostrar:</span>
-    <select 
-        v-model="perPage"
-        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease inline-block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none w-auto min-w-[80px]"
-    >
-        <option v-for="option in perPageOptions" :value="option" :key="option">
-            {{ option }}
-        </option>
-    </select>
-</div>
-</template>
+  </template>
+  

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Distrito;
 use App\Models\Institucion;
+use App\Models\CodigoSie;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -27,23 +28,27 @@ class DatabaseSeeder extends Seeder
             'estado' => 'activo',
         ]);
 
-        // Crear Institución de prueba
-        $institucion = Institucion::create([
-            'id_distrito' => $distrito->id_distrito,
-            'uuid_institucion' => Str::uuid(),
-            'subsistema' => 'Educación Regular',
-            'servicio' => 987654,
-            'servicio_generado' => 1,
-            'nivel' => 'Secundaria',
-            'programa' => 456789,
-            'unidad_educativa' => 'Unidad Educativa Ejemplo',
-            'estado' => 'activo',
-        ]);
+            // Crear Código SIE después (necesita distrito)
+    $codigoSie = CodigoSie::create([
+        'programa' => 456789,
+        'unidad_educativa' => 'Unidad Educativa Ejemplo',
+        'estado' => 'activo',
+        'distrito_id' => $distrito->id_distrito,
+    ]);
+
+    // Ahora que ya existen, crea la Institución correctamente
+    $institucion = Institucion::create([
+        'id_distrito' => $distrito->id_distrito,
+        'unidad_educativa_id' => $codigoSie->id_codigo_sie,
+        'servicio' => 987654,
+        'servicio_generado' => 1,
+        'subsistema' => 'Educación Regular',
+        'nivel' => 'Secundaria',
+        'estado' => 'activo',
+    ]);
 
         // Crear Usuario de prueba
         User::create([
-            'id_institucion' => $institucion->id_institucion,
-            'uuid_user' => Str::uuid(),
             'ci' => 12345678,
             'rda' => 87654321,
             'name' => 'Susan',
@@ -55,6 +60,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => bcrypt('admin'),
             'estado' => 'activo',
+            'distrito_id' => $distrito->id_distrito,
+            'institucion_id' => $institucion->id_institucion,
+            'codigo_sie_id' => $codigoSie->id_codigo_sie,
         ])->assignRole('Administrador');
     }
+    
 }
+    

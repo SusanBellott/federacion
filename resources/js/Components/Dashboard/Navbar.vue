@@ -5,7 +5,7 @@
       <nav>
         <ol class="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
           <li class="text-sm leading-normal">
-            <a class="dark:text-white text-slate-800 opacity-50" href="javascript:;">Pagina</a>
+            <a class="dark:text-white text-slate-800 opacity-50" href="javascript:;">Página</a>
           </li>
           <li class="text-sm pl-2 capitalize leading-normal dark:text-white text-slate-800 before:content-['/']"
             aria-current="page">
@@ -29,7 +29,7 @@
                 class="block px-0 py-2 text-sm font-semibold dark:text-white text-slate-800 transition-all ease-nav-brand"
                 @click="toggleUserMenu">
                 <i class="fa fa-user sm:mr-1"></i>
-                <span class="inline">{{ user?.name || 'Invitado' }}</span>
+                <span class="inline">{{ user?.name }}</span>
                 <i class="ml-1 fa fa-caret-down"></i>
               </a>
               <ul v-show="userMenuOpen"
@@ -37,13 +37,13 @@
                 <li>
                   <Link href="/user/profile"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900">
-                  <i class="mr-2 fa fa-user"></i> Profile
+                  <i class="mr-2 fa fa-user"></i> Perfil
                   </Link>
                 </li>
                 <li>
                   <Link href="/logout" method="post" as="button"
                     class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900">
-                  <i class="mr-2 fa fa-sign-out"></i> Logout
+                  <i class="mr-2 fa fa-sign-out"></i> Cerrar Sesion
                   </Link>
                 </li>
               </ul>

@@ -123,9 +123,10 @@ const logout = () => {
                                     :href="route('estudiantes.index')"
                                     :active="route().current('estudiantes.index')"
                                 >
-                                    Mis Cursos
+                                    Mis Actividades
                                 </NavLink>
                             </div>
+                            
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">

@@ -25,15 +25,38 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use Illuminate\Support\Facades\Auth;
 
 class Inscripcion extends Controller
 {
-    public function index()
+    function __construct()
+    {
+         $this->middleware('permission:inscritos.index', ['only' => ['index']]);
+         $this->middleware('permission:inscritos.create', ['only' => ['store']]);
+         $this->middleware('permission:editarestadodeleteinscritos.update', ['only' => ['updatedelete']]);
+         $this->middleware('permission:inscritoeditar.update', ['only' => ['update']]);
+         $this->middleware('permission:curso.inscrito.reporte', ['only' => ['pdfcurso']]);
+    }
+
+    /**
+     * Muestra una lista paginada de inscripciones, con opciones de búsqueda para inscripciones, usuarios y cursos.
+     * Los administradores y encargados ven todas las inscripciones, mientras que otros usuarios solo ven las suyas.
+     * También incluye listas paginadas de usuarios y cursos para su posible selección o visualización relacionada.
+     *
+     * @return \Inertia\Response
+     */
+    public function index(Request $request)
     {
         //------------------------------------------------------------------------------------
         $searchTerm = request()->query('search');
-        $perPage = request()->query('perPage', 10);
-        $query = ModelInscripcion::query();
+        $perPage = (int)$request->input('perPage', 10);
+        $allowedPerPage = [10, 12, 24, 48];
+        
+        if (!in_array($perPage, $allowedPerPage, false)) {
+            $perPage = 10;
+        }
+        
+        $query = ModelInscripcion::where('estado', 'activo');
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('fecha_inscripcion', 'like', "%{$searchTerm}%")
@@ -49,7 +72,16 @@ class Inscripcion extends Controller
 
             });
         }
-        $inscritos = $query->with('user')->with('curso')->paginate($perPage);
+        $user = Auth::user();
+        if ($user->hasRole('Administrador') || $user->hasRole('Encargado')) {
+            $inscritos = $query->with('user')->with('curso')->paginate($perPage);
+        }else{
+            $inscritos = $query->with('user')->with('curso')
+                                ->where('id_user',$user->id)
+                                ->paginate($perPage);
+        }
+
+
         //------------------------------------------------------------------------------------
         $searchTerm2 = request()->query('searchuser');
         $perPage2 = request()->query('perPage2', 5);
@@ -66,7 +98,12 @@ class Inscripcion extends Controller
         //------------------------------------------------------------------------------------
         $searchTerm3 = request()->query('searchcurso');
         $perPage3 = request()->query('perPage3', 5);
-        $query3 = Curso::query();
+        $hoy = Carbon::now();
+        $query3 = Curso::where('estado', 'activo') // Asegura que el curso esté activo
+            ->whereDate('fecha_inicio_inscripcion', '<=', $hoy)
+            ->whereDate('fecha_fin_inscripcion', '>=', $hoy);
+
+
         if ($searchTerm3) {
             $query3->where(function ($q) use ($searchTerm3) {
                 $q->where('nombre', 'like', "%{$searchTerm3}%")
@@ -95,30 +132,75 @@ class Inscripcion extends Controller
         ]);
     }
 
+    /**
+     * Almacena una nueva inscripción en la base de datos.
+     * Valida que se proporcionen los IDs de usuario y curso, crea un nuevo registro de inscripción con un UUID único,
+     * la fecha actual y el estado inicial 'inscrito'.
+     *
+     * @param  \Illuminate\Http\Request  $request El objeto de la petición HTTP que contiene los IDs de usuario y curso.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
-        $mensaje=["registro exitoso"];
+        $mensaje = ["registro exitoso"];
+
         $validated = $request->validate([
             'id_user' => 'required',
             'id_curso' => 'required',
         ]);
+
+            // Verifica si ya existe una inscripción activa (estado = 'activo') para el mismo curso y usuario
+    $inscripcionActiva = ModelInscripcion::where('id_user', $request->id_user)
+    ->where('id_curso', $request->id_curso)
+    ->where('estado', 'activo')
+    ->first();
+
+if ($inscripcionActiva) {
+    return back()->withErrors([
+        'id_curso' => 'El usuario ya está inscrito actualmente en este curso.',
+    ]);
+}
+
+        $curso = Curso::findOrFail($request->id_curso);
+        $hoy = Carbon::now();
+        
+        if (
+            $hoy->lt(Carbon::parse($curso->fecha_inicio_inscripcion)) ||
+            $hoy->gt(Carbon::parse($curso->fecha_fin_inscripcion))
+        ) {
+            return back()->withErrors(['id_curso' => 'El curso no está vigente para inscripciones.']);
+        }
+        
+
        // dd( $validated);
         $registroguardar = ModelInscripcion::create([
             'id_user' => $request->id_user,
             'id_curso' => $request->id_curso,
             'uuid_inscripcion' =>Str::uuid(),
             'fecha_inscripcion' => Carbon::now(),
+            'estado' => 'activo',
             'estado_ins'=>"inscrito"
 
         ]);
+
+
 
         // Lógica de guardado (ejemplo)
         return back()
             ->with('success', 'Usuario  inscrito')
             ->with('datos_array', [$mensaje]);
+
+            
     }
 
-    // App/Http/Controllers/InstitucionController.php
+    /**
+     * Actualiza la información de una inscripción existente.
+     * Valida que se proporcionen los IDs de usuario y curso y actualiza el registro de inscripción correspondiente basado en su UUID.
+     *
+     * @param  \Illuminate\Http\Request  $request El objeto de la petición HTTP con los datos actualizados de la inscripción.
+     * @param  string  $id El UUID único de la inscripción que se va a actualizar.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, $id)
     {
         $mensaje=["registro editado"];
@@ -135,6 +217,15 @@ class Inscripcion extends Controller
             ->with('success', 'Inscripcion editada correctamente')
             ->with('datos_array', [$mensaje]);
     }
+
+    /**
+     * Actualiza el estado de una inscripción (activo, inactivo o eliminado) basado en el código proporcionado.
+     * Busca la inscripción por su UUID y actualiza la columna 'estado' según el valor de '$cod'.
+     *
+     * @param  string  $id El UUID único de la inscripción que se va a actualizar.
+     * @param  string  $cod El código que indica el nuevo estado de la inscripción ('1' para activo, '2' para inactivo, otro para eliminado).
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updatedelete($id, $cod)
     {
         //dd($id, $cod);
@@ -159,11 +250,35 @@ class Inscripcion extends Controller
     }
 
 
-
+    /**
+     * Genera un certificado en formato PDF para un curso inscrito específico, incluyendo un código QR para verificación.
+     * Busca la inscripción por su UUID, genera un código QR enlazado a la página de verificación,
+     * crea un documento PDF en formato horizontal con la información del participante, el curso y la fecha,
+     * inserta la imagen del curso como fondo y el código QR en la esquina inferior derecha.
+     * Finalmente, devuelve el PDF como una respuesta descargable en el navegador.
+     *
+     * @param  string  $uuid El UUID único de la inscripción para la cual se generará el certificado.
+     * @return \Illuminate\Http\Response
+     */
     public function pdfcurso($uuid)
     {
         $cursoinscrito = ModelInscripcion::where('uuid_inscripcion', $uuid)->firstOrFail();
 
+        if (!$cursoinscrito->certificado_numero) {
+            // Obtener el máximo para este curso
+            $last = ModelInscripcion::where('id_curso', $cursoinscrito->id_curso)
+                      ->max('certificado_numero') ?? 0;
+            $next = $last + 1;
+            $cursoinscrito->certificado_numero = $next;
+            $cursoinscrito->save();
+        } else {
+            $next = $cursoinscrito->certificado_numero;
+        }
+
+        $numeroFormateado = str_pad($next, 5, '0', STR_PAD_LEFT);
+
+        $codigoCurso = $cursoinscrito->curso->codigo_curso ?? 'CURSO';
+        $textoCertificado = "{$codigoCurso} - Nro {$numeroFormateado}";
         // Ruta temporal para el QR
         $qrPath = storage_path('app/public/temp_qr.png');
 
@@ -181,6 +296,11 @@ class Inscripcion extends Controller
             foregroundColor: new Color(0, 0, 0),
             backgroundColor: new Color(255, 255, 255)
         );
+
+        $rawNombre = $cursoinscrito->curso->tipoActividad->nombre 
+        ?? $cursoinscrito->curso->tipo;
+
+$tipoTexto = mb_strtoupper($rawNombre, 'UTF-8');
 
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
@@ -202,34 +322,72 @@ class Inscripcion extends Controller
         }
 
         // Texto principal centrado con coordenadas precisas
-        $pdf->SetFont('Arial', 'B', 42);
-        $pdf->SetXY(0, 95);
-        $pdf->Cell(297, 12, utf8_decode($cursoinscrito->user->name . " " . $cursoinscrito->user->primer_apellido ." ". $cursoinscrito->user->segundo_apellido ?? 'Nombre del Participante'), 0, 1, 'C');
+        $pdf->SetFont('Arial', 'B', 30);
+        $pdf->SetXY(0, 90);
+       // $pdf->Cell(297, 12, utf8_decode($cursoinscrito->user->name . " " . $cursoinscrito->user->primer_apellido ." ". $cursoinscrito->user->segundo_apellido ?? 'Nombre del Participante'), 0, 1, 'C');
+       // Construye el nombre completo
+$nombreCompleto = $cursoinscrito->user->name
+.' '.$cursoinscrito->user->primer_apellido
+.' '.$cursoinscrito->user->segundo_apellido;
+
+// Convierte a mayúsculas en UTF-8
+$nombreCompleto = mb_strtoupper($nombreCompleto, 'UTF-8');
+
+// Y luego lo envías al PDF
+$pdf->Cell(297,12,utf8_decode($nombreCompleto),0,1,'C');
+
+
 
         $pdf->SetFont('Arial', '', 14);
-        $cursoNombre = $cursoinscrito->curso->nombre ?? 'Curso Desconocido';
-        $descripcion = "Por su participacion en el curso: \"$cursoNombre\", realizado en la Federacion Departamental de Trabajadores de Educacion Urbana de La Paz";
-        $pdf->SetXY(25, 120);
-        $pdf->MultiCell(247, 8, utf8_decode($descripcion), 0, 'C');
+        $pdf->SetXY(25, 112);
+        //$pdf->MultiCell(247, 8, utf8_decode('Por su participacion en el curso:'), 0, 'C');
+        $pdf->MultiCell(247, 8, utf8_decode("Por su participación en el {$tipoTexto}"), 0, 'C');
 
+        $pdf->SetFont('Arial', 'B', 15);
+        //$cursoNombre = $cursoinscrito->curso->nombre ?? 'Curso Desconocido';
+        $cursoNombre = mb_strtoupper($cursoinscrito->curso->nombre ?? 'Curso Desconocido', 'UTF-8');
+        $pdf->SetXY(25, 122);
+        $pdf->MultiCell(247, 8, utf8_decode($cursoNombre), 0, 'C');
+        $y = $pdf->GetY() + 1;
         $pdf->SetFont('Arial', '', 14);
-        $fechainicio = $cursoinscrito->curso->fecha_inicio ?? 'Fecha';
-        $fechafin = $cursoinscrito->curso->fecha_fin ?? 'Fecha';
+        // $descripcion = "Por su participacion en el curso: \"$cursoNombre\", realizado en la Federacion Departamental de Trabajadores de Educacion Urbana de La Paz";
+        $pdf->SetXY(25, $y);
+        $pdf->MultiCell(247, 8, utf8_decode('En la Federación Departamental de Trabajadores de Educación Urbana de La Paz'), 0, 'C');
+        
+        $pdf->SetFont('Arial', '', 14);
+        $fechai = Carbon::parse($cursoinscrito->curso->fecha_inicio)->locale('es');
+        $fechainciotexto = $fechai->translatedFormat('j \d\e F');
+        $fechainicio = $fechainciotexto ?? 'Fecha';
+        $fechaf = Carbon::parse($cursoinscrito->curso->fecha_fin)->locale('es');
+        $fechafintexto = $fechaf->translatedFormat('j \d\e F');
+        $fechafin = $fechafintexto ?? 'Fecha';
         $cargahoraria = $cursoinscrito->curso->carga_horaria ?? 'Hora';
-        $descripcion = "Realizado en el periodo de: \"$fechainicio\" al \"$fechafin\" con carga horaria de \"$cargahoraria\" Hrs.";
-        $pdf->SetXY(25, 140);
+        // Gestion
+        $fechag = Carbon::parse($cursoinscrito->curso->fecha_incio)->locale('es');
+        $gestion = $fechag->year ?? '2000';
+        $cargahoraria = $cursoinscrito->curso->carga_horaria ?? 'Hora';
+        $descripcion = "Realizado en el Período de: $fechainicio al $fechafin del $gestion con carga horaria de $cargahoraria Hrs.";
+        $y = $pdf->GetY() + 1;
+        $pdf->SetFont('Arial', '', 14);
+        $pdf->SetXY(25, $y);
         $pdf->MultiCell(247, 8, utf8_decode($descripcion), 0, 'C');
-
+        $y = $pdf->GetY() + 1;
         $pdf->SetFont('Arial', '', 12);
-        $pdf->SetXY(0, 150);
+        $pdf->SetXY(0, $y);
         $pdf->Cell(297, 10, utf8_decode('Fecha de emisión: ' . date('d/m/Y')) , 0, 1, 'C');
 
 
         // Insertar QR en esquina inferior derecha
         $pdf->Image($qrPath, 250, 35, 35);
 
+        $pdf->SetFont('Arial', '', 8);
+        // Coloca la posición que desees; por ejemplo abajo a la izquierda:
+        $pdf->SetXY(250, 35 + 35 + 2);;
+        $pdf->MultiCell(35, 4, utf8_decode($textoCertificado), 0, 'C');
+  
         // Eliminar QR temporal
         unlink($qrPath);
+  
 
         $pdfContent = $pdf->Output('', 'S');
 
@@ -239,7 +397,14 @@ class Inscripcion extends Controller
             'Content-Disposition' => 'inline; filename="certificado-curso.pdf"',
         ]);
     }
-
+    /**
+     * Muestra la página de verificación del certificado de un curso inscrito.
+     * Busca la inscripción por su UUID, cargando también las relaciones con el usuario y el curso,
+     * y luego renderiza el componente de Inertia 'Verificacion' con la información de la inscripción.
+     *
+     * @param  string  $uuid El UUID único de la inscripción que se va a verificar.
+     * @return \Inertia\Response
+     */
     public function verificarCurso($uuid){
         $inscrito = ModelInscripcion::with(['user', 'curso'])->where('uuid_inscripcion', $uuid)->firstOrFail();
         // dd($inscrito);
