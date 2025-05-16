@@ -31,6 +31,7 @@
         "recharts": "^2.15.3",
         "sweetalert2": "^11.17.2",
         "vue-carousel": "^0.11.0",
-        "vue3-carousel": "^0.15.0"
+        "vue3-carousel": "^0.15.0",
+        "ziggy-js": "^2.5.2"
     }
 }
