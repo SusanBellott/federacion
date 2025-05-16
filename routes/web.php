@@ -17,6 +17,10 @@ use App\Http\Controllers\TipoActividades;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
+    return 'Todo listo en producción 🚀';
+});
+
+Route::get('/', function () {
     // Si ya está logueado, lo mandamos directo al dashboard
     if ( Auth::check() ) {
         return redirect()->route('dashboard');
