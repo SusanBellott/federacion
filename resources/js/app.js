@@ -9,7 +9,7 @@ import '../css/argon-dashboard-tailwind.css?v=1.0.1';
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import route from './ziggy'; // Este es el archivo generado con artisan
+import { Ziggy } from './ziggy';
 import { ZiggyVue } from 'ziggy-js'; // Este viene desde npm (y sí exporta ZiggyVue)
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -38,7 +38,8 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue, { Ziggy: route }) 
+            .use(ZiggyVue, { Ziggy })
+
             .mount(el);
     },
     progress: {
