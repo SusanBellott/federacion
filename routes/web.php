@@ -58,6 +58,8 @@ Route::get('/encargado/dashboard', function () {
 Route::get('/admin/dashboard', function () {
     return Inertia::render('DashboardAdmin');
 })->middleware(['auth', 'permission:dashboard'])->name('dashboard.admin');
+Route::get('/reporte-mensual', [Dashboard::class, 'descargarReporteMensual'])->name('dashboard.reporte.mensual');
+
 
 //    Route::get('/dashboard', function () {
   //      return Inertia::render('Dashboard');
@@ -85,6 +87,9 @@ Route::get('/admin/dashboard', function () {
     Route::patch('inscritos/{id}/{cod}', action: [Inscripcion::class, 'updatedelete'])->name('editarestadodeleteinscritos.update');
     Route::put('inscritoeditar/{id}', [Inscripcion::class, 'update'])->name('inscritoeditar.update');
     Route::get('/reporte-de-curso-inscrito/{uuid}', [Inscripcion::class, 'pdfcurso'])->name('curso.inscrito.reporte');
+    Route::get('/reporte/inscritos/curso/{uuid}', [Inscripcion::class, 'reporteInscritosPorCurso'])
+    ->name('reporte.inscritos')
+    ->middleware('permission:curso.inscrito.reporte');
 
 
     //------------------------------------------------- cursos todo ------------------------------------------
@@ -126,6 +131,8 @@ Route::get('/admin/dashboard', function () {
     });
     Route::get('/distritos/{id}/datos', [InstitucionController::class, 'datosRelacionados']);
     Route::get('api/distritos/{id}/datos', [InstitucionController::class, 'getDatosRelacionados']);
+Route::get('/instituciones/{id}/codigos-sie', [CodigoSieController::class, 'getByInstitucion']);
+Route::get('/api/instituciones/{id}/codigos-sie', [CodigoSieController::class, 'getByInstitucion']);
 
     //------------------------------------------------- distritos todo ------------------------------------------
 

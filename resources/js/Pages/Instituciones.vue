@@ -19,7 +19,7 @@
                     </div>
 
                     <button v-if="$page.props.permissions.includes('instituciones.create')"
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                            class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
@@ -28,7 +28,7 @@
                                         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                         clip-rule="evenodd" />
                                 </svg>
-                                Nueva Institución
+                                Agregar Nueva Institución
                             </span>
                         </button>
                 </div>
@@ -48,7 +48,6 @@
                                 <tr>
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th> 
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Distrito</th>
-                                    <th class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Unidad educativa</th>
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Subsistema</th>
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Servicio</th>
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Servicio Generado</th>
@@ -63,9 +62,6 @@
                                     >{{ (currentPage - 1) * perPage + index + 1 }}</td>
                                     <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
                                         {{ institucion.distrito?.descripcion || 'Desconocido' }}
-                                    </td>
-                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
-                                        {{ institucion.codigo_sie?.unidad_educativa || 'Desconocido' }}
                                     </td>
                                     <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
                                        {{ institucion.subsistema }}
@@ -108,7 +104,6 @@
                                                     institucion.servicio,
                                                     institucion.servicio_generado,
                                                     institucion.nivel,
-                                                    institucion.unidad_educativa_id,
                                                 )"
                                                 class="p-2 text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -155,26 +150,13 @@
   <SearchableSelect
     v-model="form.id_distrito"
     :options="distritosOptions"
-    placeholder="Buscar distrito..."
+    placeholder="Buscar distrito"
   />
   <validacioens :message="erroresinstitucion?.value?.id_distrito" />
 </div>
 
 
     <!-- Campo Unidad Educativa (Nuevo) -->
-<!-- Campo Unidad Educativa -->
-<div>
-  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-    Unidad Educativa
-  </label>
-  <SearchableSelect
-    v-model="form.unidad_educativa_id"
-    :options="unidadEducativaOptions"
-    placeholder="Buscar unidad educativa..."
-  />
-  <validacioens :message="erroresinstitucion?.value?.unidad_educativa_id" />
-</div>
-
 
     <div>
       <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
@@ -185,10 +167,11 @@
         required 
         class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
         <option value="">Seleccione un subsistema</option>
-        <option value="EDUCACION SUPERIOR">Educación Superior</option>
-        <option value="REGULAR">Regular</option>
-        <option value="ALTERNATIVA">Alternativa</option>
-        <option value="ESPECIAL PERMANENTE">Especial Permanente</option>
+        <option value="ALTERNATIVA Y ESPECIAL PERMANENTE">ALTERNATIVA Y ESPECIAL PERMANENTE</option>
+        <option value="EDUCACION SUPERIOR">EDUCACION SUPERIOR</option>
+        <option value="REGULAR">REGULAR</option>
+        
+
 
       </select>
       <validacioens :message="erroresinstitucion?.value?.subsistema" />
@@ -234,12 +217,13 @@
         required 
         class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
         <option value="">Seleccione un nivel</option>
-        <option value="ALTERNATIVA">Alternativa</option>
-        <option value="ESPECIAL">Especial</option>
-        <option value="INICIAL">Inicial</option>
-        <option value="PERMANENTE">Permanente</option>
-        <option value="PRIMARIA">Primaria</option>
-        <option value="SECUNDARIA">Secundaria</option>
+        <option value="ALTERNATIVA">ALTERNATIVA</option>
+        <option value="ESPECIAL">ESPECIAL</option>
+        <option value="INICIAL">INICIAL</option>
+        <option value="PERMANENTE">PERMANENTE</option>
+        <option value="PRIMARIA">PRIMARIA</option>
+        <option value="SECUNDARIA">SECUNDARIA</option>
+        <option value="SUPERIOR">SUPERIOR</option>
       </select>
       <validacioens :message="erroresinstitucion?.value?.nivel" />
     </div>
@@ -297,10 +281,8 @@ import SearchableSelect from "@/Components/SearchableSelect.vue";
 const props = defineProps({
     instituciones: Object,
     distritos: Array,
-    codigosSie: Array, // Añadido para recibir los códigos SIE
     filters: Object,
 });
-const unidadesEducativas = ref([]);
 
 
 const currentPage = computed(() => props.instituciones.current_page);
@@ -321,31 +303,7 @@ const form = ref({
     servicio: "",
     servicio_generado: "",
     nivel: "",
-    unidad_educativa_id: "",
 });
-
-// Modifica la función cargarUnidadesEducativas para que devuelva la promesa de axios
-const cargarUnidadesEducativas = () => {
-    console.log("Cargando unidades para distrito:", form.value.id_distrito);
-
-    if (form.value.id_distrito) {
-        return axios.get(`/api/distritos/${form.value.id_distrito}/unidades-educativas`)
-            .then(response => {
-                unidadesEducativas.value = response.data;
-                console.log("Unidades cargadas:", unidadesEducativas.value);
-                return response.data;
-            })
-            .catch(error => {
-                console.error("Error al cargar unidades educativas:", error);
-                return [];
-            });
-    } else {
-        unidadesEducativas.value = [];
-        return Promise.resolve([]);
-    }
-};
-
-
 
 const handleClick = () => {
     showModal.value = true;
@@ -363,10 +321,9 @@ const resetForm = () => {
         servicio: "",
         servicio_generado: "",
         nivel: "",
-        unidad_educativa_id: "", 
     };
     id_institucion.value = null;
-    unidadesEducativas.value = []; 
+
 };
 
 // Modifica la función handleClickEditar para manejar correctamente la asincronía
@@ -377,7 +334,7 @@ const handleClickEditar = async (
     servicio,
     servicio_generado,
     nivel,
-    unidad_educativa_id = "",
+
 ) => {
     showModal.value = true;
     id_institucion.value = uuid;
@@ -390,22 +347,6 @@ const handleClickEditar = async (
     form.value.servicio = servicio;
     form.value.servicio_generado = servicio_generado;
     form.value.nivel = nivel;
-
-    try {
-        // Espera a que las unidades educativas se carguen completamente
-        const unidades = await cargarUnidadesEducativas();
-        
-        // Verifica si existe la unidad educativa en las opciones cargadas
-        const match = unidades.find(u => u.id_codigo_sie == unidad_educativa_id);
-        
-        // Establece el valor solo después de confirmar que las unidades se cargaron
-        form.value.unidad_educativa_id = match ? unidad_educativa_id : "";
-        
-        console.log("Unidad educativa seleccionada:", form.value.unidad_educativa_id);
-    } catch (error) {
-        console.error("Error al cargar unidades educativas:", error);
-        form.value.unidad_educativa_id = "";
-    }
 };
 
 const submitForm = () => {
@@ -435,19 +376,9 @@ const distritosOptions = computed(() =>
   }))
 );
 
-const unidadEducativaOptions = computed(() =>
-  unidadesEducativas.value.map(u => ({
-    value: u.id_codigo_sie,
-    label: u.unidad_educativa,
-  }))
-);
 
 watch(() => form.value.id_distrito, async (nuevoDistrito) => {
   if (nuevoDistrito) {
-    await cargarUnidadesEducativas(); // llama tu función
-  } else {
-    unidadesEducativas.value = [];
-    form.value.unidad_educativa_id = "";
   }
 });
 

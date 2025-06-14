@@ -26,20 +26,26 @@ class CodigoSieController extends Controller
         if (!in_array($perPage, $allowedPerPage)) {
             $perPage = 10;
         }
-        $query = CodigoSie::with('distrito');
+      $query = CodigoSie::with(['distrito', 'institucion']);
+
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('programa', 'like', "%{$searchTerm}%")
                   ->orWhere('unidad_educativa', 'like', "%{$searchTerm}%")
                   ->orWhereHas('distrito', function ($d) use ($searchTerm) {
                       $d->where('descripcion', 'like', "%{$searchTerm}%");
-                  });
+                  })
+                  ->orWhereHas('institucion', function ($i) use ($searchTerm) {
+    $i->where('nivel', 'like', "%{$searchTerm}%");
+});
+
             });
         }
         
         return Inertia::render('CodigoSie', [
             'codigosie' => $query->paginate($perPage),
             'distritos' => Distrito::select('id_distrito', 'descripcion')->get(),
+            'instituciones' => \App\Models\Institucion::select('id_institucion', 'id_distrito', 'nivel')->get(),
             'filters' => ['search' => $searchTerm, 'perPage' => $perPage],
         ]);
 
@@ -53,10 +59,17 @@ class CodigoSieController extends Controller
         $validated['uuid_codigo_sie'] = Str::uuid(); // Asegúrate de generar UUID si no viene del frontend
     
         CodigoSie::create($validated);
-    
-        return back()
-        ->with('success', 'Distrito creado correctamente')
-        ->with('datos_array', [$validated]);
+     // Obtener los datos reales para mostrar en flash (si existen)
+    $distrito = Distrito::find($validated['distrito_id'] ?? null);
+    $institucion = \App\Models\Institucion::find($validated['institucion_id'] ?? null);
+
+       return back()
+    ->with('success', 'Código SIE creado correctamente')
+    ->with('datos_array', [
+        'Distrito' => optional($request->distrito)->descripcion,
+        'Institución' => optional($request->institucion)->nivel
+    ]);
+
 
     }
     
@@ -107,4 +120,13 @@ class CodigoSieController extends Controller
             ->get(['id_codigo_sie', 'unidad_educativa'])
     );
 }
+public function getByInstitucion($institucionId)
+{
+    return response()->json(
+        CodigoSie::where('institucion_id', $institucionId)
+            ->where('estado', 'activo')
+            ->get(['id_codigo_sie', 'unidad_educativa'])
+    );
+}
+
 }

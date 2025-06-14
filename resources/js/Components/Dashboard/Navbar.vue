@@ -29,7 +29,7 @@
                 class="block px-0 py-2 text-sm font-semibold dark:text-white text-slate-800 transition-all ease-nav-brand"
                 @click="toggleUserMenu">
                 <i class="fa fa-user sm:mr-1"></i>
-                <span class="inline">{{ user?.name }}</span>
+                <span class="inline">{{ user?.name }} {{ user?.primer_apellido }} {{ user?.segundo_apellido }}</span>
                 <i class="ml-1 fa fa-caret-down"></i>
               </a>
               <ul v-show="userMenuOpen"

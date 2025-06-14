@@ -14,21 +14,34 @@ const props = defineProps({
   },
 });
 
-const misCursos = ref([...props.misCursosIds]);
+
+const misCursos = ref([...props.misCursosIds.map(id => Number(id))]);
 const loadingId = ref(null);
-const hoy = new Date().toISOString().split("T")[0];
+
+const hoy = new Date();
 
 const cursosFiltrados = computed(() => {
   const cursosList = Array.isArray(props.cursos)
     ? props.cursos
     : props.cursos?.data || [];
 
-  return cursosList.filter(curso => curso.fecha_inicio_inscripcion <= hoy);
+  return cursosList.filter((curso) => {
+    const inicio = new Date(curso.fecha_inicio_inscripcion);
+    inicio.setHours(0, 0, 0, 0); // forzar 00:00:00
+
+    const fin = new Date(curso.fecha_fin_inscripcion);
+    fin.setHours(23, 59, 59, 999); // forzar 23:59:59.999
+
+    return hoy >= inicio && hoy <= fin;
+  });
 });
 
+
 const estaInscrito = (cursoId) => {
-  return misCursos.value.includes(Number(cursoId)); // Aseguramos que sean del mismo tipo
+  return misCursos.value.includes(Number(cursoId));
 };
+
+
 
 const formatDate = (dateString) => {
   if (!dateString) return "N/A";
@@ -44,27 +57,60 @@ const tomarmateria = (uuidCurso) => {
     onSuccess: async () => {
       const curso = props.cursos.find(c => c.uuid_curso === uuidCurso);
       if (curso && !misCursos.value.includes(curso.id_curso)) {
-        misCursos.value = [...misCursos.value, curso.id_curso]; // fuerza reactividad
+        misCursos.value.push(curso.id_curso); // fuerza reactividad
       }
 
       await nextTick(); // espera a que Vue actualice el DOM
 
       Swal.fire({
-        icon: "success",
-        title: "Inscripción exitosa",
-        text: "Ya estás inscrito en este curso.",
-        confirmButtonColor: "#10b981"
-      });
+  iconHtml: `
+    <div class="flex items-center justify-center">
+      <svg class="w-20 h-20 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" fill="transparent"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4 -4" stroke="white" stroke-width="2"/>
+      </svg>
+    </div>
+  `,
+  title: '¡Ya estás inscrito!',
+  text: 'Tu inscripción se ha registrado correctamente.',
+  background: '#34d399', // verde esmeralda claro
+  color: '#fff',
+  customClass: {
+    popup: 'rounded-2xl shadow-lg px-8 py-6',
+    title: 'text-2xl font-bold',
+    confirmButton: 'bg-white text-emerald-600 font-semibold px-6 py-2 rounded-lg hover:bg-gray-100'
+  },
+  showConfirmButton: true,
+  confirmButtonText: 'Aceptar',
+});
+
     },
     onError: (errors) => {
       console.error("❌ Error al inscribirse:", errors);
 
       Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Hubo un problema al inscribirse. Intenta nuevamente.",
-        confirmButtonColor: "#ef4444"
-      });
+  iconHtml: `
+    <div class="flex items-center justify-center">
+      <svg class="w-20 h-20 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" fill="transparent"/>
+        <line x1="9" y1="9" x2="15" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <line x1="15" y1="9" x2="9" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  `,
+  title: '¡Error!',
+  text: 'Hubo un problema al inscribirse. Intenta nuevamente.',
+  background: '#ef4444', // rojo tailwind (red-500)
+  color: '#fff',
+  customClass: {
+    popup: 'rounded-2xl shadow-lg px-8 py-6',
+    title: 'text-2xl font-bold',
+    confirmButton: 'bg-white text-red-600 font-semibold px-6 py-2 rounded-lg hover:bg-gray-100'
+  },
+  showConfirmButton: true,
+  confirmButtonText: 'Cerrar',
+});
+
     },
     onFinish: () => {
       loadingId.value = null;
@@ -75,8 +121,10 @@ const tomarmateria = (uuidCurso) => {
 };
 
 onMounted(() => {
+  console.log("misCursosIds:", props.misCursosIds);
   document.documentElement.classList.add("dark");
 });
+
 </script>
 
 <template>
@@ -90,29 +138,39 @@ onMounted(() => {
       <h3 class="mt-4 text-lg font-medium">No hay actividades disponibles</h3>
     </div>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div v-else  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
       <div v-for="curso in cursosFiltrados" :key="curso.id_curso"
-        class="flex flex-col justify-between h-[520px] rounded-2xl border-2 border-transparent transform hover:scale-[1.02] transition-transform duration-300 shadow-lg hover:shadow-xl bg-gradient-to-br from-sky-700 to-sky-500">
+         class="flex flex-col rounded-2xl border-2 border-transparent transform hover:scale-[1.02] transition-transform duration-300 shadow-lg hover:shadow-xl bg-gradient-to-br from-sky-700 to-sky-500">
 
         <!-- Imagen -->
-        <div class="w-full bg-white/20 flex items-center justify-center p-4">
-          <img v-if="curso.img_curso" :src="curso.img_curso" alt="Curso"
-            class="w-full max-h-44 object-contain rounded-lg" />
-          <div v-else class="w-full h-44 flex items-center justify-center bg-white/10 text-gray-300 rounded-lg">
-            <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        </div>
+<!-- Imagen con bordes superiores redondeados correctos -->
+<div class="w-full p-4 overflow-hidden rounded-t-2xl bg-white/20 flex items-center justify-center">
+  <img
+    v-if="curso.img_curso"
+    :src="curso.img_curso"
+    alt="Curso"
+    class="max-w-full max-h-40 object-contain"
+    style="aspect-ratio: 16/9;" />
+
+  <div v-else class="w-full h-44 flex items-center justify-center bg-white/10 text-gray-300">
+    <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  </div>
+</div>
+
 
         <!-- Contenido -->
-        <div class="bg-white/90 dark:bg-gray-800/90 rounded-b-2xl p-6 flex flex-col justify-between h-full">
+     <div class="bg-white/90 dark:bg-gray-800/90 rounded-b-2xl p-6 flex flex-col justify-between h-full">
+
           <div class="space-y-2 text-gray-600 dark:text-gray-400 text-sm">
             <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
               {{ curso.nombre }}
             </h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-2 line-clamp-3">{{ curso.descripcion }}</p>
+           <p class="text-gray-600 dark:text-gray-300 mb-2 text-sm leading-snug">
+  {{ curso.descripcion }}
+</p>
 
             <div class="space-y-2">
               <div class="flex justify-between">
@@ -135,7 +193,8 @@ onMounted(() => {
             <button v-if="estaInscrito(curso.id_curso)"
               class="w-full py-3 bg-gray-400 text-white font-semibold rounded-full shadow-inner cursor-not-allowed"
               disabled>
-              Ya inscrito
+              Inscrito
+
             </button>
 
             <button v-else :disabled="loadingId === curso.uuid_curso"

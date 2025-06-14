@@ -154,11 +154,14 @@ const form = ref({
     fecha_inicio: "",
     fecha_fin: "",
     carga_horaria: "",
+        tipo_pago: '',
+    precio: null,
     img_curso: "",
     imagen: null
 });
 
 const imagenPreview = ref(null);
+const today = new Date().toISOString().split("T")[0];
 
 const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -212,7 +215,9 @@ const handleClickEditar = (
     fecha_inicio,
     fecha_fin,
     img_curso,
-    carga_horaria
+    carga_horaria,
+      tipo_pago, // 👈 nuevo
+  precio  
 ) => {
     console.log("tipo editado:", tipo); // <--- Aquí
     showModal.value = true;
@@ -245,6 +250,8 @@ if (!tipoObjeto && props.cursos.data) {
     form.value.fecha_fin = fecha_fin;
     form.value.img_curso = img_curso;
     form.value.carga_horaria = carga_horaria;
+form.value.tipo_pago = tipo_pago || 'gratuito';
+form.value.precio = tipo_pago === 'pago' ? precio : null;
 
 };
 
@@ -257,6 +264,7 @@ function resetForm() {
     fecha_inicio: '',
     fecha_fin: '',
     carga_horaria: '',
+      tipo_pago: '',      // ✅ ← importante
     img_curso: ""
     };
     id_curso.value = null;
@@ -268,12 +276,21 @@ function extractDesignId(url) {
 }
 
 const submitForm = () => {
+  // ✅ Limpia el campo "precio" si el curso es gratuito
+  if (form.value.tipo_pago === 'gratuito') {
+    form.value.precio = ''; // Cambiar a vacío explícitamente o eliminar
+  }
 
-    const formData = new FormData();
-    for (const [key, value] of Object.entries(form.value)) {
-  formData.append(key, value);
-}
+  const formData = new FormData();
 
+  // ✅ Solo incluir 'precio' si es de pago
+  for (const [key, value] of Object.entries(form.value)) {
+    if (key === 'precio' && form.value.tipo_pago !== 'pago') {
+      continue; // ❌ No agregues precio si no es un curso de pago
+    }
+
+    formData.append(key, value ?? '');
+  }
 
 
 
@@ -352,6 +369,10 @@ const enviarfotos = () => {
         inputFile.value.value = null;
     }
   }
+const userIsAdmin = computed(() => {
+  const roles = page.props.auth.user.roles.map(r => r.name);
+  return roles.includes('Administrador') || roles.includes('Encargado');
+});
 
 watch(
   () => [form.value.tipo_actividad_id, form.value.fecha_inicio, form.value.fecha_fin],
@@ -382,6 +403,12 @@ const cargaRange = computed(() => {
   return tipo ? { min: tipo.horas_minimas, max: tipo.horas_minimas * 60 } : { min: 0, max: 9999 };
 });
 
+const generarPDFInscritos = (uuidCurso) => {
+  const url = `/reporte/inscritos/curso/${uuidCurso}`;
+  window.open(url, '_blank'); // abre el PDF en nueva pestaña
+};
+
+
 </script>
 
 <template>
@@ -407,11 +434,10 @@ const cargaRange = computed(() => {
 </label>
 <select
   v-model.number="form.tipo_actividad_id"
-  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none max-h-48 overflow-y-auto"
   required
 >
-<option value="" disabled>Seleccione un tipo de actividad</option>
-
+  <option value="" disabled>Seleccione un tipo de actividad</option>
   <option
     v-for="tipo in props.tipos"
     :key="tipo.id"
@@ -420,6 +446,7 @@ const cargaRange = computed(() => {
     {{ tipo.codigo }} - {{ tipo.nombre }}
   </option>
 </select>
+
 
 
 
@@ -456,7 +483,7 @@ const cargaRange = computed(() => {
   <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
     Fecha de inicio de inscripción <span class="text-red-500">*</span>
   </label>
-  <input v-model="form.fecha_inicio_inscripcion" type="date" required :min="today"
+  <input v-model="form.fecha_inicio_inscripcion" type="date" :required="!id_curso"  :min="!id_curso ? today : null"
   class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
   <span v-if="errors.fecha_inicio_inscripcion" class="text-red-500 text-xs">{{ errors.fecha_inicio_inscripcion }}</span>
 </div>
@@ -466,7 +493,7 @@ const cargaRange = computed(() => {
   <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
     Fecha de fin de inscripción <span class="text-red-500">*</span>
   </label>
-  <input v-model="form.fecha_fin_inscripcion" type="date" required :min="form.fecha_inicio_inscripcion"
+  <input v-model="form.fecha_fin_inscripcion" type="date" :required="!id_curso" :min="form.fecha_inicio_inscripcion"
     max="2040-12-31"
     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
     <span v-if="errors.fecha_fin_inscripcion" class="text-red-500 text-xs">{{ errors.fecha_fin_inscripcion }}</span>
@@ -477,7 +504,7 @@ const cargaRange = computed(() => {
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                         Fecha de Inicio de actividad <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="form.fecha_inicio" type="date" required :min="today" max="2040-12-31"
+                    <input v-model="form.fecha_inicio" type="date" :required="!id_curso" :min="!id_curso ? today : null" max="2040-12-31"
                         class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
                         <span v-if="errors.fecha_inicio" class="text-red-500 text-xs">{{ errors.fecha_inicio }}</span>
                     </div>
@@ -487,7 +514,7 @@ const cargaRange = computed(() => {
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                         Fecha de Culminación de actividad <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="form.fecha_fin" type="date" required :min="form.fecha_inicio || today" max="2040-12-31"
+                    <input v-model="form.fecha_fin" type="date" :required="!id_curso" :min="form.fecha_inicio || today" max="2040-12-31"
                         class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
                         <span v-if="errors.fecha_fin" class="text-red-500 text-xs">{{ errors.fecha_fin }}</span>
                     </div>
@@ -497,7 +524,7 @@ const cargaRange = computed(() => {
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                         Carga Horaria <span class="text-red-500">*</span>
                     </label>
-                    <input v-model="form.carga_horaria" type="number" readonly disabled
+                    <input v-model="form.carga_horaria" type="number" readonly disabled placeholder="Cálculo automático de horas"
   class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-gray-200 bg-clip-padding px-3 py-2 font-normal text-gray-500 outline-none transition-all placeholder:text-gray-500 focus:outline-none cursor-not-allowed" />
 
   <span v-if="errors.carga_horaria" class="text-red-500 text-xs">
@@ -505,6 +532,41 @@ const cargaRange = computed(() => {
 </span>
 
                     </div>
+<!-- Campo Tipo de curso -->
+<div>
+  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+    Tipo de curso <span class="text-red-500">*</span>
+  </label>
+  <select
+    v-model="form.tipo_pago"
+    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+    required
+  >
+    <option value="" disabled>Seleccione costo de actividad</option>
+    <option value="gratuito">Gratuito</option>
+    <option value="pago">Con costo</option>
+  </select>
+  <span v-if="errors.tipo_pago" class="text-red-500 text-xs">{{ errors.tipo_pago }}</span>
+</div>
+
+<!-- Campo Precio (solo visible si es de paga) -->
+<div v-if="form.tipo_pago === 'pago'">
+  <label class="inline-block mt-4 mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+    Precio (Bs) <span class="text-red-500">*</span>
+  </label>
+  <input
+    v-model="form.precio"
+    type="number"
+    min="10"
+    step="0.01"
+    placeholder="Ingresa el monto"
+    required
+    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+  />
+  <span v-if="errors.precio" class="text-red-500 text-xs">{{ errors.precio }}</span>
+</div>
+
+
                   <!-- Imagen del Curso -->
                   <div class="col-span-1 sm:col-span-2">
                     <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Imagen del certificado <span class="text-red-500">*</span></label>
@@ -650,7 +712,7 @@ const cargaRange = computed(() => {
                                     <th class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Inscripción</th>
                                     <th class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Duración de actividad</th>
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Carga Horaria</th>
-                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Imagen</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Imagen</th>                                    
                                     <th  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"v-if="false">Certificados</th>
                                     <th v-if="$page.props.permissions.includes('editarestadodeletecursos.update')"  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado de Curso</th>
                                     <th v-if="$page.props.permissions.includes('editarestadodeletecursos.update') && $page.props.permissions.includes('cursoseditar.update')"  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
@@ -669,9 +731,26 @@ const cargaRange = computed(() => {
       ? `${curso.tipo_actividad.codigo} - ${curso.tipo_actividad.nombre}`
       : 'SIN TIPO' }}
 </div>
+<span class="font-semibold">Costo del Curso: </span>
+<div>
+  <span v-if="curso.tipo_pago === 'gratuito'"
+    class="text-green-500 text-[10px] font-bold border border-green-300 px-2 py-0.5 rounded-full">
+    GRATUITO
+  </span>
+  <span v-else
+       class="text-yellow-500 text-[10px] font-bold border border-yellow-400 px-2 py-0.5 rounded-full whitespace-nowrap">
+    CON COSTO
+  </span>
+</div>
+
+<span v-if="curso.tipo_pago === 'pago'" class="font-semibold mt-1 block">
+  <span class="text-white">Precio:</span>
+  <span class="text-yellow-400"> Bs {{ Number(curso.precio).toFixed(2) }}</span>
+</span>
 
 
                                         <span class="font-semibold">Titulo: </span> <div class="text-slate-400"> {{ curso.nombre }}</div>
+                                    
                                     </td>
                                  
                                     <td class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
@@ -688,6 +767,8 @@ const cargaRange = computed(() => {
                                     <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
                                         <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ curso.carga_horaria }} hrs</span>
                                     </td>
+                                    
+
                                     <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
                                         
   <img
@@ -712,7 +793,7 @@ const cargaRange = computed(() => {
                                         </button>
                                     </td>
                                     <td v-if="$page.props.permissions.includes('editarestadodeletecursos.update')" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span
+  <span
     v-if="curso.estado_curso === 'no iniciado'"
     class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/50"
   >
@@ -720,13 +801,19 @@ const cargaRange = computed(() => {
   </span>
   <span
     v-else-if="curso.estado_curso === 'abierto'"
-      class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-green-500/10 text-green-400 border border-green-500/50"
+    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-green-500/10 text-green-400 border border-green-500/50"
   >
     INSCRIPCIONES ABIERTAS
   </span>
   <span
+    v-else-if="curso.estado_curso === 'cerrado'"
+    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-orange-500/10 text-orange-400 border border-orange-500/50"
+  >
+    INSCRIPCIONES CERRADAS
+  </span>
+  <span
     v-else-if="curso.estado_curso === 'curso'"
-     class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/50"
+    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/50"
   >
     EN CURSO
   </span>
@@ -736,7 +823,14 @@ const cargaRange = computed(() => {
   >
     TERMINADO
   </span>
-                                    </td>
+  <span
+    v-else
+    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-red-500/10 text-red-400 border border-red-500/50"
+  >
+    SIN ESTADO
+  </span>
+</td>
+
                         
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <div class="flex justify-center space-x-2">
@@ -751,13 +845,25 @@ const cargaRange = computed(() => {
                                                     curso.fecha_inicio,
                                                     curso.fecha_fin,
                                                     curso.img_curso,
-                                                    curso.carga_horaria
+                                                    curso.carga_horaria,
+                                                        curso.tipo_pago,
+    curso.precio
                                                 )"
                                                 class="p-2 text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                                 </svg>
                                             </button>
+                                            <button
+  v-if="curso.estado !== 'eliminado' && curso.estado !== 'inactivo' && $page.props.permissions.includes('curso.inscrito.reporte')"
+  @click="generarPDFInscritos(curso.uuid_curso)"
+  class="p-2 text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
+  title="Descargar reporte PDF de inscritos"
+>
+ <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1.5A2.5 2.5 0 006.5 20h11a2.5 2.5 0 002.5-2.5V16M12 4v12m0 0l-4-4m4 4l4-4" />
+  </svg>
+</button>
                                             <button v-if="curso.estado != 'eliminado' && curso.estado != 'inactivo' && $page.props.permissions.includes('editarestadodeletecursos.update')"
                                                 @click="handleDelete(curso.uuid_curso, 3, '¿Estás seguro de que deseas eliminar este registro de forma permanente?')"
                                                 class="p-2 text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">
@@ -772,6 +878,8 @@ const cargaRange = computed(() => {
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                 </svg>
                                             </button>
+                                         
+
                                         </div>
                                     </td>
                                 </tr>

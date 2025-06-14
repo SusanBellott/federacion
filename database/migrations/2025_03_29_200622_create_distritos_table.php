@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('distritos', function (Blueprint $table) {
             $table->id('id_distrito');
             $table->uuid('uuid_distrito');
-            $table->bigInteger('codigo')->unique(); ;
+            $table->bigInteger('codigo');
             $table->string('descripcion');
             $table->string('estado')->default('activo');
             $table->timestamps();
             $table->softDeletes();
-
+            
+    // ✅ Índice único combinado por código + descripción (para evitar duplicados exactos)
+    $table->unique(['codigo', 'descripcion']);
         });
     }
 

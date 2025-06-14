@@ -136,7 +136,7 @@ const editing = computed(() => !!id_tipo.value);
                     </div>
                     <button v-if="permissions.includes('tiposactividad.store')"
 
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                            class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
@@ -145,7 +145,7 @@ const editing = computed(() => !!id_tipo.value);
                                         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                         clip-rule="evenodd" />
                                 </svg>
-                                Agregar Nuevo Tipo
+                                Agregar Nuevo Tipo de Actividad
                             </span>
                         </button>
                 </div>

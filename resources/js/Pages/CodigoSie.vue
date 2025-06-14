@@ -13,6 +13,7 @@ import SearchableSelect from "@/Components/SearchableSelect.vue";
 const props = defineProps({
   codigosie: Object,
   distritos: Array,
+    instituciones: Array, 
   filters: Object,
 });
 
@@ -29,7 +30,7 @@ const deleteCode = ref(null);
 
 // Computed para determinar si estamos editando
 const editing = computed(() => !!id_codigo.value);
-const instituciones = ref([]);
+
 const codigos_sie = ref([]);
 
 const handleDelete = (codigo, cod, texto) => {
@@ -44,6 +45,7 @@ const showModal = ref(false);
 // Datos del formulario
 const form = ref({
   distrito_id: "",
+   institucion_id: "",
   programa: "",
   unidad_educativa: "",
 });
@@ -55,16 +57,22 @@ const distritosOptions = computed(() => {
     label: d.descripcion
   }));
 });
+const institucionesFiltradas = computed(() => {
+  return props.instituciones.filter(
+    i => i.id_distrito === form.value.distrito_id
+  );
+});
 
 const handleClick = () => {
   showModal.value = true;
 };
 
-const handleClickEditar = (uuid, distrito_id, programa, unidad_educativa) => {
+const handleClickEditar = (uuid, distrito_id, institucion_id, programa, unidad_educativa) => {
   showModal.value = true;
   id_codigo.value = uuid;
   // Aquí modificamos el objeto dentro de ref()
   form.value.distrito_id = distrito_id;
+  form.value.institucion_id = institucion_id;
   form.value.programa = programa;
   form.value.unidad_educativa = unidad_educativa;
 };
@@ -106,31 +114,9 @@ const submitForm = () => {
 
   }
 };
-const cargarDatosRelacionados = async (distrito_id) => {
-  if (!distrito_id) {
-    instituciones.value = [];
-    codigos_sie.value = [];
-    return;
-  }
-  try {
-    const response = await axios.get(`/api/distritos/${distrito_id}/datos-relacionados`);
-    instituciones.value = response.data.instituciones || [];
-    codigos_sie.value = response.data.codigos_sie || [];
-  } catch (error) {
-    console.error("Error cargando datos relacionados:", error);
-    alert("No se pudieron cargar los datos relacionados.");
-  }
-};
 
-watch(() => form.value.distrito_id, async (nuevoDistrito, antiguoDistrito) => {
-  if (nuevoDistrito !== antiguoDistrito) {
-    if (!editing.value) {
-      form.value.codigo_sie_id = "";
-      form.value.institucion_id = "";
-    }
-    await cargarDatosRelacionados(nuevoDistrito);
-  }
-});
+
+
 </script>
 
 <template>
@@ -151,7 +137,7 @@ watch(() => form.value.distrito_id, async (nuevoDistrito, antiguoDistrito) => {
             </div>
           </div>
           <button v-if="$page.props.permissions.includes('codigosie.create')"
-                  class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                  class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
                   @click="handleClick">
             <span class="flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
@@ -179,9 +165,10 @@ watch(() => form.value.distrito_id, async (nuevoDistrito, antiguoDistrito) => {
               <thead class="align-bottom">
                 <tr>
                   <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th>
-                  <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Distrito</th>
-                  <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Programa</th>
-                  <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Unidad Educativa</th>
+                  <th class="w-[250px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Distrito</th>
+                   <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nivel</th>
+                  <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Codigo SIE</th>
+                  <th class="w-[250px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Unidad Educativa</th>
                   <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado</th>
                   <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update') || $page.props.permissions.includes('distritoseditar.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
                 </tr>
@@ -192,6 +179,10 @@ watch(() => form.value.distrito_id, async (nuevoDistrito, antiguoDistrito) => {
                     {{ (currentPage - 1) * perPage + index + 1 }}</td>
                   <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
                     {{ item.distrito?.descripcion || 'Sin distrito' }}
+                  </td>
+                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                   <td>{{ item.institucion?.nivel || 'Sin institución' }}</td>
+
                   </td>
                   <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
                     {{ item.programa }}
@@ -222,6 +213,7 @@ watch(() => form.value.distrito_id, async (nuevoDistrito, antiguoDistrito) => {
                               @click="handleClickEditar(
                                 item.uuid_codigo_sie,
                                 item.distrito_id,
+                                 item.institucion_id,
                                 item.programa,
                                 item.unidad_educativa
                               )"
@@ -270,19 +262,31 @@ watch(() => form.value.distrito_id, async (nuevoDistrito, antiguoDistrito) => {
               <SearchableSelect
         v-model="form.distrito_id"
         :options="distritosOptions"
-        placeholder="Buscar distrito..."
+        placeholder="Buscar distrito"
         
       />
               <validaciones :message="errores.distrito_id" />
             </div>
+<!-- Campo Institución -->
+<div>
+  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+    Institución <span class="text-red-500">*</span>
+  </label>
+  <SearchableSelect
+    v-model="form.institucion_id"
+    :options="institucionesFiltradas.map(i => ({ value: i.id_institucion, label: i.nivel }))"
+    placeholder="Seleccionar nivel"
+  />
+  <validaciones :message="errores.institucion_id" />
+</div>
 
-            <!-- Campo Programa -->
+            <!-- Campo Codigo SIE -->
             <div>
               <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                Programa <span class="text-red-500">*</span>
+                Codigo SIE <span class="text-red-500">*</span>
               </label>
               <input v-model="form.programa" type="number" required
-                     placeholder="Ingrese código de programa" 
+                     placeholder="Ingrese código SIE" 
                      class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
                      dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
               <validaciones :message="errores.programa" />

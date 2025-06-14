@@ -27,7 +27,7 @@ class DistritoRequest  extends FormRequest
                 'digits:3',
                 'min:200',
                 'max:300',
-                'unique:distritos,codigo,' . ($distritoId ?? 'NULL') . ',id_distrito',
+             
             ],
             'descripcion' => [
                 'required',
@@ -46,7 +46,7 @@ class DistritoRequest  extends FormRequest
             'codigo.digits' => 'El código de distrito debe tener exactamente 3 dígitos.',
             'codigo.min' => 'El código de distrito no puede ser menor a 200.',
             'codigo.max' => 'El código de distrito no puede ser mayor a 300.',
-            'codigo.unique' => 'Este Codigo ya está registrado en el sistema.',
+            
 
             'descripcion.required' => 'El campo "Descripción" es obligatorio.',
             'descripcion.regex' => 'La descripción del distrito debe contener al menos una letra.',
@@ -54,26 +54,28 @@ class DistritoRequest  extends FormRequest
 
         ];
     }
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            if ($this->isMethod('put') || $this->isMethod('patch')) {
-                $codigo = $this->input('codigo');
-    
-                // Buscar el distrito actual por UUID
-                $distrito = \App\Models\Distrito::where('uuid_distrito', $this->route('uuid'))->first();
-                $distritoId = $distrito?->id_distrito ?? null;
-    
-                // Verificar si existe otro distrito con el mismo código
-                $existente = \App\Models\Distrito::where('codigo', $codigo)
-                    ->where('id_distrito', '!=', $distritoId)
-                    ->first();
-    
-                if ($existente) {
-                    $validator->errors()->add('codigo', 'Este código ya pertenece al distrito: ' . strtoupper($existente->descripcion));
-                }
-            }
-        });
-    }
+public function withValidator($validator)
+{
+    $validator->after(function ($validator) {
+        $codigo = $this->input('codigo');
+        $descripcion = strtoupper(trim($this->input('descripcion')));
+        $distritoId = null;
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $distrito = \App\Models\Distrito::where('uuid_distrito', $this->route('uuid'))->first();
+            $distritoId = $distrito?->id_distrito ?? null;
+        }
+
+        $existe = \App\Models\Distrito::where('codigo', $codigo)
+            ->whereRaw('UPPER(TRIM(descripcion)) = ?', [$descripcion])
+            ->when($distritoId, fn($q) => $q->where('id_distrito', '!=', $distritoId))
+            ->exists();
+
+        if ($existe) {
+            $validator->errors()->add('descripcion', 'Ya existe un distrito con ese código y descripción.');
+        }
+    });
+}
+
     
 }

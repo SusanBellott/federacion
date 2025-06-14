@@ -17,7 +17,7 @@ class InstitucionRequest extends FormRequest
         $id = $institucion?->id_institucion ?? null;
         return [
             'id_distrito' => 'required|integer|exists:distritos,id_distrito',
-            'subsistema' => 'required|string|in:EDUCACION SUPERIOR,REGULAR,ALTERNATIVA,ESPECIAL PERMANENTE',
+            'subsistema' => 'required|string|in:ALTERNATIVA Y ESPECIAL PERMANENTE,EDUCACION SUPERIOR,REGULAR',
 
 
             'servicio' => [
@@ -28,8 +28,8 @@ class InstitucionRequest extends FormRequest
             ],
             
             'servicio_generado' => 'required|numeric',
-            'nivel' => 'required|string|in:ALTERNATIVA,ESPECIAL,INICIAL,PERMANENTE,PRIMARIA,SECUNDARIA',
-            'unidad_educativa_id' => 'required|exists:codigo_sies,id_codigo_sie',
+            'nivel' => 'required|string|in:ALTERNATIVA,ESPECIAL,INICIAL,PERMANENTE,PRIMARIA,SECUNDARIA,SUPERIOR',
+         
 
         ];
     }
@@ -48,9 +48,7 @@ class InstitucionRequest extends FormRequest
             'servicio_generado.required' => 'El campo "Servicio Generado" es obligatorio.',
             'nivel.required' => 'El campo "Nivel" es obligatorio.',
             'nivel.in' => 'Seleccione un nivel válido.',
-            'unidad_educativa_id.exists' => 'La unidad educativa seleccionada no existe.',
-            'unidad_educativa_id.required' => 'La unidad educativa es obligatoria.',
-
+           
         ];
     }
 }

@@ -91,6 +91,7 @@ class Recepcion extends Controller
             'codigo_sie_id' => $request->codigo_sie_id,   
             'uuid_user' => Str::uuid(),
             'ci' => $request->ci,
+            'complemento_ci' => $request->complemento_ci,
             'rda' => $request->rda,
           'name' => trim($request->name . ' ' . ($request->name2 ?? '')),
 
@@ -105,13 +106,16 @@ class Recepcion extends Controller
         ])->assignRole('Estudiante');
         $registroId = $registroguardar->id;
         $registrouuId = $registroguardar->uuid_user;
-        $registroguardar = ModelInscripcion::create([
+    // Solo crear inscripción si se seleccionó un curso
+    if ($request->filled('id_curso')) {
+        ModelInscripcion::create([
             'id_user' => $registroId,
             'id_curso' => $request->id_curso,
             'uuid_inscripcion' => Str::uuid(),
             'fecha_inscripcion' => Carbon::now(),
             'estado_ins' => "inscrito"
         ]);
+    }
 
         return redirect()
             ->route('inscritos.index', [

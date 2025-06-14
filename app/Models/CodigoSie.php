@@ -22,6 +22,7 @@ class CodigoSie extends Model
         'unidad_educativa',
         'estado',
         'distrito_id',
+               'institucion_id',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -38,5 +39,8 @@ class CodigoSie extends Model
     {
         return $this->belongsTo(Distrito::class, 'distrito_id'); // ✅ correcto
     }
-    
+        public function institucion()
+    {
+        return $this->belongsTo(Institucion::class, 'institucion_id');
+    }
 }

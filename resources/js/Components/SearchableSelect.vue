@@ -92,15 +92,23 @@
   const searchQuery = ref('');
   const selectedItem = ref(props.modelValue);
   const sortedOptions = computed(() => {
-    return [...props.options].sort((a, b) => a.label.localeCompare(b.label));
+  if (!Array.isArray(props.options)) return [];
+  return [...props.options].sort((a, b) => {
+    const labelA = a?.label?.toString() || '';
+    const labelB = b?.label?.toString() || '';
+    return labelA.localeCompare(labelB);
   });
+});
+
   
-  const filteredOptions = computed(() => {
-    if (!searchQuery.value) return sortedOptions.value;
-    return sortedOptions.value.filter(option => 
-      option.label.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+const filteredOptions = computed(() => {
+  if (!searchQuery.value) return sortedOptions.value;
+  return sortedOptions.value.filter(option => {
+    const label = option?.label || '';
+    return label.toLowerCase().includes(searchQuery.value.toLowerCase());
   });
+});
+
   
   // Update the display value when modelValue changes
   watch(() => props.modelValue, () => {

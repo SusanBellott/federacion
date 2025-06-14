@@ -26,6 +26,8 @@ class Curso extends Model
         'fecha_inicio',
         'fecha_fin',
         'carga_horaria',
+            'tipo_pago',
+    'precio',
         'img_curso',
         'encargado',
         'grado_academico',

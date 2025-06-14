@@ -32,6 +32,7 @@ class User extends Authenticatable
     protected $fillable = [
         'uuid_user',
         'ci',
+         'complemento_ci',
         'rda',
         'name',
         'primer_apellido',
@@ -128,4 +129,14 @@ class User extends Authenticatable
             $model->uuid_user = Str::uuid();
         });
     }
+    public function setPasswordAttribute($value)
+{
+    // Evita hashear dos veces si ya está en formato bcrypt
+    if (\Illuminate\Support\Str::startsWith($value, '$2y$')) {
+        $this->attributes['password'] = $value;
+    } else {
+        $this->attributes['password'] = bcrypt($value);
+    }
+}
+
 }

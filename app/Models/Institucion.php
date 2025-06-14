@@ -16,7 +16,7 @@ class Institucion extends Model
     protected $primaryKey = 'id_institucion';
     public $incrementing = true;
     protected $keyType = 'int';
-    protected $fillable = ['uuid_institucion', 'servicio', 'servicio_generado', 'subsistema', 'nivel','estado', 'id_distrito', 'unidad_educativa_id'];
+    protected $fillable = ['uuid_institucion', 'servicio', 'servicio_generado', 'subsistema', 'nivel','estado', 'id_distrito'];
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -34,9 +34,9 @@ class Institucion extends Model
         return $this->belongsTo(Distrito::class, 'id_distrito');
     }
 
-    public function codigoSie()
+   public function codigosSie()
     {
-        return $this->belongsTo(CodigoSie::class, 'unidad_educativa_id', 'id_codigo_sie');
+        return $this->hasMany(CodigoSie::class, 'institucion_id', 'id_institucion');
     }
     
     

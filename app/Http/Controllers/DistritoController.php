@@ -162,9 +162,7 @@ class DistritoController extends Controller
     public function datosRelacionados($id)
     {
         return response()->json([
-            'codigos_sie' => CodigoSie::where('distrito_id', $id)  // ✅ corregido aquí
-                ->where('estado', 'activo')
-                ->get(['id_codigo_sie', 'unidad_educativa']),
+
             
             'instituciones' => Institucion::where('id_distrito', $id)
                 ->where('estado', 'activo')

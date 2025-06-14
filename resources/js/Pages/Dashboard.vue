@@ -28,7 +28,8 @@
         
 
         <!-- Componente de cursos disponibles -->
-        <CursosDisponibles :cursos="cursos || []" />
+        <CursosDisponibles :cursos="cursos || []" :mis-cursos-ids="misCursosIds || []" />
+
       </div>
     </section>
 
@@ -39,10 +40,16 @@
         <!-- Cards de estadísticas generales -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-12">
           <StatCard title="Usuarios" :value="stats.totalUsers" icon="users" class="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200" />
-          <StatCard title="Cursos" :value="stats.totalCourses" icon="book-open" class="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200" />
-          <StatCard title="Inscripciones" :value="stats.totalInscriptions" icon="clipboard-list" class="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200" />
-          <StatCard title="Certificados" :value="stats.totalCertificates" icon="badge-check" class="bg-gradient-to-br from-green-50 to-green-100 border-green-200" />
           <StatCard title="Tipos de actividad" :value="stats.totalActivityTypes" icon="collection" class="bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200" />
+
+          <StatCard title="Actividades" :value="stats.totalCourses" icon="book-open" class="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200" />
+          <StatCard title="Certificados" :value="stats.totalCertificates" icon="badge-check" class="bg-gradient-to-br from-green-50 to-green-100 border-green-200" />
+       
+          <StatCard title="Inscripciones Totales" :value="stats.totalInscriptions" icon="clipboard-list" class="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200" />
+                  <StatCard title="Inscripciones Activas" :value="stats.inscripcionesActivas"   icon="user-check" class="bg-gradient-to-br from-emerald-100 to-emerald-200 border-emerald-300"/>
+          <StatCard title="Desinscritos" :value="stats.inactivas"  icon="user-x"  class="bg-gradient-to-br from-yellow-100 to-yellow-200 border-yellow-300" />
+
+
         </div>
       </div>
       <!-- Componente de gráficos -->
@@ -70,7 +77,7 @@ import { ref, onMounted } from 'vue';
 const page = usePage()
 
 // Extraemos stats, isStudent y canSeeStats del objeto props
-const { stats, isStudent, canSeeStats,cursos  } = page.props
+const { stats, isStudent, canSeeStats, cursos, misCursosIds } = page.props
 
 // Variable para activar/desactivar modo depuración
 const debug = ref(true); // Cambiar a false en producción
@@ -84,6 +91,7 @@ onMounted(() => {
   } else {
     console.log("No hay cursos disponibles");
   }
+  console.log("misCursosIds:", misCursosIds); 
 });
 </script>
 

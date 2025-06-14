@@ -48,18 +48,23 @@
                                 class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                                 <thead class="align-bottom">
                                     <tr>
-                                        <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words" >Nro</th> 
+                                        <th class="w-[50px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words" >Nro</th> 
                                         <th
                                         class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Usuario</th>
                                         <th
                                         class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Título de actividad</th>
+                                            <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
+    Costo
+</th>
+
                                         <th
                                         class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
                                             Fecha de Inscripción</th>
+                                            
                                             <th v-if="$page.props.permissions.includes('editarestadodeleteinscritos.update') || $page.props.permissions.includes('inscritoeditar.update') || $page.props.permissions.includes('curso.inscrito.reporte')"
-                                            class="px-3 py-3 w-[200px] max-w-[200px] text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-nowrap">
+                                            class="px-3 py-3 w-[150px] max-w-[200px] text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-nowrap">
                                             Acciones</th>
                                     </tr>
                                 </thead>
@@ -101,6 +106,19 @@
                                                     v-else>{{ inscrito.curso.nombre }}</span>
                                             </p>
                                         </td>
+                                        
+                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap text-xs font-semibold text-gray-700 dark:text-white dark:opacity-80">
+  <span
+  :class="{
+    'text-green-500 font-semibold': inscrito.curso?.tipo_pago === 'gratuito',
+    'text-yellow-400 font-semibold': inscrito.curso?.tipo_pago === 'pago'
+  }"
+>
+ {{ inscrito.curso?.precio ? 'Bs. ' + inscrito.curso.precio : 'Gratuito' }}
+</span>
+                                        
+</td>
+
                                         <td
                                             class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                             <span
@@ -233,13 +251,43 @@
                                 <label class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">
                                     Seleccionar Curso
                                 </label>
-                                <Buscadorcurso
-  v-if="valorbusquedacurso"
-  ref="buscadorCursoRef"
-  :filters="filters3"
-  :data="props.cursos"
-  ruta="inscritos.index"
-/>
+  <Buscadorcurso
+    v-if="valorbusquedacurso"
+    ref="buscadorCursoRef"
+    :filters="filters3"
+    :data="props.cursos"
+    ruta="inscritos.index"
+  />
+
+<!-- Resultado seleccionado - SOLO UNA VEZ -->
+<div v-if="!valorbusquedacurso" class="flex items-center space-x-4 mt-2">
+  <button
+    type="button"
+    @click="limipiarcurso"
+    class="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white rounded-md transition duration-200"
+  >
+    -
+  </button>
+  <p class="text-xl text-sky-500 dark:text-sky-400">
+    {{ curso_nombre }}
+  </p>
+  <span
+    v-if="curso_nombre"
+    :class="{
+      'bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900': getTipoCurso() === 'gratuito',
+      'bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900': getTipoCurso() === 'pago'
+    }"
+    class="text-xs font-semibold px-2.5 py-0.5 rounded-full border"
+  >
+    {{ getTipoCurso() === 'gratuito' ? 'Gratuito' : `Con costo (Bs. ${getPrecioCurso()})` }}
+  </span>
+  <p v-if="errors.id_curso"
+     class="mt-1 text-red-500 text-sm dark:text-red-400">
+     {{ errors.id_curso }}
+  </p>
+</div>
+
+
 
                                     <div v-if="curso_nombre !== '' && valorbusquedacurso">
       <div class="max-h-60 overflow-y-auto">
@@ -271,23 +319,6 @@
       </div>
     </div>
 
-
-    <div v-if="!valorbusquedacurso" class="flex items-center space-x-4">
-      <button
-        type="button"
-        @click="limipiarcurso"
-        class="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white rounded-md transition duration-200"
-      >
-        -
-      </button>
-      <p class="text-xl text-sky-500 dark:text-sky-400">
-        {{ curso_nombre }}
-      </p>
-      <p v-if="errors.id_curso"
-   class="mt-1 text-red-500 text-sm dark:text-red-400">
-   {{ errors.id_curso }}
-</p>
-    </div>
                             </div>
                         </div>
                         <div class="mt-6 flex justify-end space-x-3">
@@ -356,15 +387,23 @@ const curso_nombre = ref('');
 const id_cursof = ref(null);
 const valorbusquedacurso = ref(true);
 const cursos = computed(() => {
-  // Asegúrate de que props.cursos existe y tiene una propiedad 'data'
-  return props.cursos || { data: [] };
+  const lista = props.cursos?.data || [];
+  return {
+    data: lista.filter(c => c.estado_curso === 'abierto')
+  };
 });
+
 
 // Función para acceder a searchTerm2 del componente hijo
 const getSearchTerm = (nombre, mater, pater, id) => {
     if (inscritosComponent.value) {
         inscritosComponent.value.searchTerm2 = nombre;
-        user_nombre_completo.value = nombre + " " + mater + " " + pater;
+        user_nombre_completo.value = [
+  nombre,
+  mater || '',
+  pater || ''
+].join(' ').replace(/\s+/g, ' ').trim();
+
         valorbusqueda.value = false;
         id_usuariof.value = id;
     }
@@ -478,6 +517,16 @@ const submitForm = () => {
         });
     }
 };
+
+function getTipoCurso() {
+  const curso = props.cursos.data.find(c => c.id_curso === id_cursof.value);
+  return curso?.tipo_pago || 'gratuito';
+}
+const getPrecioCurso = () => {
+  const curso = props.cursos?.data?.find(c => c.id_curso === id_cursof.value);
+  return curso?.precio ? Number(curso.precio).toFixed(2) : '0.00';
+};
+
 const mostrarCertificado = (fechaFin) => {
     if (!fechaFin) return false;
 

@@ -8,7 +8,9 @@ import Pagination from "@/Components/Pagination.vue";
 import useSweetAlert from "@/Components/SweetAlert.vue";
 import editaralerta from "@/Components/AlertaEditada.vue";
 import BuscadorDistritos from "@/Components/Buscador.vue";
-import validaciones from "@/Components/InputError.vue";
+import InputError from "@/Components/InputError.vue";
+
+
 
 
 const props = defineProps({
@@ -130,7 +132,7 @@ const submitForm = () => {
                         </div> 
                     </div>
                     <button v-if="$page.props.permissions.includes('distritos.create')"
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                            class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
                             @click="handleClick">
                             <span class="flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
@@ -159,7 +161,7 @@ const submitForm = () => {
                                 <tr>
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th> 
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Código</th>
-                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Descripción</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Distrito</th>
                                     <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado</th>
                                     <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update') || $page.props.permissions.includes('distritoseditar.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
                                 </tr>
@@ -245,7 +247,8 @@ const submitForm = () => {
                             <input id="codigo" v-model="form.codigo" type="number"
                             placeholder="Ingrese código de distrito" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
                                 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
-                            <validaciones :message="erroresdistrito.codigo" />
+                            <InputError :message="erroresdistrito.codigo" />
+
                         </div>
 
                         <!-- Campo Descripción -->
@@ -256,7 +259,8 @@ const submitForm = () => {
                             <input v-model="form.descripcion" type="text" required
                             placeholder="Ingrese nombre de distrito" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
                                 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
-                            <validaciones :message="erroresdistrito.descripcion" />
+                            <InputError :message="erroresdistrito.descripcion" />
+
                         </div>
                     </div>
 

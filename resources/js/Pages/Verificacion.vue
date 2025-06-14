@@ -11,7 +11,10 @@
       </h1>
       <!-- Información -->
       <div class="text-left text-gray-800 space-y-3">
-        <p><span class="font-bold">CÉDULA DE IDENTIDAD:</span> {{ inscrito?.user?.ci || 'N/A' }}</p>
+        <span class="font-bold">CÉDULA DE IDENTIDAD:</span>
+  {{ inscrito?.user?.ci || 'N/A' }}
+  <span v-if="inscrito?.user?.complemento_ci">-{{ inscrito.user.complemento_ci }}</span>
+
         <p><span class="font-bold">NOMBRE COMPLETO:</span> {{ nombreCompleto }}</p>
         
         <!-- Nombre de la actividad -->

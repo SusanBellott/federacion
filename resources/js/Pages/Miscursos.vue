@@ -106,11 +106,29 @@ const getTipoActividad = (tipoId) => {
   return 'SIN TIPO';
 };
 
-function puedeDesinscribir(fechaFinISO) {
-  if (!fechaFinISO) return false;
-  const ahora = new Date();
-  const fin = new Date(fechaFinISO);
-  return ahora <= fin;
+function puedeDesinscribir(fechaFinInscripcionISO) {
+  if (!fechaFinInscripcionISO) return false;
+
+  const hoy = new Date();
+  const finInscripcion = new Date(fechaFinInscripcionISO);
+
+  // Forzar hora a las 23:59:59 del día de fin de inscripción
+  finInscripcion.setHours(23, 59, 59, 999);
+  console.log("Hoy:", hoy.toISOString());
+console.log("FinInscripción:", finInscripcion.toISOString());
+
+  return hoy <= finInscripcion;
+}
+
+function puedeAnularInscripcion(curso) {
+  if (!curso || !curso.fecha_fin_inscripcion) return false;
+
+  const hoy = new Date();
+  const finInscripcion = new Date(curso.fecha_fin_inscripcion);
+  finInscripcion.setHours(23, 59, 59, 999);
+
+  // ✅ Solo cursos gratuitos pueden anularse
+  return curso.tipo_pago === 'gratuito' && hoy <= finInscripcion;
 }
 
 const formatDate = (dateString) => {
@@ -168,6 +186,9 @@ const cursosFiltrados = computed(() => {
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th> 
                                     <th class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Título de actividad</th>
                                     <th class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Descripción de actividad</th>
+                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">
+    Costo
+</th>
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado</th>
                                     <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
                                 </tr>
@@ -186,6 +207,17 @@ const cursosFiltrados = computed(() => {
                                             {{ micurso.curso ? micurso.curso.descripcion : 'N/A' }}
                                         </p>
                                     </td>
+                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap text-xs font-semibold text-gray-700 dark:text-white dark:opacity-80">
+ <span
+  :class="{
+    'text-green-500 font-semibold': micurso.curso?.tipo_pago === 'gratuito',
+    'text-yellow-400 font-semibold': micurso.curso?.tipo_pago === 'pago'
+  }"
+>
+  {{ micurso.curso?.tipo_pago === 'pago' ? 'Bs. ' + micurso.curso.precio : 'Gratuito' }}
+</span>
+</td>
+
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span v-if="micurso.estado_ins == 'activo'" 
                                             class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">
@@ -203,7 +235,9 @@ const cursosFiltrados = computed(() => {
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap">
                                         <div class="flex justify-center">
                                             <button
-                                                v-if="micurso.curso && puedeDesinscribir(micurso.curso.fecha_fin)"
+                                            v-if="puedeAnularInscripcion(micurso.curso)"
+
+
                                                 @click="handleDelete(
                                                     micurso.uuid_inscripcion,
                                                     2,

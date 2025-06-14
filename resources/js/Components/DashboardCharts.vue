@@ -4,7 +4,7 @@
       <!-- Título y gráfico -->
       <div class="bg-white shadow-md rounded-lg p-6 mb-4">
         <h2 class="text-xl font-bold text-gray-800 mb-4">{{ config.title }}</h2>
-        <div class="h-96" :ref="el => chartRefs[index] = el"></div>
+        <div class="h-96 w-[640px] mx-auto" :ref="el => chartRefs[index] = el"></div>
       </div>
 
       <!-- Tabla de datos -->
@@ -24,6 +24,13 @@
                 {{ serie.data[rowIndex] }}
               </td>
             </tr>
+              <!-- Fila de total -->
+  <tr class="font-semibold text-gray-900 bg-gray-50 border-t">
+    <td class="px-4 py-2">TOTAL</td>
+    <td v-for="serie in config.series" :key="serie.name + '-total'" class="px-4 py-2">
+      {{ serie.data.reduce((a, b) => a + b, 0) }}
+    </td>
+  </tr>
           </tbody>
         </table>
       </div>
@@ -40,10 +47,11 @@
         <h3 class="text-lg font-semibold text-gray-700 mb-4">Resumen General</h3>
         <ul class="space-y-2 text-gray-600">
           <li>Usuarios: {{ stats.totalUsers }}</li>
+                    <li>Tipos de Actividad: {{ stats.totalActivityTypes }}</li>
           <li>Actividades: {{ stats.totalCourses }}</li>
           <li>Inscripciones: {{ stats.totalInscriptions }}</li>
           <li>Certificados: {{ stats.totalCertificates }}</li>
-          <li>Tipos de Actividad: {{ stats.totalActivityTypes }}</li>
+
         </ul>
       </div>
     </div>
@@ -69,28 +77,29 @@
       series: [{ name: 'Inscritos', data: Object.values(stats.byActivityType) }]
     },
     {
-      title: 'Gráfico general de inscritos y certificados',
-      x: Object.keys(stats.byActivityType),
-      series: [
-        {
-          name: 'Inscritos',
-          data: Object.keys(stats.byActivityType).map(tipo => stats.byActivityType[tipo])
-        },
-        {
-          name: 'Certificados',
-          data: Object.keys(stats.certificatesByTypeAndCourse).map(tipo => {
-            const cursos = stats.certificatesByTypeAndCourse[tipo] || {};
-            return Object.values(cursos).reduce((a, b) => a + b, 0);
-          })
-        }
-      ]
+  title: 'Gráfico general de inscritos y certificados',
+  x: Object.keys(stats.byActivityType),
+  series: [
+    {
+      name: 'Inscritos',
+      data: Object.values(stats.byActivityType)
     },
+    {
+      name: 'Certificados',
+      data: Object.keys(stats.byActivityType).map(tipo => {
+        const certificados = stats.certificatesByTypeAndCourse[tipo] || {};
+        return Object.values(certificados).reduce((a, b) => a + b, 0);
+      })
+    }
+  ]
+}
+,
     {
       title: 'Gráfico de cantidad de actividades realizadas',
       x: Object.keys(stats.byCourseInType),
       series: [
         {
-          name: 'Actividad',
+          name: 'Actividades Realizadas',
           data: Object.keys(stats.byCourseInType).map(tipo => Object.keys(stats.byCourseInType[tipo]).length)
         }
       ]
@@ -101,15 +110,29 @@
       series: [
         {
           name: 'Inscritos',
-          data: Object.keys(stats.byCourseInType).flatMap(tipo => Object.values(stats.byCourseInType[tipo]))
-        },
+          data: Object.keys(stats.byCourseInType).flatMap(tipo => {
+  const cursos = stats.byCourseInType[tipo];
+  const activos = stats.activosByTypeAndCourse?.[tipo] || {};
+  return Object.keys(cursos).map(curso => activos[curso] || 0);
+})
+},
         {
           name: 'Certificados',
-          data: Object.keys(stats.certificatesByTypeAndCourse).flatMap(tipo => {
-            const cursos = stats.certificatesByTypeAndCourse[tipo] || {};
-            return Object.keys(stats.byCourseInType[tipo] || {}).map(curso => cursos[curso] || 0);
-          })
-        }
+          data: Object.keys(stats.byCourseInType).flatMap(tipo => {
+  const cursos = stats.byCourseInType[tipo];
+  const certificados = stats.certificatesByTypeAndCourse?.[tipo] || {};
+  return Object.keys(cursos).map(curso => certificados[curso] || 0);
+})
+        },
+    {
+      name: 'Desinscritos',
+  data:Object.keys(stats.byCourseInType).flatMap(tipo => {
+  const cursos = stats.byCourseInType[tipo];
+  const desinscritos = stats.inactivosByTypeAndCourse?.[tipo] || {};
+  return Object.keys(cursos).map(curso => desinscritos[curso] || 0);
+})
+
+ },
       ]
     }
   ];
@@ -174,7 +197,7 @@ const descargarPDF = async () => {
   for (let i = 0; i < chartRefs.value.length; i++) {
   const chartRef = chartRefs.value[i];
   const config = chartConfigs[i];
-
+  await new Promise(resolve => setTimeout(resolve, 300));
   // Captura del gráfico
   const canvas = await html2canvas(chartRef);
   const imgData = canvas.toDataURL('image/png');
@@ -193,24 +216,34 @@ pdf.addImage(imgData, 'PNG', xCentered, y, imgWidth, 80);
   y += 8;
 
   // Generar tabla
-  autoTable(pdf, {
-    startY: y,
-    head: [[ 'Categoría', ...config.series.map(s => s.name) ]],
-    body: config.x.map((label, row) => [
-      label,
-      ...config.series.map(s => s.data[row] ?? '—')
-    ]),
-    styles: {
-      fontSize: 9,
-      halign: 'left',
-    },
-    headStyles: {
-      fillColor: [41, 128, 185],
-      textColor: 255,
-      fontStyle: 'bold'
-    },
-    theme: 'grid'
-  });
+  const bodyRows = config.x.map((label, row) => [
+  label,
+  ...config.series.map(s => s.data[row] ?? '—')
+]);
+
+// Agrega fila de TOTAL
+const totalRow = [
+  'TOTAL',
+  ...config.series.map(s => s.data.reduce((a, b) => a + b, 0))
+];
+bodyRows.push(totalRow);
+
+autoTable(pdf, {
+  startY: y,
+  head: [[ 'Categoría', ...config.series.map(s => s.name) ]],
+  body: bodyRows,
+  styles: {
+    fontSize: 9,
+    halign: 'left',
+  },
+  headStyles: {
+    fillColor: [41, 128, 185],
+    textColor: 255,
+    fontStyle: 'bold'
+  },
+  theme: 'grid'
+});
+
 
   y = pdf.lastAutoTable.finalY + 10;
 

@@ -14,15 +14,18 @@ return new class extends Migration
         Schema::create('codigo_sies', function (Blueprint $table) {
             $table->id('id_codigo_sie');
             $table->uuid('uuid_codigo_sie');
-            $table->bigInteger('programa')->unique();;
+            $table->bigInteger('programa');
             $table->string('unidad_educativa');
             $table->string('estado')->default('activo');
             $table->timestamps();
             $table->softDeletes();
-// Relación con distrito
-$table->unsignedBigInteger('distrito_id');
-$table->foreign('distrito_id')->references('id_distrito')->on('distritos')->onDelete('cascade');
+/// 🔗 Clave foránea a distritos
+            $table->unsignedBigInteger('distrito_id');
+            $table->foreign('distrito_id')->references('id_distrito')->on('distritos')->onDelete('cascade');
 
+            // 🔗 Clave foránea a instituciones
+            $table->unsignedBigInteger('institucion_id');
+            $table->foreign('institucion_id')->references('id_institucion')->on('instituciones')->onDelete('cascade');
         });
     }
 

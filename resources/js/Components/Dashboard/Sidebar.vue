@@ -125,17 +125,18 @@ const menuItems = [
     link: '/usuarios',
     permissions: ['usuarios.index']
   },
-  {
-    name: 'Institución',
-    icon: 'text-cyan-500 ni ni-app',
-    link: '/instituciones',
-    permissions: ['instituciones.index']
-  },
+
   {
     name: 'Códigos SIE',
     icon: 'text-green-500 ni ni-key-25',
     link: '/codigo-sie',
     permissions: ['codigosie.index']
+  },
+    {
+    name: 'Institución',
+    icon: 'text-cyan-500 ni ni-app',
+    link: '/instituciones',
+    permissions: ['instituciones.index']
   },
   {
     name: 'Distritos',

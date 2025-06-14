@@ -26,6 +26,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use Illuminate\Support\Facades\Auth;
+use App\Pdf\CustomPDF;
 
 class Inscripcion extends Controller
 {
@@ -47,6 +48,7 @@ class Inscripcion extends Controller
      */
     public function index(Request $request)
     {
+          $user = Auth::user(); 
         //------------------------------------------------------------------------------------
         $searchTerm = request()->query('search');
         $perPage = (int)$request->input('perPage', 10);
@@ -102,7 +104,12 @@ class Inscripcion extends Controller
         $query3 = Curso::where('estado', 'activo') // Asegura que el curso esté activo
             ->whereDate('fecha_inicio_inscripcion', '<=', $hoy)
             ->whereDate('fecha_fin_inscripcion', '>=', $hoy);
-
+// Aplicar filtro de pago según rol
+if ($user->hasRole('Estudiante')) {
+    $query3->where('tipo_pago', 'gratuito');
+} elseif ($user->hasAnyRole(['Administrador', 'Encargado'])) {
+    $query3->whereIn('tipo_pago', ['gratuito', 'pago']);
+}
 
         if ($searchTerm3) {
             $query3->where(function ($q) use ($searchTerm3) {
@@ -179,8 +186,8 @@ if ($inscripcionActiva) {
             'uuid_inscripcion' =>Str::uuid(),
             'fecha_inscripcion' => Carbon::now(),
             'estado' => 'activo',
-            'estado_ins'=>"inscrito"
-
+            'estado_ins'=>"inscrito",
+            'codigo_curso' => $curso->codigo_curso, 
         ]);
 
 
@@ -249,6 +256,151 @@ if ($inscripcionActiva) {
         }
     }
 
+    /** ESta es la seccion para el reporte en pdf de los cursos inscritos */
+
+public function reporteInscritosPorCurso($uuidCurso)
+{
+    $curso = Curso::where('uuid_curso', $uuidCurso)->firstOrFail();
+    $inscritos = ModelInscripcion::where('id_curso', $curso->id_curso)
+        ->where('estado', 'activo')
+        ->with(['user.codigoSie'])
+        ->get();
+
+    $pdf = new \App\Pdf\CustomPDF('P', 'mm', 'A4');
+    $pdf->AliasNbPages();
+
+    // Datos para encabezado
+    $pdf->nombreCurso = $curso->nombre;
+    $pdf->codigoCurso = $curso->codigo_curso;
+    $pdf->fechaHora = Carbon::now()->format('d/m/Y - h:i:s A');
+
+    $pdf->AddPage();
+
+    // 👉 Encabezado de tabla
+    $drawTableHeader = function () use ($pdf) {
+        $pdf->Ln(2);
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->SetFillColor(255, 204, 204);
+        $pdf->SetDrawColor(200, 0, 0);
+        $pdf->SetTextColor(0, 0, 0);
+
+        $pdf->Cell(8, 8, '#', 1, 0, 'C');
+        $pdf->Cell(22, 8, 'CI', 1, 0, 'C');
+        $pdf->Cell(50, 8, 'NOMBRE COMPLETO', 1, 0, 'C');
+        $pdf->Cell(55, 8, utf8_decode('UNIDAD EDUCATIVA'), 1, 0, 'C');
+        $pdf->Cell(35, 8, utf8_decode('FECHA INSCRIPCIÓN'), 1, 0, 'C');
+        $pdf->Cell(20, 8, 'COSTO (Bs)', 1, 0, 'C');
+        $pdf->Ln();
+        $pdf->SetFont('Arial', '', 8); // 🔁 Reestablecer fuente normal para contenido
+    };
+
+    $drawTableHeader();
+
+    $precioCurso = $curso->tipo_pago === 'pago' ? ($curso->precio ?? 0) : 0;
+    $total = 0;
+    $lineHeight = 5;
+
+    foreach ($inscritos as $i => $inscrito) {
+        $user = $inscrito->user;
+
+// Mayúsculas en UTF-8 (conserva tildes y ñ correctamente)
+$nombre = mb_strtoupper(trim($user->name . ' ' . $user->primer_apellido . ' ' . $user->segundo_apellido), 'UTF-8');
+$institucion = mb_strtoupper($user->codigoSie->unidad_educativa ?? '---', 'UTF-8');
+
+// Decodifica UTF-8 a ISO-8859-1 para que FPDF lo interprete bien
+$nombre = utf8_decode($nombre);
+$institucion = utf8_decode(str_replace(
+    ['“', '”', '„', '«', '»'], // ← comillas especiales
+    ['"', '"', '"', '"', '"'], // ← las reemplazamos por comillas normales
+    $institucion
+));
+
+        $fecha = Carbon::parse($inscrito->fecha_inscripcion)->format('d/m/Y');
+        $costo = $precioCurso;
+        $total += $costo;
+
+        // Medir altura real de Unidad Educativa
+        $temp = new \Codedge\Fpdf\Fpdf\Fpdf();
+        $temp->AddPage();
+        $temp->SetFont('Arial', '', 8);
+        $temp->SetXY(10, 10);
+        $temp->MultiCell(55, $lineHeight, $institucion);
+        $alturaUnidad = $temp->GetY() - 10;
+
+        $cellHeight = max($lineHeight, $alturaUnidad);
+
+        // Si no hay espacio suficiente, nueva hoja
+        if ($pdf->GetY() + $cellHeight > 270) {
+            $pdf->AddPage();
+            $drawTableHeader();
+        }
+
+        $x = $pdf->GetX();
+        $y = $pdf->GetY();
+// Número
+$pdf->SetXY($x, $y);
+$pdf->Cell(8, $cellHeight, $i + 1, 1, 0, 'C');
+
+// CI centrado
+$ciCompleto = $user->ci . ($user->complemento_ci ? ' -' . strtoupper($user->complemento_ci) : '');
+$pdf->SetXY($x + 8, $y);
+$pdf->Cell(22, $cellHeight, $ciCompleto, 1, 0, 'L');
+
+
+// 🔍 Medimos el número de líneas que ocupará el nombre
+$temp = new \Codedge\Fpdf\Fpdf\Fpdf();
+$temp->AddPage();
+$temp->SetFont('Arial', '', 8);
+$temp->SetXY(0, 0);
+$temp->MultiCell(50, $lineHeight, $nombre);
+$nombreHeight = $temp->GetY(); // altura total que ocupa el nombre
+
+// Calculamos el "padding" superior para centrar verticalmente
+$paddingTop = ($cellHeight - $nombreHeight) / 2;
+$paddingTop = max(0, $paddingTop); // evitar valores negativos
+
+// ⬛ Dibujamos la celda y posicionamos el texto
+$pdf->SetXY($x + 30, $y);
+$pdf->Rect($x + 30, $y, 50, $cellHeight); // borde
+
+$pdf->SetXY($x + 30, $y + $paddingTop); // desplazamiento vertical para centrar
+$pdf->MultiCell(50, $lineHeight, $nombre, 0, 'L'); // 'C' para centrado horizontal
+
+
+// UNIDAD EDUCATIVA (MultiCell + borde + alineado izquierda pero centrado verticalmente)
+$pdf->SetXY($x + 80, $y);
+$pdf->Rect($x + 80, $y, 55, $cellHeight);
+$pdf->MultiCell(55, $lineHeight, $institucion, 0, 'L');
+
+// FECHA (centrado)
+$pdf->SetXY($x + 135, $y);
+$pdf->Cell(35, $cellHeight, $fecha, 1, 0, 'C');
+
+// COSTO (centrado a la derecha visualmente)
+$pdf->SetXY($x + 170, $y);
+$pdf->Cell(20, $cellHeight, number_format($costo, 2, ',', '.'), 1, 0, 'C');
+
+// Avanzar Y para siguiente fila
+$pdf->SetY($y + $cellHeight);
+
+    }
+
+    // Total
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(170, 8, 'TOTAL RECAUDADO (Bs)', 1);
+    $pdf->Cell(20, 8, number_format($total, 2, ',', '.'), 1);
+    $pdf->Ln();
+
+    $pdfContent = $pdf->Output('', 'S');
+
+    return response($pdfContent, 200, [
+        'Content-Type' => 'application/pdf',
+        'Content-Length' => strlen($pdfContent),
+        'Content-Disposition' => 'inline; filename="reporte-inscritos.pdf"',
+    ]);
+}
+
+
 
     /**
      * Genera un certificado en formato PDF para un curso inscrito específico, incluyendo un código QR para verificación.
@@ -275,10 +427,13 @@ if ($inscripcionActiva) {
             $next = $cursoinscrito->certificado_numero;
         }
 
+
         $numeroFormateado = str_pad($next, 5, '0', STR_PAD_LEFT);
+        $cursoinscrito->load('curso'); // <-- Esto asegura que esté actualizado
 
         $codigoCurso = $cursoinscrito->curso->codigo_curso ?? 'CURSO';
         $textoCertificado = "{$codigoCurso} - Nro {$numeroFormateado}";
+
         // Ruta temporal para el QR
         $qrPath = storage_path('app/public/temp_qr.png');
 
@@ -321,20 +476,43 @@ $tipoTexto = mb_strtoupper($rawNombre, 'UTF-8');
             $pdf->Image($rutaCompleta, 0, 0, 297, 210); // Ancho total A4 landscape
         }
 
-        // Texto principal centrado con coordenadas precisas
-        $pdf->SetFont('Arial', 'B', 30);
-        $pdf->SetXY(0, 90);
-       // $pdf->Cell(297, 12, utf8_decode($cursoinscrito->user->name . " " . $cursoinscrito->user->primer_apellido ." ". $cursoinscrito->user->segundo_apellido ?? 'Nombre del Participante'), 0, 1, 'C');
-       // Construye el nombre completo
-$nombreCompleto = $cursoinscrito->user->name
-.' '.$cursoinscrito->user->primer_apellido
-.' '.$cursoinscrito->user->segundo_apellido;
+// Construye el nombre completo en mayúsculas
+$nombreCompleto = mb_strtoupper(
+    $cursoinscrito->user->name . ' ' .
+    $cursoinscrito->user->primer_apellido . ' ' .
+    $cursoinscrito->user->segundo_apellido,
+    'UTF-8'
+);
 
-// Convierte a mayúsculas en UTF-8
-$nombreCompleto = mb_strtoupper($nombreCompleto, 'UTF-8');
+// Establecer fuente inicial grande
+// Construye el nombre completo en mayúsculas
+$nombreCompleto = mb_strtoupper(
+    $cursoinscrito->user->name . ' ' .
+    $cursoinscrito->user->primer_apellido . ' ' .
+    $cursoinscrito->user->segundo_apellido,
+    'UTF-8'
+);
 
-// Y luego lo envías al PDF
-$pdf->Cell(297,12,utf8_decode($nombreCompleto),0,1,'C');
+// Tamaño máximo y mínimo permitido
+$fontSize = 25;
+$minFontSize = 10;
+$maxWidth = 260;
+
+$pdf->SetFont('Arial', 'B', $fontSize);
+$nombreWidth = $pdf->GetStringWidth(utf8_decode($nombreCompleto));
+
+// Reducir fuente hasta que quepa en el ancho permitido
+while ($nombreWidth > $maxWidth && $fontSize > $minFontSize) {
+    $fontSize--;
+    $pdf->SetFont('Arial', 'B', $fontSize);
+    $nombreWidth = $pdf->GetStringWidth(utf8_decode($nombreCompleto));
+}
+
+// Finalmente, imprimir el nombre centrado
+$pdf->SetXY(0, 90);
+$pdf->Cell(297, 12, utf8_decode($nombreCompleto), 0, 1, 'C');
+
+
 
 
 
@@ -366,7 +544,7 @@ $pdf->Cell(297,12,utf8_decode($nombreCompleto),0,1,'C');
         $fechag = Carbon::parse($cursoinscrito->curso->fecha_incio)->locale('es');
         $gestion = $fechag->year ?? '2000';
         $cargahoraria = $cursoinscrito->curso->carga_horaria ?? 'Hora';
-        $descripcion = "Realizado en el Período de: $fechainicio al $fechafin del $gestion con carga horaria de $cargahoraria Hrs.";
+        $descripcion = "Realizado en el Período de $fechainicio al $fechafin del $gestion con carga horaria de $cargahoraria Hrs.";
         $y = $pdf->GetY() + 1;
         $pdf->SetFont('Arial', '', 14);
         $pdf->SetXY(25, $y);
