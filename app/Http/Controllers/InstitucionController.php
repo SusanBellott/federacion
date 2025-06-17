@@ -41,7 +41,6 @@ class InstitucionController extends Controller
                     ->orWhereHas('distrito', function ($d) use ($searchTerm) {
                         $d->where('descripcion', 'like', "%{$searchTerm}%");
                     });
-                    
             });
         }
 
@@ -60,10 +59,9 @@ class InstitucionController extends Controller
         // Solo se guarda el ID de la unidad educativa
         $institucion = Institucion::create($validated);
 
-return back()->with('success', 'Institución creada correctamente')->with('datos_array', [
-    'Distrito' => optional($institucion->distrito)->descripcion,
-]);
-
+        return back()->with('success', 'Institución creada correctamente')->with('datos_array', [
+            'Distrito' => optional($institucion->distrito)->descripcion,
+        ]);
     }
 
     public function update(InstitucionRequest $request, $uuid)
@@ -104,49 +102,48 @@ return back()->with('success', 'Institución creada correctamente')->with('datos
 
 
 
-public function getByDistrito($distritoId)
-{
-    return response()->json(
-        Institucion::where('id_distrito', $distritoId)
-            ->where('estado', 'activo')
-            ->get(['id_institucion', 'nivel'])
-    );
-}
-
-
-public function getCodigosSieByInstitucion($institucionId)
-{
-    return response()->json(
-        CodigoSie::where('institucion_id', $institucionId)
-            ->where('estado', 'activo')
-            ->get(['id_codigo_sie', 'unidad_educativa'])
-    );
-}
-public function getDatosRelacionados($id)
-{
-    try {
-        // Validar si existe el distrito
-        $distrito = Distrito::findOrFail($id);
-
-        // Obtener instituciones relacionadas activas
-        $instituciones = Institucion::where('id_distrito', $id)
-            ->where('estado', 'activo')
-            ->get(['id_institucion', 'nivel']);
-
-        // (Opcional) podrías incluir códigos sie relacionados también
-        $codigos = CodigoSie::whereIn('institucion_id', $instituciones->pluck('id_institucion'))
-            ->where('estado', 'activo')
-            ->get(['id_codigo_sie', 'unidad_educativa', 'institucion_id']);
-
-        return response()->json([
-            'instituciones' => $instituciones,
-            'codigos_sie' => $codigos,
-        ]);
-    } catch (\Throwable $th) {
-        return response()->json([
-            'error' => 'Error al obtener datos relacionados: ' . $th->getMessage(),
-        ], 500);
+    public function getByDistrito($distritoId)
+    {
+        return response()->json(
+            Institucion::where('id_distrito', $distritoId)
+                ->where('estado', 'activo')
+                ->get(['id_institucion', 'nivel'])
+        );
     }
-}
 
+
+    public function getCodigosSieByInstitucion($institucionId)
+    {
+        return response()->json(
+            CodigoSie::where('institucion_id', $institucionId)
+                ->where('estado', 'activo')
+                ->get(['id_codigo_sie', 'unidad_educativa'])
+        );
+    }
+    public function getDatosRelacionados($id)
+    {
+        try {
+            // Validar si existe el distrito
+            $distrito = Distrito::findOrFail($id);
+
+            // Obtener instituciones relacionadas activas
+            $instituciones = Institucion::where('id_distrito', $id)
+                ->where('estado', 'activo')
+                ->get(['id_institucion', 'nivel']);
+
+            // (Opcional) podrías incluir códigos sie relacionados también
+            $codigos = CodigoSie::whereIn('institucion_id', $instituciones->pluck('id_institucion'))
+                ->where('estado', 'activo')
+                ->get(['id_codigo_sie', 'unidad_educativa', 'institucion_id']);
+
+            return response()->json([
+                'instituciones' => $instituciones,
+                'codigos_sie' => $codigos,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'Error al obtener datos relacionados: ' . $th->getMessage(),
+            ], 500);
+        }
+    }
 }

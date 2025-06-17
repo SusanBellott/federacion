@@ -16,22 +16,22 @@ class Cursos extends FormRequest
     public function rules(): array
     {
         return [
-'tipo_actividad_id' => [
-    'required',
-    'exists:tipos_actividad,id',
-    Rule::unique('cursos', 'tipo_actividad_id')->ignore($this->getCursoId(), 'id_curso'),
-],
+            'tipo_actividad_id' => [
+                'required',
+                'exists:tipos_actividad,id',
+                Rule::unique('cursos', 'tipo_actividad_id')->ignore($this->getCursoId(), 'id_curso'),
+            ],
 
 
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string|max:255',
 
             // Inscripción: hoy en adelante
-           'fecha_inicio_inscripcion' => [
-    'required',
-    'date',
-    $this->isUpdating() ? 'nullable' : 'after_or_equal:today',
-],
+            'fecha_inicio_inscripcion' => [
+                'required',
+                'date',
+                $this->isUpdating() ? 'nullable' : 'after_or_equal:today',
+            ],
             'fecha_fin_inscripcion' => 'required|date|after_or_equal:fecha_inicio_inscripcion',
 
             // Curso: después de inscripción
@@ -39,19 +39,19 @@ class Cursos extends FormRequest
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
 
             // Carga horaria no debe enviarse manualmente
-           'carga_horaria' => 'nullable|integer|min:1|max:1000',
+            'carga_horaria' => 'nullable|integer|min:1|max:1000',
             // NUEVOS CAMPOS
-'tipo_pago' => ['required', Rule::in(['gratuito', 'pago'])],
-    ];
+            'tipo_pago' => ['required', Rule::in(['gratuito', 'pago'])],
+        ];
 
-    // Validación condicional para el precio
-    if ($this->input('tipo_pago') === 'pago') {
-        $rules['precio'] = ['required', 'numeric', 'min:10'];
-    } else {
-        $rules['precio'] = ['nullable'];
-    }
+        // Validación condicional para el precio
+        if ($this->input('tipo_pago') === 'pago') {
+            $rules['precio'] = ['required', 'numeric', 'min:10'];
+        } else {
+            $rules['precio'] = ['nullable'];
+        }
 
-    return $rules;
+        return $rules;
     }
 
     public function messages(): array
@@ -77,7 +77,7 @@ class Cursos extends FormRequest
             'fecha_fin.after_or_equal' => 'La fecha de finalización debe ser posterior a la fecha de inicio del curso.',
 
             'carga_horaria.prohibited' => 'La carga horaria no puede ser modificada desde aquí. Se asigna automáticamente.',
-         // MENSAJES NUEVOS
+            // MENSAJES NUEVOS
             'tipo_pago.required' => 'Debe seleccionar si el curso es gratuito o de paga.',
             'tipo_pago.in' => 'El tipo de curso debe ser gratuito o de paga.',
 
@@ -88,13 +88,12 @@ class Cursos extends FormRequest
         ];
     }
     protected function getCursoId()
-{
-    $uuid = $this->route('id'); // o el nombre de la ruta (ver web.php)
-    return \App\Models\Curso::where('uuid_curso', $uuid)->value('id_curso');
-}
-protected function isUpdating(): bool
-{
-    return $this->method() === 'PUT' || $this->method() === 'PATCH';
-}
-
+    {
+        $uuid = $this->route('id'); // o el nombre de la ruta (ver web.php)
+        return \App\Models\Curso::where('uuid_curso', $uuid)->value('id_curso');
+    }
+    protected function isUpdating(): bool
+    {
+        return $this->method() === 'PUT' || $this->method() === 'PATCH';
+    }
 }

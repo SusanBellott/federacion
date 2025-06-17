@@ -14,6 +14,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\Distrito;
 
 use App\Models\CodigoSie;
+
 class UserController extends Controller
 {
     /**
@@ -48,18 +49,18 @@ class UserController extends Controller
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
-                  ->orWhere('ci', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%")
-                  ->orWhere('name', 'like', "%{$searchTerm}%")
-              ->orWhere('primer_apellido', 'like', "%{$searchTerm}%");
+                    ->orWhere('ci', 'like', "%{$searchTerm}%")
+                    ->orWhere('email', 'like', "%{$searchTerm}%")
+                    ->orWhere('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('primer_apellido', 'like', "%{$searchTerm}%");
             });
         }
 
         return Inertia::render('User', [
             'usuarios' => $query->paginate($perPage),
             'distritos' => Distrito::select('id_distrito', 'descripcion')->get(),
-        'instituciones' => Institucion::select('id_institucion', 'nivel')->get(),
-        'codigosSie' => CodigoSie::select('id_codigo_sie', 'unidad_educativa')->get(),
+            'instituciones' => Institucion::select('id_institucion', 'nivel')->get(),
+            'codigosSie' => CodigoSie::select('id_codigo_sie', 'unidad_educativa')->get(),
 
             'roles' => Role::orderBy('id', 'ASC')->get(),
             'filters' => [
@@ -78,11 +79,11 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $validated = $request->validated();
-        
+
         // Generar UUID y crear correo electrónico automático
         $validated['uuid_user'] = Str::uuid();
         $inicial = strtoupper(substr($validated['name'], 0, 1));
-        $validated['email'] = $inicial.'_'.$validated['rda'].'@fdteulp.com';
+        $validated['email'] = $inicial . '_' . $validated['rda'] . '@fdteulp.com';
         $validated['password'] = Hash::make($validated['ci']);
         $validated['estado'] = 'activo';
 
@@ -105,25 +106,25 @@ class UserController extends Controller
     public function update(UserRequest $request, $uuid)
     {
         $user = User::where('uuid_user', $uuid)->firstOrFail();
-    
+
         $request->validate([
             'email' => 'nullable|email|unique:users,email,' . $user->id,
         ]);
-    
+
         $validated = $request->validated();
-    
+
         // 🔄 Regenerar correo automáticamente con inicial y RDA
         $inicial = strtoupper(substr($validated['name'], 0, 1));
         $validated['email'] = $inicial . '_' . $validated['rda'] . '@fdteulp.com';
-    
+
         $user->update($validated);
         $user->roles()->sync($request->role);
-    
+
         return back()
             ->with('success', 'Usuario actualizado correctamente')
             ->with('datos_array', [$validated]);
     }
-    
+
 
     /**
      * Actualiza el estado de un usuario (activo, inactivo o eliminado).
@@ -137,17 +138,17 @@ class UserController extends Controller
         if (!$uuid || !$code) {
             return back()->with('error', 'Hubo un error con la solicitud.');
         }
-        
+
         $user = User::where('uuid_user', $uuid)->firstOrFail();
-        
-        $newStatus = match($code) {
+
+        $newStatus = match ($code) {
             '1' => 'activo',
             '2' => 'inactivo',
             default => 'eliminado',
         };
-        
+
         $user->update(['estado' => $newStatus]);
-        
+
         return back()->with('editado', 'ok');
     }
 
@@ -162,7 +163,7 @@ class UserController extends Controller
         $user = User::where('uuid_user', $uuid)->firstOrFail();
         $user->password = Hash::make($user->ci);
         $user->update();
-        
+
         return back()->with('editado', 'ok');
     }
 }

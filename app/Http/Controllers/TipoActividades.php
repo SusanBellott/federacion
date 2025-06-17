@@ -28,23 +28,23 @@ class TipoActividades extends Controller
         }
         $query = TipoActividad::select('id', 'uuid_tipo_actividad', 'codigo', 'nombre', 'horas_minimas', 'estado');
 
-        
+
         // Aplicar filtro de búsqueda si existe
         if (!empty($busqueda)) {
             $query->where(function ($q) use ($busqueda) {
                 $q->where('codigo', 'LIKE', "%{$busqueda}%")
-                  ->orWhere('nombre', 'LIKE', "%{$busqueda}%");
+                    ->orWhere('nombre', 'LIKE', "%{$busqueda}%");
             });
         }
-        
+
         $tipos = $query->orderBy('id', 'asc')
-        ->paginate($perPage)
-                      ->withQueryString();
-        
+            ->paginate($perPage)
+            ->withQueryString();
+
         return Inertia::render('TipoActividad', [
             'tipos' => $tipos,
             'filters' => [
-               'perPage' => $perPage,
+                'perPage' => $perPage,
             ],
         ]);
     }
@@ -81,7 +81,7 @@ class TipoActividades extends Controller
     public function update(Request $request, $id)
     {
         $tipo = TipoActividad::findOrFail($id);
-        
+
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:100',
             'horas_minimas' => 'required|integer|min:2',
@@ -106,30 +106,30 @@ class TipoActividades extends Controller
         if (!$uuid || !$code) {
             return back()->with('error', 'Hubo un error con la solicitud.');
         }
-    
+
         $tipo = TipoActividad::where('uuid_tipo_actividad', $uuid)->firstOrFail();
-    
+
         $nuevoEstado = match ((string)$code) {
             '1' => 'activo',
             '2' => 'inactivo',
             default => 'eliminado',
         };
-    
+
         $tipo->update(['estado' => $nuevoEstado]);
-    
+
         return back()->with('editado', 'ok'); // Para disparar SweetAlert
     }
-    
+
 
 
     public function destroy($id)
     {
         $tipo = TipoActividad::findOrFail($id);
         $nombre = $tipo->nombre;
-        
+
         // En lugar de eliminar físicamente, cambiamos el estado
         $tipo->update(['estado' => 'eliminado']);
-        
+
         return redirect()->back()->with([
             'success' => true,
             'datos_array' => [

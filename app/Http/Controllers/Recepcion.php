@@ -13,14 +13,15 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\Institucion as ModelInstitucion;
 use App\Http\Requests\Recepciones;
+
 class Recepcion extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:recepciones.index', ['only' => ['index']]);
-         $this->middleware('permission:recepcion.create', ['only' => ['store']]);
-         $this->middleware('permission:editarestadorecepcion.update', ['only' => ['updatedelete']]);
-         $this->middleware('permission:recepcioneseditar.update', ['only' => ['update']]);
+        $this->middleware('permission:recepciones.index', ['only' => ['index']]);
+        $this->middleware('permission:recepcion.create', ['only' => ['store']]);
+        $this->middleware('permission:editarestadorecepcion.update', ['only' => ['updatedelete']]);
+        $this->middleware('permission:recepcioneseditar.update', ['only' => ['update']]);
     }
 
     /**
@@ -67,7 +68,6 @@ class Recepcion extends Controller
                 'perPage' => $perPage
             ]
         ]);
-        
     }
 
     /**
@@ -84,16 +84,16 @@ class Recepcion extends Controller
     {
         $validated = $request->validated();
         $inicial = strtoupper(substr($validated['name'], 0, 1));
-        $correo = $inicial.'_'.$request->rda.'@fdteulp.com';
+        $correo = $inicial . '_' . $request->rda . '@fdteulp.com';
         $registroguardar = ModelUser::create([
             'institucion_id' => $request->institucion_id,
             'distrito_id' => $request->distrito_id,            // ✅ AÑADIR
-            'codigo_sie_id' => $request->codigo_sie_id,   
+            'codigo_sie_id' => $request->codigo_sie_id,
             'uuid_user' => Str::uuid(),
             'ci' => $request->ci,
             'complemento_ci' => $request->complemento_ci,
             'rda' => $request->rda,
-          'name' => trim($request->name . ' ' . ($request->name2 ?? '')),
+            'name' => trim($request->name . ' ' . ($request->name2 ?? '')),
 
             'primer_apellido' => $request->primer_apellido,
             'segundo_apellido' => $request->segundo_apellido,
@@ -102,20 +102,20 @@ class Recepcion extends Controller
             'horas' => $request->horas,
             'email' => $correo,
             'password' => bcrypt($request->ci),
-            'estado' => 'activo' 
+            'estado' => 'activo'
         ])->assignRole('Estudiante');
         $registroId = $registroguardar->id;
         $registrouuId = $registroguardar->uuid_user;
-    // Solo crear inscripción si se seleccionó un curso
-    if ($request->filled('id_curso')) {
-        ModelInscripcion::create([
-            'id_user' => $registroId,
-            'id_curso' => $request->id_curso,
-            'uuid_inscripcion' => Str::uuid(),
-            'fecha_inscripcion' => Carbon::now(),
-            'estado_ins' => "inscrito"
-        ]);
-    }
+        // Solo crear inscripción si se seleccionó un curso
+        if ($request->filled('id_curso')) {
+            ModelInscripcion::create([
+                'id_user' => $registroId,
+                'id_curso' => $request->id_curso,
+                'uuid_inscripcion' => Str::uuid(),
+                'fecha_inscripcion' => Carbon::now(),
+                'estado_ins' => "inscrito"
+            ]);
+        }
 
         return redirect()
             ->route('inscritos.index', [
@@ -126,5 +126,4 @@ class Recepcion extends Controller
             ->with('success', 'Usuario inscrito correctamente')
             ->with('datos_array', [$validated]);
     }
-
 }

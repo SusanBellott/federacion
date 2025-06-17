@@ -22,7 +22,7 @@ class DistritoController extends Controller
         $this->middleware('permission:editarestadodeletedistrito.update', ['only' => ['updateStatus']]);
         $this->middleware('permission:distritoseditar.update', ['only' => ['update']]);
     }
-    
+
     /**
      * Muestra una lista paginada de distritos con opción de búsqueda.
      *
@@ -66,7 +66,7 @@ class DistritoController extends Controller
     {
         $validated = $request->validated();
         $validated['uuid_distrito'] = Str::uuid();
-        
+
         Distrito::create($validated);
 
         return back()
@@ -85,9 +85,9 @@ class DistritoController extends Controller
     {
         $distrito = Distrito::where('uuid_distrito', $uuid)->firstOrFail();
         $validated = $request->validated();
-        
+
         $distrito->update($validated);
-        
+
         return redirect()->route('distritos.index')->with([
             'success' => true,
             'datos_array' => [
@@ -96,7 +96,6 @@ class DistritoController extends Controller
                 'icon' => 'success',
             ]
         ]);
-        
     }
 
     /**
@@ -113,15 +112,15 @@ class DistritoController extends Controller
         }
 
         $distrito = Distrito::where('uuid_distrito', $uuid)->firstOrFail();
-        
-        $newStatus = match($code) {
+
+        $newStatus = match ($code) {
             '1' => 'activo',
             '2' => 'inactivo',
             default => 'eliminado',
         };
 
         $distrito->update(['estado' => $newStatus]);
-        
+
         return back()->with('editado', 'ok');
     }
 
@@ -152,7 +151,7 @@ class DistritoController extends Controller
             'codigos_sie' => $distrito->codigosSie()->get(['id_codigo_sie', 'unidad_educativa'])
         ]);
     }
-    
+
     /**
      * Obtiene todos los datos relacionados con un distrito (instituciones y códigos SIE).
      * 
@@ -163,11 +162,10 @@ class DistritoController extends Controller
     {
         return response()->json([
 
-            
+
             'instituciones' => Institucion::where('id_distrito', $id)
                 ->where('estado', 'activo')
                 ->get(['id_institucion', 'nivel']),
         ]);
     }
-    
 }

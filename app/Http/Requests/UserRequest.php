@@ -31,33 +31,33 @@ class UserRequest extends FormRequest
                     return $query->where('complemento_ci', $complemento);
                 })->ignore($userId),
             ],
-'complemento_ci' => [
-    'nullable',
-    'regex:/^[A-Z0-9\-]{1,5}$/i',
-    function ($attribute, $value, $fail) use ($ci, $userId) {
-        $usuarioExistente = User::where('ci', $ci)
-            ->where(function ($query) use ($value) {
-                if ($value) {
-                    $query->where('complemento_ci', $value);
-                } else {
-                    $query->whereNull('complemento_ci');
-                }
-            })
-            ->where('id', '!=', $userId)
-            ->first();
+            'complemento_ci' => [
+                'nullable',
+                'regex:/^[A-Z0-9\-]{1,5}$/i',
+                function ($attribute, $value, $fail) use ($ci, $userId) {
+                    $usuarioExistente = User::where('ci', $ci)
+                        ->where(function ($query) use ($value) {
+                            if ($value) {
+                                $query->where('complemento_ci', $value);
+                            } else {
+                                $query->whereNull('complemento_ci');
+                            }
+                        })
+                        ->where('id', '!=', $userId)
+                        ->first();
 
-        if ($usuarioExistente) {
-            if (!$value) {
-                // Mensaje para el campo CI
-                $fail('ci', 'Este número de carnet ya está asignado a un usuario dentro del sistema.');
-                // Mensaje para el complemento
-                $fail('Agrega un complemento para este número de carnet.');
-            } else {
-                $fail('Ya existe un usuario con este CI y complemento.');
-            }
-        }
-    }
-],
+                    if ($usuarioExistente) {
+                        if (!$value) {
+                            // Mensaje para el campo CI
+                            $fail('ci', 'Este número de carnet ya está asignado a un usuario dentro del sistema.');
+                            // Mensaje para el complemento
+                            $fail('Agrega un complemento para este número de carnet.');
+                        } else {
+                            $fail('Ya existe un usuario con este CI y complemento.');
+                        }
+                    }
+                }
+            ],
 
 
 

@@ -952,7 +952,6 @@ const resetPassword = (id, cod, texto) => {
                                 <input
                                     v-model="form.name"
                                     type="text"
-                                    
                                     placeholder="Ingrese nombre completo"
                                     class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
                                 />
@@ -1015,7 +1014,6 @@ const resetPassword = (id, cod, texto) => {
                                 <input
                                     v-model="form.email"
                                     type="email"
-                                    
                                     class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                                 />
                                 <InputError
@@ -1034,7 +1032,6 @@ const resetPassword = (id, cod, texto) => {
                                 <input
                                     v-model="form.item"
                                     type="number"
-                                    
                                     placeholder="Ingrese número de ítem"
                                     class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
                                 />
@@ -1054,7 +1051,6 @@ const resetPassword = (id, cod, texto) => {
                                 <input
                                     v-model="form.cargo"
                                     type="number"
-                                    
                                     placeholder="Ingrese número de cargo"
                                     class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
                                 />
@@ -1074,7 +1070,6 @@ const resetPassword = (id, cod, texto) => {
                                 <input
                                     v-model="form.horas"
                                     type="number"
-                                    
                                     placeholder="Ingrese número de horas"
                                     class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
                                 />

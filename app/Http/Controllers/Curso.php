@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\Distrito as ModelIDistrito;
 use App\Models\Curso as ModelCurso;
 use App\Models\Imagencertificado;
-use App\Models\TipoActividad; 
+use App\Models\TipoActividad;
 use Carbon\Carbon;
 use App\Models\Inscripcion;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +23,11 @@ class Curso extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:cursos.index', ['only' => ['index']]);
-         $this->middleware('permission:cursos.create', ['only' => ['store']]);
-         $this->middleware('permission:editarestadodeletecursos.update', ['only' => ['updatedelete']]);
-         $this->middleware('permission:cursoseditar.update', ['only' => ['update']]);
-         $this->middleware('permission:cursosimagenes.create', ['only' => ['storeimagen']]);
+        $this->middleware('permission:cursos.index', ['only' => ['index']]);
+        $this->middleware('permission:cursos.create', ['only' => ['store']]);
+        $this->middleware('permission:editarestadodeletecursos.update', ['only' => ['updatedelete']]);
+        $this->middleware('permission:cursoseditar.update', ['only' => ['update']]);
+        $this->middleware('permission:cursosimagenes.create', ['only' => ['storeimagen']]);
     }
     /**
      * Muestra una lista paginada de cursos, con opción de búsqueda y filtrado por página.
@@ -49,7 +49,7 @@ class Curso extends Controller
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('nombre', 'like', "%{$searchTerm}%")
-                ->orWhere('codigo_curso', 'like', "%{$searchTerm}%")
+                    ->orWhere('codigo_curso', 'like', "%{$searchTerm}%")
                     ->orWhere('descripcion', 'like', "%{$searchTerm}%")
                     ->orWhere('fecha_inicio', 'like', "%{$searchTerm}%")
                     ->orWhere('fecha_fin', 'like', "%{$searchTerm}%")
@@ -58,13 +58,12 @@ class Curso extends Controller
                     ->orWhere('grado_academico', 'like', "%{$searchTerm}%")
                     ->orWhereHas('tipoActividad', function ($qt) use ($searchTerm) {
                         $qt->where('nombre', 'like', "%{$searchTerm}%")
-                           ->orWhere('codigo', 'like', "%{$searchTerm}%");
-           
-                        });
+                            ->orWhere('codigo', 'like', "%{$searchTerm}%");
                     });
+            });
         }
 
-        
+
         $cursos = $query->with([
             'tipoActividad:id,codigo,nombre',
             'imagencertificados'
@@ -76,7 +75,7 @@ class Curso extends Controller
             $fin_insc = $curso->fecha_fin_inscripcion ? Carbon::parse($curso->fecha_fin_inscripcion)->endOfDay() : null;
             $inicio_curso = $curso->fecha_inicio ? Carbon::parse($curso->fecha_inicio) : null;
             $fin_curso = $curso->fecha_fin ? Carbon::parse($curso->fecha_fin)->endOfDay() : null;
-        
+
             if ($inicio_insc && $fecha_actual->lt($inicio_insc)) {
                 $curso->estado_curso = 'no iniciado';
             } elseif ($inicio_insc && $fin_insc && $fecha_actual->between($inicio_insc, $fin_insc)) {
@@ -90,22 +89,22 @@ class Curso extends Controller
             } else {
                 $curso->estado_curso = 'sin estado';
             }
-        
+
             return $curso;
         });
-        
-        
-        
-        
+
+
+
+
         $uuidEnEdicion = $request->query('edit');
         $cursoEditando = null;
-    
+
         if ($uuidEnEdicion) {
             $cursoEditando = ModelCurso::with('tipoActividad')
                 ->where('uuid_curso', $uuidEnEdicion)
                 ->first();
         }
-    
+
         $tipos = TipoActividad::orderBy('codigo')->get();
 
 
@@ -131,25 +130,25 @@ class Curso extends Controller
     public function store(Cursos $request)
     {
         $validated = $request->validate([
-           'tipo_actividad_id' => [
-    'required',
-    'exists:tipos_actividad,id',
-    Rule::unique('cursos', 'tipo_actividad_id'),
-],
+            'tipo_actividad_id' => [
+                'required',
+                'exists:tipos_actividad,id',
+                Rule::unique('cursos', 'tipo_actividad_id'),
+            ],
 
             'nombre' => 'required',
             'descripcion' => 'required',
             'fecha_inicio_inscripcion' => 'required|date|after_or_equal:today',
-'fecha_fin_inscripcion' => 'required|date|after_or_equal:fecha_inicio_inscripcion|before_or_equal:2040-12-31',
-'fecha_inicio' => 'required|date|after_or_equal:fecha_fin_inscripcion',
-'fecha_fin' => 'required|date|after_or_equal:fecha_inicio|before_or_equal:2040-12-31',
-           'carga_horaria' => 'required|integer|min:1|max:1000',
-           'tipo_pago' => 'required|in:gratuito,pago',
-'precio' => 'nullable|required_if:tipo_pago,pago|numeric|min:10',
+            'fecha_fin_inscripcion' => 'required|date|after_or_equal:fecha_inicio_inscripcion|before_or_equal:2040-12-31',
+            'fecha_inicio' => 'required|date|after_or_equal:fecha_fin_inscripcion',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio|before_or_equal:2040-12-31',
+            'carga_horaria' => 'required|integer|min:1|max:1000',
+            'tipo_pago' => 'required|in:gratuito,pago',
+            'precio' => 'nullable|required_if:tipo_pago,pago|numeric|min:10',
 
         ]);
-        $data = $request->only(['tipo_actividad_id','nombre', 'descripcion','fecha_inicio_inscripcion', 'fecha_fin_inscripcion', 'fecha_inicio', 'fecha_fin', 'carga_horaria', 'tipo_pago','precio' ]);
-       $data['uuid_curso'] = Str::uuid();
+        $data = $request->only(['tipo_actividad_id', 'nombre', 'descripcion', 'fecha_inicio_inscripcion', 'fecha_fin_inscripcion', 'fecha_inicio', 'fecha_fin', 'carga_horaria', 'tipo_pago', 'precio']);
+        $data['uuid_curso'] = Str::uuid();
         $data['estado_curso'] = 'abierto';
         if ($request->hasFile('imagen')) {
             $image = $request->file('imagen');
@@ -158,8 +157,8 @@ class Curso extends Controller
             $data['img_curso'] = 'storage/' . $imagePath;
         }
         $data['codigo_curso'] = $this->generarCodigoCurso($request->nombre);
-$data['tipo_pago'] = $request->tipo_pago;
-$data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
+        $data['tipo_pago'] = $request->tipo_pago;
+        $data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
 
         $curso = ModelCurso::create($data);
         /*   Imagencertificado::create([
@@ -170,36 +169,35 @@ $data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
         return back()
             ->with('success', 'Curso creada correctamente')
             ->with('datos_array', [$validated]);
-
     }
 
 
     private function generarCodigoCurso($nombre)
     {
         $excluir = ['de', 'la', 'el', 'y', 'en', 'del', 'los', 'las', 'para', 'con', 'segun', 'su'];
-    
+
         $palabras = collect(explode(' ', strtolower($nombre)))
             ->filter(fn($p) => !in_array($p, $excluir) && trim($p) !== '')
             ->values();
-    
+
         $letras = '';
-    
+
         // Paso 1: Tomar la primera letra de hasta 3 palabras
         foreach ($palabras as $palabra) {
             if (strlen($letras) < 3) {
                 $letras .= strtoupper(mb_substr($palabra, 0, 1));
             }
         }
-    
+
         // Paso 2: Si no alcanza 3 letras, completar con más letras de la primera palabra
         if (strlen($letras) < 3 && isset($palabras[0])) {
             $restante = 3 - strlen($letras);
             $letras .= strtoupper(mb_substr($palabras[0], 1, $restante));
         }
-    
+
         // Paso 3: Si aún no llega a 3 letras, completar con 'X'
         $codigoBase = str_pad($letras, 3, 'X');
-    
+
         // Buscar la última versión
         $ultimaVersion = ModelCurso::where('codigo_curso', 'like', "$codigoBase-V%")
             ->get()
@@ -208,12 +206,12 @@ $data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
                 return isset($partes[1]) && is_numeric($partes[1]) ? (int)$partes[1] : 0;
             })
             ->max();
-    
+
         $siguienteVersion = $ultimaVersion ? $ultimaVersion + 1 : 1;
-    
+
         return "$codigoBase-V$siguienteVersion";
     }
-    
+
 
     /**
      * Almacena múltiples imágenes de certificado asociadas a un curso específico.
@@ -283,33 +281,33 @@ $data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
 
         ];
         // 👇 Solo agregamos esta validación si es curso de pago
-    if ($request->input('tipo_pago') === 'pago') {
-        $rules['precio'] = 'required|numeric|min:10';
-    }
+        if ($request->input('tipo_pago') === 'pago') {
+            $rules['precio'] = 'required|numeric|min:10';
+        }
         // Si se está enviando una nueva fecha, se valida; si no, se conserva la anterior
         if ($request->filled('fecha_inicio_inscripcion')) {
             $rules['fecha_inicio_inscripcion'] = 'required|date|before_or_equal:fecha_fin_inscripcion';
         }
-    
+
         if ($request->filled('fecha_fin_inscripcion')) {
             $rules['fecha_fin_inscripcion'] = 'required|date|after_or_equal:fecha_inicio_inscripcion|before_or_equal:2040-12-31';
         }
-    
+
         if ($request->filled('fecha_inicio')) {
             $rules['fecha_inicio'] = 'required|date|after_or_equal:fecha_fin_inscripcion';
         }
-    
+
         if ($request->filled('fecha_fin')) {
             $rules['fecha_fin'] = 'required|date|after_or_equal:fecha_inicio|before_or_equal:2040-12-31';
         }
-    
+
         $validated = $request->validate($rules);
 
-    // Si alguna fecha no vino en la request, conservar la actual
-    $validated['fecha_inicio_inscripcion'] = $request->fecha_inicio_inscripcion ?? $curso->fecha_inicio_inscripcion;
-    $validated['fecha_fin_inscripcion'] = $request->fecha_fin_inscripcion ?? $curso->fecha_fin_inscripcion;
-    $validated['fecha_inicio'] = $request->fecha_inicio ?? $curso->fecha_inicio;
-    $validated['fecha_fin'] = $request->fecha_fin ?? $curso->fecha_fin;
+        // Si alguna fecha no vino en la request, conservar la actual
+        $validated['fecha_inicio_inscripcion'] = $request->fecha_inicio_inscripcion ?? $curso->fecha_inicio_inscripcion;
+        $validated['fecha_fin_inscripcion'] = $request->fecha_fin_inscripcion ?? $curso->fecha_fin_inscripcion;
+        $validated['fecha_inicio'] = $request->fecha_inicio ?? $curso->fecha_inicio;
+        $validated['fecha_fin'] = $request->fecha_fin ?? $curso->fecha_fin;
 
         if ($request->hasFile('imagen')) {
             if ($curso->img_curso) {
@@ -323,51 +321,49 @@ $data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
             $imagePath = $image->storeAs('imagenescursos', $uniqueName, 'public');
             $validated['img_curso'] = 'storage/' . $imagePath;
         }
-        
-    // Estado dinámico
-    $fecha_actual = Carbon::now();
-    $inicio_insc = Carbon::parse($validated['fecha_inicio_inscripcion']);
-    $fin_insc = Carbon::parse($validated['fecha_fin_inscripcion'])->endOfDay();
-    $inicio_curso = Carbon::parse($validated['fecha_inicio']);
-    $fin_curso = Carbon::parse($validated['fecha_fin'])->endOfDay();
 
-    if ($inicio_insc && $fecha_actual->lt($inicio_insc)) {
-        $validated['estado_curso'] = 'no iniciado';
-    } elseif ($inicio_insc && $fin_insc && $fecha_actual->between($inicio_insc, $fin_insc)) {
-        $validated['estado_curso'] = 'abierto';
-    } elseif ($fin_insc && $inicio_curso && $fecha_actual->gt($fin_insc) && $fecha_actual->lt($inicio_curso)) {
-        $validated['estado_curso'] = 'cerrado';
-    } elseif ($inicio_curso && $fin_curso && $fecha_actual->between($inicio_curso, $fin_curso)) {
-        $validated['estado_curso'] = 'curso';
-    } elseif ($fin_curso && $fecha_actual->gt($fin_curso)) {
-        $validated['estado_curso'] = 'terminado';
-    } else {
-        $validated['estado_curso'] = 'sin estado';
-    }
+        // Estado dinámico
+        $fecha_actual = Carbon::now();
+        $inicio_insc = Carbon::parse($validated['fecha_inicio_inscripcion']);
+        $fin_insc = Carbon::parse($validated['fecha_fin_inscripcion'])->endOfDay();
+        $inicio_curso = Carbon::parse($validated['fecha_inicio']);
+        $fin_curso = Carbon::parse($validated['fecha_fin'])->endOfDay();
 
-      // ✅ Asegurar coherencia en tipo_pago y precio
-    $validated['tipo_pago'] = $request->tipo_pago;
-    $validated['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
+        if ($inicio_insc && $fecha_actual->lt($inicio_insc)) {
+            $validated['estado_curso'] = 'no iniciado';
+        } elseif ($inicio_insc && $fin_insc && $fecha_actual->between($inicio_insc, $fin_insc)) {
+            $validated['estado_curso'] = 'abierto';
+        } elseif ($fin_insc && $inicio_curso && $fecha_actual->gt($fin_insc) && $fecha_actual->lt($inicio_curso)) {
+            $validated['estado_curso'] = 'cerrado';
+        } elseif ($inicio_curso && $fin_curso && $fecha_actual->between($inicio_curso, $fin_curso)) {
+            $validated['estado_curso'] = 'curso';
+        } elseif ($fin_curso && $fecha_actual->gt($fin_curso)) {
+            $validated['estado_curso'] = 'terminado';
+        } else {
+            $validated['estado_curso'] = 'sin estado';
+        }
+
+        // ✅ Asegurar coherencia en tipo_pago y precio
+        $validated['tipo_pago'] = $request->tipo_pago;
+        $validated['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
 
 
         // Siempre verifica si ya existe otro curso con el mismo nombre y tipo_actividad_id
         $existeOtro = ModelCurso::where('nombre', $request->nombre)
-        ->where('id_curso', '!=', $curso->id_curso)
-        ->exists();
-    
-   if ($request->nombre !== $curso->nombre) {
-    $validated['codigo_curso'] = $this->generarCodigoCurso($request->nombre);
-}
+            ->where('id_curso', '!=', $curso->id_curso)
+            ->exists();
 
-    
-      $curso->update($validated);
+        if ($request->nombre !== $curso->nombre) {
+            $validated['codigo_curso'] = $this->generarCodigoCurso($request->nombre);
+        }
+
+
+        $curso->update($validated);
 
         return back()->with([
             'success' => 'Curso editado correctamente',
             'datos_array' => $validated,
         ]);
-
-
     }
 
     /**
@@ -401,7 +397,7 @@ $data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
         }
     }
 
-     /**
+    /**
      * Actualiza el estado del curso ('abierto', 'curso' o 'terminado') basado en el código proporcionado.
      * Busca el curso por su UUID y actualiza la columna 'estado_curso' según el valor de '$cod'.
      *
@@ -435,8 +431,8 @@ $data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
         dd($request->all());
         dd($request->hasFile('imagenes'));
         return back()
-        ->with('success', 'Imágenes agregadas correctamente')
-        ->with('datos_array', $mensaje);
+            ->with('success', 'Imágenes agregadas correctamente')
+            ->with('datos_array', $mensaje);
     }
     public function updateimagen222(Request $request, $id)
     {
@@ -450,23 +446,23 @@ $data['precio'] = $request->tipo_pago === 'pago' ? $request->precio : null;
 
     public function misCursos()
     {
-         $user = Auth::user();
+        $user = Auth::user();
         $userId = $user->id;
-         $fechaActual = Carbon::now();
-    
-    // 🔐 Aplicar condición de visibilidad según rol
- $cursosQuery = ModelCurso::inscripcionesDisponibles()
-        ->where('estado', 'activo');
-if ($user->hasRole('Estudiante')) {
-    $cursosQuery->where('tipo_pago', 'gratuito');
-} elseif ($user->hasAnyRole(['Administrador', 'Encargado'])) {
-    $cursosQuery->whereIn('tipo_pago', ['gratuito', 'pago']);
-}
+        $fechaActual = Carbon::now();
+
+        // 🔐 Aplicar condición de visibilidad según rol
+        $cursosQuery = ModelCurso::inscripcionesDisponibles()
+            ->where('estado', 'activo');
+        if ($user->hasRole('Estudiante')) {
+            $cursosQuery->where('tipo_pago', 'gratuito');
+        } elseif ($user->hasAnyRole(['Administrador', 'Encargado'])) {
+            $cursosQuery->whereIn('tipo_pago', ['gratuito', 'pago']);
+        }
 
 
 
 
-      $cursosDisponibles = $cursosQuery
+        $cursosDisponibles = $cursosQuery
 
             ->with(['tipoActividad', 'imagencertificados'])
             ->orderBy('fecha_inicio_inscripcion')
@@ -477,22 +473,22 @@ if ($user->hasRole('Estudiante')) {
                     ->where('id_curso', $curso->id_curso)
                     ->where('estado_ins', 'inscrito')
                     ->exists();
-    
+
                 $curso->ya_inscrito = $yaInscrito;
-    
+
                 return $curso;
             });
-    
+
         $miscursos = Inscripcion::with('curso')
             ->where('id_user', $userId)
             ->paginate(10);
-    
+
         // 🔥 Esta es la línea clave que te falta:
         $misCursosIds = Inscripcion::where('id_user', $userId)
             ->where('estado_ins', 'inscrito')
             ->pluck('id_curso')
             ->toArray();
-    
+
         return Inertia::render('Miscursos', [
             'nombre_user' => Auth::user()->name,
             'cursos' => $cursosDisponibles,
@@ -500,7 +496,4 @@ if ($user->hasRole('Estudiante')) {
             'misCursosIds' => $misCursosIds, // ✅ pásalo al frontend
         ]);
     }
-    
-    
-    
 }

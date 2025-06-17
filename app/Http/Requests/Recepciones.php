@@ -20,47 +20,47 @@ class Recepciones extends FormRequest
             'distrito_id' => 'required|exists:distritos,id_distrito',
             'codigo_sie_id' => 'required|exists:codigo_sies,id_codigo_sie',
             'id_curso' => 'nullable|exists:cursos,id_curso',
-'ci' => [
-    'required',
-    'numeric',
-    'digits_between:3,10',
-    function ($attribute, $value, $fail) {
-        $complemento = $this->input('complemento_ci');
+            'ci' => [
+                'required',
+                'numeric',
+                'digits_between:3,10',
+                function ($attribute, $value, $fail) {
+                    $complemento = $this->input('complemento_ci');
 
-        $existe = User::where('ci', $value)
-            ->where('complemento_ci', $complemento)
-            ->exists();
+                    $existe = User::where('ci', $value)
+                        ->where('complemento_ci', $complemento)
+                        ->exists();
 
-        if ($existe) {
-            $fail('Este número de carnet ya está asignado a un usuario dentro del sistema.');
-        }
-    },
-],
-'complemento_ci' => [
-    'nullable',
-    'regex:/^[A-Z0-9\-]{1,5}$/i',
-    function ($attribute, $value, $fail) {
-        $ci = $this->input('ci');
+                    if ($existe) {
+                        $fail('Este número de carnet ya está asignado a un usuario dentro del sistema.');
+                    }
+                },
+            ],
+            'complemento_ci' => [
+                'nullable',
+                'regex:/^[A-Z0-9\-]{1,5}$/i',
+                function ($attribute, $value, $fail) {
+                    $ci = $this->input('ci');
 
-        $existeSinComplemento = User::where('ci', $ci)
-            ->whereNull('complemento_ci')
-            ->exists();
+                    $existeSinComplemento = User::where('ci', $ci)
+                        ->whereNull('complemento_ci')
+                        ->exists();
 
-        if ($existeSinComplemento && !$value) {
-            $fail('Agrega un complemento para este número de carnet.');
-        }
+                    if ($existeSinComplemento && !$value) {
+                        $fail('Agrega un complemento para este número de carnet.');
+                    }
 
-        if ($value) {
-            $yaExiste = User::where('ci', $ci)
-                ->where('complemento_ci', $value)
-                ->exists();
+                    if ($value) {
+                        $yaExiste = User::where('ci', $ci)
+                            ->where('complemento_ci', $value)
+                            ->exists();
 
-            if ($yaExiste) {
-                $fail('Ya existe un usuario con este CI y complemento.');
-            }
-        }
-    },
-],
+                        if ($yaExiste) {
+                            $fail('Ya existe un usuario con este CI y complemento.');
+                        }
+                    }
+                },
+            ],
 
             'name' => 'required|regex:/^[\pLÁÉÍÓÚáéíóúÑñ]+$/u|max:30',
             'name2' => 'nullable|regex:/^[\pLÁÉÍÓÚáéíóúÑñ]+$/u|max:30',
@@ -95,10 +95,10 @@ class Recepciones extends FormRequest
             'ci.required' => 'El campo CI es obligatorio.',
             'ci.numeric' => 'El CI debe ser un número.',
             'ci.digits_between' => 'El CI debe tener entre 3 y 10 dígitos.',
-        
 
-'complemento_ci.required' => 'El complemento CI es obligatorio si el CI ya está registrado.',
-'complemento_ci.regex' => 'El complemento CI debe contener solo letras, números o guiones.',
+
+            'complemento_ci.required' => 'El complemento CI es obligatorio si el CI ya está registrado.',
+            'complemento_ci.regex' => 'El complemento CI debe contener solo letras, números o guiones.',
 
             'name.required' => 'El campo "Nombre" es obligatorio.',
 

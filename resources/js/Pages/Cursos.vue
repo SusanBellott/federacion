@@ -8,16 +8,16 @@ import Pagination from "@/Components/Pagination.vue";
 import useSweetAlert from "@/Components/SweetAlert.vue";
 import editaralerta from "@/Components/AlertaEditada.vue";
 import BuscadorCursos from "@/Components/Buscador.vue";
-import ModalMolqui from '@/Components/modalmolqui.vue';
+import ModalMolqui from "@/Components/modalmolqui.vue";
 
-import 'vue3-carousel/carousel.css';
-import { Carousel, Slide, Navigation } from 'vue3-carousel';
+import "vue3-carousel/carousel.css";
+import { Carousel, Slide, Navigation } from "vue3-carousel";
 
 const props = defineProps({
     cursos: Object,
     filters: Object,
     tipos: Array,
-    cursoEditando: Object
+    cursoEditando: Object,
 });
 
 const currentPage = computed(() => props.cursos.current_page);
@@ -25,29 +25,32 @@ const perPage = computed(() => props.cursos.per_page);
 
 const errors = computed(() => page.props.errors || {});
 
-
 const images = computed(() => {
-    const cursoSeleccionado = props.cursos.data?.find(curso => curso.uuid_curso === form2.value.uuid_curso)
-        || props.cursos;
+    const cursoSeleccionado =
+        props.cursos.data?.find(
+            (curso) => curso.uuid_curso === form2.value.uuid_curso
+        ) || props.cursos;
 
     if (!cursoSeleccionado?.imagencertificados?.length) {
-        return [{
-            id: 0,
-            url: 'https://elements-resized.envatousercontent.com/elements-cover-images/3f0e526c-d7ee-45bd-b91d-1e189a758b43?w=433&cf_fit=scale-down&q=85&format=auto&s=4e110c03679629b3d3c67a48d969e0f08224e522cdefed56f8a22d8fccd3bfd9',
-            alt: 'No hay imágenes disponibles para este curso',
-            isPlaceholder: true
-        }];
+        return [
+            {
+                id: 0,
+                url: "https://elements-resized.envatousercontent.com/elements-cover-images/3f0e526c-d7ee-45bd-b91d-1e189a758b43?w=433&cf_fit=scale-down&q=85&format=auto&s=4e110c03679629b3d3c67a48d969e0f08224e522cdefed56f8a22d8fccd3bfd9",
+                alt: "No hay imágenes disponibles para este curso",
+                isPlaceholder: true,
+            },
+        ];
     }
 
     return cursoSeleccionado.imagencertificados.map((imagen) => {
-        const rutaImagen = imagen.imagenescer || '';
-        const imageUrl = rutaImagen.startsWith('storage/')
-            ? `/storage/${rutaImagen.split('storage/')[1]}`
+        const rutaImagen = imagen.imagenescer || "";
+        const imageUrl = rutaImagen.startsWith("storage/")
+            ? `/storage/${rutaImagen.split("storage/")[1]}`
             : rutaImagen;
 
         const altText = imagen.descripcion
             ? `Certificado: ${imagen.descripcion}`
-            : `Certificado del curso ${cursoSeleccionado.nombre || ''}`;
+            : `Certificado del curso ${cursoSeleccionado.nombre || ""}`;
 
         return {
             id: imagen.uuid_imgcer || imagen.id_imgcer,
@@ -55,11 +58,10 @@ const images = computed(() => {
             alt: altText,
             descripcion: imagen.descripcion,
             estado: imagen.estado,
-            isPlaceholder: false
+            isPlaceholder: false,
         };
     });
 });
-
 
 const config = {
     height: 400,
@@ -68,12 +70,12 @@ const config = {
     autoplay: 4000,
     wrapAround: true,
     pauseAutoplayOnHover: true,
-}
+};
 
 const showImageInfo = (imageId, index) => {
-    console.log('ID de la imagen:', imageId);
-    console.log('Índice:', index);
-    console.log('Datos completos:', images.value[index]);
+    console.log("ID de la imagen:", imageId);
+    console.log("Índice:", index);
+    console.log("Datos completos:", images.value[index]);
 };
 
 const page = usePage();
@@ -81,9 +83,9 @@ const flash = computed(() => page.props.flash || {});
 const previousRoute = ref(null);
 const deleteDialog = ref(null);
 const deleteDialogEstado = ref(null);
-const showFormModal = ref(false)
+const showFormModal = ref(false);
 const id_curso = ref(null);
-const imageError = ref(false)
+const imageError = ref(false);
 const inputFile = ref(null);
 
 const form2 = ref({
@@ -106,8 +108,8 @@ const handleImagenesChange = (event) => {
     form2.value.imagenes = [];
     if (files && files.length > 0) {
         imagenesPreviews.value = [];
-        Array.from(files).forEach(file => {
-            if (file.type.match('image.*')) {
+        Array.from(files).forEach((file) => {
+            if (file.type.match("image.*")) {
                 form2.value.imagenes.push(file);
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -145,19 +147,19 @@ const showModalimagen = ref(false);
 const showModalcertificado = ref(false);
 
 const form = ref({
-    tipo_actividad_id: '',
-    codigo_curso: '',              
+    tipo_actividad_id: "",
+    codigo_curso: "",
     nombre: "",
     descripcion: "",
-    fecha_inicio_inscripcion: "",  // nuevo
-    fecha_fin_inscripcion: "", 
+    fecha_inicio_inscripcion: "", // nuevo
+    fecha_fin_inscripcion: "",
     fecha_inicio: "",
     fecha_fin: "",
     carga_horaria: "",
-        tipo_pago: '',
+    tipo_pago: "",
     precio: null,
     img_curso: "",
-    imagen: null
+    imagen: null,
 });
 
 const imagenPreview = ref(null);
@@ -196,7 +198,6 @@ const closemodaliamgenes = () => {
     resetForm2();
 };
 
-
 const Abrirmmodalcertificados = () => {
     showModalcertificado.value = true;
 };
@@ -216,31 +217,28 @@ const handleClickEditar = (
     fecha_fin,
     img_curso,
     carga_horaria,
-      tipo_pago, // 👈 nuevo
-  precio  
+    tipo_pago, // 👈 nuevo
+    precio
 ) => {
     console.log("tipo editado:", tipo); // <--- Aquí
     showModal.value = true;
     id_curso.value = uuid;
     form.value.tipo_actividad_id = Number(tipo);
 
+    // Buscar el tipo exacto desde la lista si existe
+    const tipoObjeto = props.tipos.find((t) => t.id === tipo);
 
-// Buscar el tipo exacto desde la lista si existe
-const tipoObjeto = props.tipos.find(t => t.id === tipo);
-
-// Si no está, lo agregamos manualmente desde el curso
-if (!tipoObjeto && props.cursos.data) {
-    const curso = props.cursos.data.find(c => c.uuid_curso === uuid);
-    if (curso && curso.tipoActividad) {
-        props.tipos.push({
-            id: tipo,
-            nombre: curso.tipoActividad.nombre,
-            codigo: curso.tipoActividad.codigo
-        });
+    // Si no está, lo agregamos manualmente desde el curso
+    if (!tipoObjeto && props.cursos.data) {
+        const curso = props.cursos.data.find((c) => c.uuid_curso === uuid);
+        if (curso && curso.tipoActividad) {
+            props.tipos.push({
+                id: tipo,
+                nombre: curso.tipoActividad.nombre,
+                codigo: curso.tipoActividad.codigo,
+            });
+        }
     }
-}
-
-
 
     form.value.nombre = nombre;
     form.value.descripcion = descripcion;
@@ -250,56 +248,53 @@ if (!tipoObjeto && props.cursos.data) {
     form.value.fecha_fin = fecha_fin;
     form.value.img_curso = img_curso;
     form.value.carga_horaria = carga_horaria;
-form.value.tipo_pago = tipo_pago || 'gratuito';
-form.value.precio = tipo_pago === 'pago' ? precio : null;
-
+    form.value.tipo_pago = tipo_pago || "gratuito";
+    form.value.precio = tipo_pago === "pago" ? precio : null;
 };
 
 function resetForm() {
-  id_curso.value = null;
-  form.value = {
-    tipo_actividad_id: '',
-    nombre: '',
-    descripcion: '',
-    fecha_inicio: '',
-    fecha_fin: '',
-    carga_horaria: '',
-      tipo_pago: '',      // ✅ ← importante
-    img_curso: ""
+    id_curso.value = null;
+    form.value = {
+        tipo_actividad_id: "",
+        nombre: "",
+        descripcion: "",
+        fecha_inicio: "",
+        fecha_fin: "",
+        carga_horaria: "",
+        tipo_pago: "", // ✅ ← importante
+        img_curso: "",
     };
     id_curso.value = null;
 }
 
 function extractDesignId(url) {
-  const match = url.match(/design\/([A-Za-z0-9-_]+)/);
-  return match ? match[1] : '';
+    const match = url.match(/design\/([A-Za-z0-9-_]+)/);
+    return match ? match[1] : "";
 }
 
 const submitForm = () => {
-  // ✅ Limpia el campo "precio" si el curso es gratuito
-  if (form.value.tipo_pago === 'gratuito') {
-    form.value.precio = ''; // Cambiar a vacío explícitamente o eliminar
-  }
-
-  const formData = new FormData();
-
-  // ✅ Solo incluir 'precio' si es de pago
-  for (const [key, value] of Object.entries(form.value)) {
-    if (key === 'precio' && form.value.tipo_pago !== 'pago') {
-      continue; // ❌ No agregues precio si no es un curso de pago
+    // ✅ Limpia el campo "precio" si el curso es gratuito
+    if (form.value.tipo_pago === "gratuito") {
+        form.value.precio = ""; // Cambiar a vacío explícitamente o eliminar
     }
 
-    formData.append(key, value ?? '');
-  }
+    const formData = new FormData();
 
+    // ✅ Solo incluir 'precio' si es de pago
+    for (const [key, value] of Object.entries(form.value)) {
+        if (key === "precio" && form.value.tipo_pago !== "pago") {
+            continue; // ❌ No agregues precio si no es un curso de pago
+        }
 
+        formData.append(key, value ?? "");
+    }
 
     if (form.value.imagen) {
-        formData.append('imagen', form.value.imagen);
+        formData.append("imagen", form.value.imagen);
     }
     const config = {
         headers: {
-            'Content-Type': 'multipart/form-data'
+            "Content-Type": "multipart/form-data",
         },
         preserveScroll: true,
         onSuccess: () => {
@@ -311,7 +306,7 @@ const submitForm = () => {
         },
         onError: (errors) => {
             console.error("Errores de validación:", errors);
-        }
+        },
     };
 
     if (!id_curso.value) {
@@ -320,11 +315,11 @@ const submitForm = () => {
         router.post(`/cursoseditar/${id_curso.value}`, formData, {
             ...config,
             data: formData,
-            method: 'post',
+            method: "post",
             headers: {
                 ...config.headers,
-                'X-HTTP-Method-Override': 'PUT'
-            }
+                "X-HTTP-Method-Override": "PUT",
+            },
         });
     }
 };
@@ -334,7 +329,7 @@ const enviarfotos = () => {
         const formData = new FormData();
 
         for (const [key, value] of Object.entries(form2.value)) {
-            if (key !== 'imagenes') {
+            if (key !== "imagenes") {
                 formData.append(key, value);
             }
         }
@@ -345,7 +340,7 @@ const enviarfotos = () => {
                     formData.append(`imagenes[${index}]`, imagen);
                 });
             } else {
-                formData.append('imagenes[0]', form2.value.imagenes);
+                formData.append("imagenes[0]", form2.value.imagenes);
             }
         }
 
@@ -368,267 +363,450 @@ const enviarfotos = () => {
         resetForm2();
         inputFile.value.value = null;
     }
-  }
+};
 const userIsAdmin = computed(() => {
-  const roles = page.props.auth.user.roles.map(r => r.name);
-  return roles.includes('Administrador') || roles.includes('Encargado');
+    const roles = page.props.auth.user.roles.map((r) => r.name);
+    return roles.includes("Administrador") || roles.includes("Encargado");
 });
 
 watch(
-  () => [form.value.tipo_actividad_id, form.value.fecha_inicio, form.value.fecha_fin],
-  ([idTipo, inicio, fin]) => {
-    if (!idTipo || !inicio || !fin) return;
+    () => [
+        form.value.tipo_actividad_id,
+        form.value.fecha_inicio,
+        form.value.fecha_fin,
+    ],
+    ([idTipo, inicio, fin]) => {
+        if (!idTipo || !inicio || !fin) return;
 
-    const tipo = props.tipos.find(t => t.id === parseInt(idTipo));
-    if (!tipo || !tipo.horas_minimas) return;
+        const tipo = props.tipos.find((t) => t.id === parseInt(idTipo));
+        if (!tipo || !tipo.horas_minimas) return;
 
-    const fechaInicio = new Date(inicio);
-    const fechaFin = new Date(fin);
-    if (fechaInicio > fechaFin) return;
+        const fechaInicio = new Date(inicio);
+        const fechaFin = new Date(fin);
+        if (fechaInicio > fechaFin) return;
 
-    const dias = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24)) + 1;
-    form.value.carga_horaria = dias * tipo.horas_minimas;
-  }
+        const dias =
+            Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24)) + 1;
+        form.value.carga_horaria = dias * tipo.horas_minimas;
+    }
 );
 
-watch(() => props.cursos.data, (nuevosCursos) => {
-  nuevosCursos.forEach((curso, i) => {
-    console.log(`Curso[${i}] tipoActividad:`, curso.tipoActividad);
-  });
-});
-
+watch(
+    () => props.cursos.data,
+    (nuevosCursos) => {
+        nuevosCursos.forEach((curso, i) => {
+            console.log(`Curso[${i}] tipoActividad:`, curso.tipoActividad);
+        });
+    }
+);
 
 const cargaRange = computed(() => {
-  const tipo = props.tipos.find(t => t.id === parseInt(form.value.tipo_actividad_id));
-  return tipo ? { min: tipo.horas_minimas, max: tipo.horas_minimas * 60 } : { min: 0, max: 9999 };
+    const tipo = props.tipos.find(
+        (t) => t.id === parseInt(form.value.tipo_actividad_id)
+    );
+    return tipo
+        ? { min: tipo.horas_minimas, max: tipo.horas_minimas * 60 }
+        : { min: 0, max: 9999 };
 });
 
 const generarPDFInscritos = (uuidCurso) => {
-  const url = `/reporte/inscritos/curso/${uuidCurso}`;
-  window.open(url, '_blank'); // abre el PDF en nueva pestaña
+    const url = `/reporte/inscritos/curso/${uuidCurso}`;
+    window.open(url, "_blank"); // abre el PDF en nueva pestaña
 };
-
-
 </script>
 
 <template>
     <AppLayout title="Cursos">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <h2
+                class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+            >
                 Cursos
             </h2>
         </template>
 
         <!-- Modal con Formulario -->
         <Modal :show="showModal" @close="closeModal" max-width="2xl">
-    <form @submit.prevent="submitForm">
-        <div class="p-4 sm:p-6">
-            <h2 class="px-4 sm:px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                {{ id_curso ? 'Editar Curso' : 'Agregar Nuevo Curso' }}
-            </h2>
+            <form @submit.prevent="submitForm">
+                <div class="p-4 sm:p-6">
+                    <h2
+                        class="px-4 sm:px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                    >
+                        {{ id_curso ? "Editar Curso" : "Agregar Nuevo Curso" }}
+                    </h2>
 
-            <div class="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                <div class="col-span-1 sm:col-span-2 md:col-span-1">
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-  Tipo de actividad <span class="text-red-500">*</span>
-</label>
-<select
-  v-model.number="form.tipo_actividad_id"
-  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none max-h-48 overflow-y-auto"
-  required
->
-  <option value="" disabled>Seleccione un tipo de actividad</option>
-  <option
-    v-for="tipo in props.tipos"
-    :key="tipo.id"
-    :value="tipo.id"
-  >
-    {{ tipo.codigo }} - {{ tipo.nombre }}
-  </option>
-</select>
+                    <div
+                        class="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4"
+                    >
+                        <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Tipo de actividad
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <select
+                                v-model.number="form.tipo_actividad_id"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none max-h-48 overflow-y-auto"
+                                required
+                            >
+                                <option value="" disabled>
+                                    Seleccione un tipo de actividad
+                                </option>
+                                <option
+                                    v-for="tipo in props.tipos"
+                                    :key="tipo.id"
+                                    :value="tipo.id"
+                                >
+                                    {{ tipo.codigo }} - {{ tipo.nombre }}
+                                </option>
+                            </select>
 
+                            <span
+                                v-if="errors.tipo_actividad_id"
+                                class="text-red-500 text-xs"
+                                >{{ errors.tipo_actividad_id }}</span
+                            >
+                        </div>
+                        <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Código de Curso
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.codigo_curso"
+                                type="text"
+                                required
+                                placeholder="Se genera de manera automatica"
+                                readonly
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+                        </div>
+                        <!-- Campo Nombre -->
+                        <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Nombre de la actividad
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.nombre"
+                                type="text"
+                                required
+                                placeholder="Ingresa el nombre de la actividad"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+                            <span
+                                v-if="errors.nombre"
+                                class="text-red-500 text-xs"
+                                >{{ errors.nombre }}</span
+                            >
+                        </div>
 
+                        <!-- Campo Descripción -->
+                        <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Describe la actividad
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.descripcion"
+                                type="text"
+                                required
+                                placeholder="Realiza la descripción de la actividad"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+                            <span
+                                v-if="errors.descripcion"
+                                class="text-red-500 text-xs"
+                                >{{ errors.descripcion }}</span
+                            >
+                        </div>
+                        <!-- Campo Fecha Inicio de Inscripción -->
+                        <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Fecha de inicio de inscripción
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.fecha_inicio_inscripcion"
+                                type="date"
+                                :required="!id_curso"
+                                :min="!id_curso ? today : null"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+                            <span
+                                v-if="errors.fecha_inicio_inscripcion"
+                                class="text-red-500 text-xs"
+                                >{{ errors.fecha_inicio_inscripcion }}</span
+                            >
+                        </div>
 
+                        <!-- Campo Fecha Fin de Inscripción -->
+                        <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Fecha de fin de inscripción
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.fecha_fin_inscripcion"
+                                type="date"
+                                :required="!id_curso"
+                                :min="form.fecha_inicio_inscripcion"
+                                max="2040-12-31"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+                            <span
+                                v-if="errors.fecha_fin_inscripcion"
+                                class="text-red-500 text-xs"
+                                >{{ errors.fecha_fin_inscripcion }}</span
+                            >
+                        </div>
 
-<span v-if="errors.tipo_actividad_id" class="text-red-500 text-xs">{{ errors.tipo_actividad_id }}</span>
-</div>
-<div class="col-span-1 sm:col-span-2 md:col-span-1">
-  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-    Código de Curso <span class="text-red-500">*</span>
-  </label>
-  <input v-model="form.codigo_curso" type="text" required placeholder="Se genera de manera automatica" readonly 
-  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-</div>
-                <!-- Campo Nombre -->
-                <div class="col-span-1 sm:col-span-2 md:col-span-1">
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Nombre de la actividad <span class="text-red-500">*</span>
-                    </label>
-                    <input v-model="form.nombre" type="text" required placeholder="Ingresa el nombre de la actividad"
-                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                    <span v-if="errors.nombre" class="text-red-500 text-xs">{{ errors.nombre }}</span>
+                        <!-- Campo Fecha de Inicio -->
+                        <div>
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Fecha de Inicio de actividad
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.fecha_inicio"
+                                type="date"
+                                :required="!id_curso"
+                                :min="!id_curso ? today : null"
+                                max="2040-12-31"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+                            <span
+                                v-if="errors.fecha_inicio"
+                                class="text-red-500 text-xs"
+                                >{{ errors.fecha_inicio }}</span
+                            >
+                        </div>
+
+                        <!-- Campo Fecha de Culminación -->
+                        <div>
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Fecha de Culminación de actividad
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.fecha_fin"
+                                type="date"
+                                :required="!id_curso"
+                                :min="form.fecha_inicio || today"
+                                max="2040-12-31"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+                            <span
+                                v-if="errors.fecha_fin"
+                                class="text-red-500 text-xs"
+                                >{{ errors.fecha_fin }}</span
+                            >
+                        </div>
+
+                        <!-- Campo Carga Horaria -->
+                        <div>
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Carga Horaria
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.carga_horaria"
+                                type="number"
+                                readonly
+                                disabled
+                                placeholder="Cálculo automático de horas"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-gray-200 bg-clip-padding px-3 py-2 font-normal text-gray-500 outline-none transition-all placeholder:text-gray-500 focus:outline-none cursor-not-allowed"
+                            />
+
+                            <span
+                                v-if="errors.carga_horaria"
+                                class="text-red-500 text-xs"
+                            >
+                                {{ errors.carga_horaria }}
+                            </span>
+                        </div>
+                        <!-- Campo Tipo de curso -->
+                        <div>
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Tipo de curso
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <select
+                                v-model="form.tipo_pago"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                required
+                            >
+                                <option value="" disabled>
+                                    Seleccione costo de actividad
+                                </option>
+                                <option value="gratuito">Gratuito</option>
+                                <option value="pago">Con costo</option>
+                            </select>
+                            <span
+                                v-if="errors.tipo_pago"
+                                class="text-red-500 text-xs"
+                                >{{ errors.tipo_pago }}</span
+                            >
+                        </div>
+
+                        <!-- Campo Precio (solo visible si es de paga) -->
+                        <div v-if="form.tipo_pago === 'pago'">
+                            <label
+                                class="inline-block mt-4 mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Precio (Bs) <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                v-model="form.precio"
+                                type="number"
+                                min="10"
+                                step="0.01"
+                                placeholder="Ingresa el monto"
+                                required
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+                            <span
+                                v-if="errors.precio"
+                                class="text-red-500 text-xs"
+                                >{{ errors.precio }}</span
+                            >
+                        </div>
+
+                        <!-- Imagen del Curso -->
+                        <div class="col-span-1 sm:col-span-2">
+                            <label
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                >Imagen del certificado
+                                <span class="text-red-500">*</span></label
+                            >
+                            <input
+                                type="file"
+                                @change="handleImageChange"
+                                accept="image/*"
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
+
+                            <!-- Vista previa -->
+                            <div v-if="imagenPreview" class="mt-2">
+                                <img
+                                    :src="imagenPreview"
+                                    class="h-40 w-auto object-cover rounded"
+                                />
+                            </div>
+
+                            <!-- Mostrar imagen existente al editar -->
+                            <div v-else-if="form.img_curso" class="mt-2">
+                                <img
+                                    :src="form.img_curso"
+                                    class="h-40 w-auto object-cover rounded"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <button
+                            type="button"
+                            @click="closeModal"
+                            class="inline-block px-4 sm:px-6 py-2 sm:py-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-slate-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            type="submit"
+                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
+                        >
+                            {{ id_curso ? "Actualizar" : "Guardar" }} curso
+                        </button>
+                    </div>
                 </div>
-
-                <!-- Campo Descripción -->
-                <div class="col-span-1 sm:col-span-2 md:col-span-1">
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Describe la actividad <span class="text-red-500">*</span>
-                    </label>
-                    <input v-model="form.descripcion" type="text" required placeholder="Realiza la descripción de la actividad"
-                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                    <span v-if="errors.descripcion" class="text-red-500 text-xs">{{ errors.descripcion }}</span>
-                </div>
-<!-- Campo Fecha Inicio de Inscripción -->
-<div class="col-span-1 sm:col-span-2 md:col-span-1">
-  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-    Fecha de inicio de inscripción <span class="text-red-500">*</span>
-  </label>
-  <input v-model="form.fecha_inicio_inscripcion" type="date" :required="!id_curso"  :min="!id_curso ? today : null"
-  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-  <span v-if="errors.fecha_inicio_inscripcion" class="text-red-500 text-xs">{{ errors.fecha_inicio_inscripcion }}</span>
-</div>
-
-<!-- Campo Fecha Fin de Inscripción -->
-<div class="col-span-1 sm:col-span-2 md:col-span-1">
-  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-    Fecha de fin de inscripción <span class="text-red-500">*</span>
-  </label>
-  <input v-model="form.fecha_fin_inscripcion" type="date" :required="!id_curso" :min="form.fecha_inicio_inscripcion"
-    max="2040-12-31"
-    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-    <span v-if="errors.fecha_fin_inscripcion" class="text-red-500 text-xs">{{ errors.fecha_fin_inscripcion }}</span>
-</div>
-
-                <!-- Campo Fecha de Inicio -->
-                <div>
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Fecha de Inicio de actividad <span class="text-red-500">*</span>
-                    </label>
-                    <input v-model="form.fecha_inicio" type="date" :required="!id_curso" :min="!id_curso ? today : null" max="2040-12-31"
-                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                        <span v-if="errors.fecha_inicio" class="text-red-500 text-xs">{{ errors.fecha_inicio }}</span>
-                    </div>
-
-                <!-- Campo Fecha de Culminación -->
-                <div>
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Fecha de Culminación de actividad <span class="text-red-500">*</span>
-                    </label>
-                    <input v-model="form.fecha_fin" type="date" :required="!id_curso" :min="form.fecha_inicio || today" max="2040-12-31"
-                        class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"/>
-                        <span v-if="errors.fecha_fin" class="text-red-500 text-xs">{{ errors.fecha_fin }}</span>
-                    </div>
-
-                <!-- Campo Carga Horaria -->
-                <div>
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-                        Carga Horaria <span class="text-red-500">*</span>
-                    </label>
-                    <input v-model="form.carga_horaria" type="number" readonly disabled placeholder="Cálculo automático de horas"
-  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-gray-200 bg-clip-padding px-3 py-2 font-normal text-gray-500 outline-none transition-all placeholder:text-gray-500 focus:outline-none cursor-not-allowed" />
-
-  <span v-if="errors.carga_horaria" class="text-red-500 text-xs">
-    {{ errors.carga_horaria }}
-</span>
-
-                    </div>
-<!-- Campo Tipo de curso -->
-<div>
-  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-    Tipo de curso <span class="text-red-500">*</span>
-  </label>
-  <select
-    v-model="form.tipo_pago"
-    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-    required
-  >
-    <option value="" disabled>Seleccione costo de actividad</option>
-    <option value="gratuito">Gratuito</option>
-    <option value="pago">Con costo</option>
-  </select>
-  <span v-if="errors.tipo_pago" class="text-red-500 text-xs">{{ errors.tipo_pago }}</span>
-</div>
-
-<!-- Campo Precio (solo visible si es de paga) -->
-<div v-if="form.tipo_pago === 'pago'">
-  <label class="inline-block mt-4 mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
-    Precio (Bs) <span class="text-red-500">*</span>
-  </label>
-  <input
-    v-model="form.precio"
-    type="number"
-    min="10"
-    step="0.01"
-    placeholder="Ingresa el monto"
-    required
-    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-  />
-  <span v-if="errors.precio" class="text-red-500 text-xs">{{ errors.precio }}</span>
-</div>
-
-
-                  <!-- Imagen del Curso -->
-                  <div class="col-span-1 sm:col-span-2">
-                    <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Imagen del certificado <span class="text-red-500">*</span></label>
-                    <input type="file" @change="handleImageChange" accept="image/*"
-                    class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
-
-                    <!-- Vista previa -->
-                    <div v-if="imagenPreview" class="mt-2">
-                        <img :src="imagenPreview" class="h-40 w-auto object-cover rounded">
-                    </div>
-
-                    <!-- Mostrar imagen existente al editar -->
-                    <div v-else-if="form.img_curso" class="mt-2">
-                        <img :src="form.img_curso" class="h-40 w-auto object-cover rounded">
-                    </div>
-                </div>
-
-</div>
-
-
-
-            <div class="mt-6 flex justify-end space-x-3">
-                <button type="button" @click="closeModal"
-                class="inline-block px-4 sm:px-6 py-2 sm:py-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-slate-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
-                    Cancelar
-                </button>
-                <button type="submit"
-                    class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200">
-                    {{ id_curso ? 'Actualizar' : 'Guardar' }} curso
-                </button>
-            </div>
-        </div>
-    </form>
-</Modal>
+            </form>
+        </Modal>
 
         <!-- Modal para imágenes -->
-        <Modal :show="showModalimagen" @close="closemodaliamgenes" max-width="2xl">
+        <Modal
+            :show="showModalimagen"
+            @close="closemodaliamgenes"
+            max-width="2xl"
+        >
             <div class="p-6">
                 <div class="mt-2 flex items-start gap-0 group">
                     <div class="flex-grow">
-                        <label class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Añadir imagenes</label>
+                        <label
+                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                            >Añadir imagenes</label
+                        >
                         <div class="flex items-center space-x-4">
-                            <input ref="inputFile" type="file" @change="handleImagenesChange" accept="image/*" multiple
-                            class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+                            <input
+                                ref="inputFile"
+                                type="file"
+                                @change="handleImagenesChange"
+                                accept="image/*"
+                                multiple
+                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                            />
 
-                            <button v-if="imagenesPreviews && imagenesPreviews.length > 0" type="button"
+                            <button
+                                v-if="
+                                    imagenesPreviews &&
+                                    imagenesPreviews.length > 0
+                                "
+                                type="button"
                                 @click="enviarfotos()"
-                                class="px-4 py-2 bg-gray-950 hover:bg-gray-600 text-white rounded-md transition duration-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                                class="px-4 py-2 bg-gray-950 hover:bg-gray-600 text-white rounded-md transition duration-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    class="size-6"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+                                    />
                                 </svg>
                             </button>
                         </div>
 
                         <!-- Contenedor de miniaturas -->
                         <div class="mt-2 flex flex-wrap gap-2">
-                            <div v-for="(preview, index) in imagenesPreviews" :key="'new-' + index" class="relative">
-                                <img :src="preview" class="h-20 w-20 object-cover rounded border border-gray-200">
-                                <button type="button" @click="removePreview(index)"
-                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                            <div
+                                v-for="(preview, index) in imagenesPreviews"
+                                :key="'new-' + index"
+                                class="relative"
+                            >
+                                <img
+                                    :src="preview"
+                                    class="h-20 w-20 object-cover rounded border border-gray-200"
+                                />
+                                <button
+                                    type="button"
+                                    @click="removePreview(index)"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                                >
                                     ×
                                 </button>
                             </div>
@@ -636,8 +814,11 @@ const generarPDFInscritos = (uuidCurso) => {
                     </div>
 
                     <div class="flex-shrink-0 pl-4">
-                        <button type="button" @click="closemodaliamgenes"
-                            class="px-4 py-2 bg-red-700 hover:bg-pink-600 text-white rounded-md transition duration-200">
+                        <button
+                            type="button"
+                            @click="closemodaliamgenes"
+                            class="px-4 py-2 bg-red-700 hover:bg-pink-600 text-white rounded-md transition duration-200"
+                        >
                             x
                         </button>
                     </div>
@@ -645,15 +826,20 @@ const generarPDFInscritos = (uuidCurso) => {
             </div>
 
             <div class="p-6">
-                <h2 class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                <h2
+                    class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                >
                     Todas las imagenes
                 </h2>
                 <Carousel v-bind="config" class="carousel">
                     <Slide v-for="(image, index) in images" :key="image.id">
                         <div class="slide-container">
                             <img :src="image.url" :alt="image.alt" />
-                            <button @click="showImageInfo(image.id, index)" class="info-button"
-                                aria-label="Mostrar información de la imagen">
+                            <button
+                                @click="showImageInfo(image.id, index)"
+                                class="info-button"
+                                aria-label="Mostrar información de la imagen"
+                            >
                                 ℹ️
                             </button>
                         </div>
@@ -668,31 +854,44 @@ const generarPDFInscritos = (uuidCurso) => {
 
         <div class="flex-none w-full max-w-full px-3">
             <h6 class="text-gray-700 dark:text-white">Cursos</h6>
-            <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-                <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
+            <div
+                class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+            >
+                <div
+                    class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center"
+                >
                     <div class="flex items-center space-x-4">
                         <div class="relative">
-                            <BuscadorCursos :filters="filters" ruta="cursos.index" />
+                            <BuscadorCursos
+                                :filters="filters"
+                                ruta="cursos.index"
+                            />
                         </div>
                     </div>
-                    
 
-
-                    <button v-if="$page.props.permissions.includes('cursos.create')"
-                            class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
-                            @click="handleClick">
-                            <span class="flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                Agregar Nuevo Curso
-                            </span>
-                        </button>
+                    <button
+                        v-if="$page.props.permissions.includes('cursos.create')"
+                        class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
+                        @click="handleClick"
+                    >
+                        <span class="flex items-center justify-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 mr-2"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                            Agregar Nuevo Curso
+                        </span>
+                    </button>
                 </div>
-               
+
                 <!-- Alerts & Notifications -->
                 <div class="px-6 pt-4">
                     <div v-if="flash.success">
@@ -703,183 +902,477 @@ const generarPDFInscritos = (uuidCurso) => {
 
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
-                        <table class="w-full text-sm text-left border-collapse text-slate-500 dark:border-white/40">
+                        <table
+                            class="w-full text-sm text-left border-collapse text-slate-500 dark:border-white/40"
+                        >
                             <thead class="align-bottom">
                                 <tr>
-                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th> 
-                                    <th class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Actividad</th>                             
-                                    <th class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Descripción</th>
-                                    <th class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Inscripción</th>
-                                    <th class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Duración de actividad</th>
-                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Carga Horaria</th>
-                                    <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Imagen</th>                                    
-                                    <th  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"v-if="false">Certificados</th>
-                                    <th v-if="$page.props.permissions.includes('editarestadodeletecursos.update')"  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado de Curso</th>
-                                    <th v-if="$page.props.permissions.includes('editarestadodeletecursos.update') && $page.props.permissions.includes('cursoseditar.update')"  class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
+                                    <th
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Nro
+                                    </th>
+                                    <th
+                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Actividad
+                                    </th>
+                                    <th
+                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Descripción
+                                    </th>
+                                    <th
+                                        class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Inscripción
+                                    </th>
+                                    <th
+                                        class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Duración de actividad
+                                    </th>
+                                    <th
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Carga Horaria
+                                    </th>
+                                    <th
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Imagen
+                                    </th>
+                                    <th
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        v-if="false"
+                                    >
+                                        Certificados
+                                    </th>
+                                    <th
+                                        v-if="
+                                            $page.props.permissions.includes(
+                                                'editarestadodeletecursos.update'
+                                            )
+                                        "
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Estado de Curso
+                                    </th>
+                                    <th
+                                        v-if="
+                                            $page.props.permissions.includes(
+                                                'editarestadodeletecursos.update'
+                                            ) &&
+                                            $page.props.permissions.includes(
+                                                'cursoseditar.update'
+                                            )
+                                        "
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                    >
+                                        Acciones
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(curso, index) in cursos.data" :key="curso.id" class="border-b dark:border-white/40">  {{ console.log(curso.tipoActividad) }}
-                                 
-                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
-                                    {{ (currentPage - 1) * perPage + index + 1 }}</td>
-                                    <td class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
-                                        <span class="font-semibold">Codigo de actividad: </span> <div class="text-slate-400"> {{ curso.codigo_curso}}</div>
-                                        <span class="font-semibold">Tipo: </span>
+                                <tr
+                                    v-for="(curso, index) in cursos.data"
+                                    :key="curso.id"
+                                    class="border-b dark:border-white/40"
+                                >
+                                    {{
+                                        console.log(curso.tipoActividad)
+                                    }}
+
+                                    <td
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                    >
+                                        {{
+                                            (currentPage - 1) * perPage +
+                                            index +
+                                            1
+                                        }}
+                                    </td>
+                                    <td
+                                        class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                    >
+                                        <span class="font-semibold"
+                                            >Codigo de actividad:
+                                        </span>
                                         <div class="text-slate-400">
-  {{ curso.tipo_actividad?.codigo && curso.tipo_actividad?.nombre
-      ? `${curso.tipo_actividad.codigo} - ${curso.tipo_actividad.nombre}`
-      : 'SIN TIPO' }}
-</div>
-<span class="font-semibold">Costo del Curso: </span>
-<div>
-  <span v-if="curso.tipo_pago === 'gratuito'"
-    class="text-green-500 text-[10px] font-bold border border-green-300 px-2 py-0.5 rounded-full">
-    GRATUITO
-  </span>
-  <span v-else
-       class="text-yellow-500 text-[10px] font-bold border border-yellow-400 px-2 py-0.5 rounded-full whitespace-nowrap">
-    CON COSTO
-  </span>
-</div>
+                                            {{ curso.codigo_curso }}
+                                        </div>
+                                        <span class="font-semibold"
+                                            >Tipo:
+                                        </span>
+                                        <div class="text-slate-400">
+                                            {{
+                                                curso.tipo_actividad?.codigo &&
+                                                curso.tipo_actividad?.nombre
+                                                    ? `${curso.tipo_actividad.codigo} - ${curso.tipo_actividad.nombre}`
+                                                    : "SIN TIPO"
+                                            }}
+                                        </div>
+                                        <span class="font-semibold"
+                                            >Costo del Curso:
+                                        </span>
+                                        <div>
+                                            <span
+                                                v-if="
+                                                    curso.tipo_pago ===
+                                                    'gratuito'
+                                                "
+                                                class="text-green-500 text-[10px] font-bold border border-green-300 px-2 py-0.5 rounded-full"
+                                            >
+                                                GRATUITO
+                                            </span>
+                                            <span
+                                                v-else
+                                                class="text-yellow-500 text-[10px] font-bold border border-yellow-400 px-2 py-0.5 rounded-full whitespace-nowrap"
+                                            >
+                                                CON COSTO
+                                            </span>
+                                        </div>
 
-<span v-if="curso.tipo_pago === 'pago'" class="font-semibold mt-1 block">
-  <span class="text-white">Precio:</span>
-  <span class="text-yellow-400"> Bs {{ Number(curso.precio).toFixed(2) }}</span>
-</span>
+                                        <span
+                                            v-if="curso.tipo_pago === 'pago'"
+                                            class="font-semibold mt-1 block"
+                                        >
+                                            <span class="text-white"
+                                                >Precio:</span
+                                            >
+                                            <span class="text-yellow-400">
+                                                Bs
+                                                {{
+                                                    Number(
+                                                        curso.precio
+                                                    ).toFixed(2)
+                                                }}</span
+                                            >
+                                        </span>
 
-
-                                        <span class="font-semibold">Titulo: </span> <div class="text-slate-400"> {{ curso.nombre }}</div>
-                                    
+                                        <span class="font-semibold"
+                                            >Titulo:
+                                        </span>
+                                        <div class="text-slate-400">
+                                            {{ curso.nombre }}
+                                        </div>
                                     </td>
-                                 
-                                    <td class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
-                                      {{ curso.descripcion }}
+
+                                    <td
+                                        class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                    >
+                                        {{ curso.descripcion }}
                                     </td>
-                                    <td class="w-[100px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
-                                        <span class="font-semibold">Fecha de inicio: </span> <div class="text-slate-400">{{ curso.fecha_inicio_inscripcion }} </div>
-                                        <span class="font-semibold">Fecha Fin: </span> <div class="text-slate-400"> {{ curso.fecha_fin_inscripcion }}</div>    
+                                    <td
+                                        class="w-[100px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                    >
+                                        <span class="font-semibold"
+                                            >Fecha de inicio:
+                                        </span>
+                                        <div class="text-slate-400">
+                                            {{ curso.fecha_inicio_inscripcion }}
+                                        </div>
+                                        <span class="font-semibold"
+                                            >Fecha Fin:
+                                        </span>
+                                        <div class="text-slate-400">
+                                            {{ curso.fecha_fin_inscripcion }}
+                                        </div>
                                     </td>
-                                        <td class="w-[100px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
-                                            <span class="font-semibold">Fecha de inicio: </span> <div class="text-slate-400">{{ curso.fecha_inicio }}</div>     
-                                            <span class="font-semibold">Fecha Fin: </span> <div class="text-slate-400"> {{ curso.fecha_fin }}</div>   
-                                        </td>
-                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
-                                        <span class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80">{{ curso.carga_horaria }} hrs</span>
+                                    <td
+                                        class="w-[100px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                    >
+                                        <span class="font-semibold"
+                                            >Fecha de inicio:
+                                        </span>
+                                        <div class="text-slate-400">
+                                            {{ curso.fecha_inicio }}
+                                        </div>
+                                        <span class="font-semibold"
+                                            >Fecha Fin:
+                                        </span>
+                                        <div class="text-slate-400">
+                                            {{ curso.fecha_fin }}
+                                        </div>
                                     </td>
-                                    
+                                    <td
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                    >
+                                        <span
+                                            class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                            >{{ curso.carga_horaria }} hrs</span
+                                        >
+                                    </td>
 
-                                    <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
-                                        
-  <img
-    v-if="curso.img_curso && curso.img_curso !== 'curso.jpg'"
-    :src="curso.img_curso.startsWith('storage/') ? '/' + curso.img_curso : curso.img_curso"
-    class="h-16 w-auto object-cover rounded mx-auto"
-    alt="Imagen del curso"
-  />
-  <span v-else class="text-xs italic text-gray-500 dark:text-gray-400">Sin imagen</span>
-</td>
+                                    <td
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                    >
+                                        <img
+                                            v-if="
+                                                curso.img_curso &&
+                                                curso.img_curso !== 'curso.jpg'
+                                            "
+                                            :src="
+                                                curso.img_curso.startsWith(
+                                                    'storage/'
+                                                )
+                                                    ? '/' + curso.img_curso
+                                                    : curso.img_curso
+                                            "
+                                            class="h-16 w-auto object-cover rounded mx-auto"
+                                            alt="Imagen del curso"
+                                        />
+                                        <span
+                                            v-else
+                                            class="text-xs italic text-gray-500 dark:text-gray-400"
+                                            >Sin imagen</span
+                                        >
+                                    </td>
 
-
-
-                                    <td v-if="false" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <button v-if="curso.estado != 'eliminado' && curso.estado != 'inactivo'"
-                                            @click="Abrirmmodaliamgenes(curso.uuid_curso)"
-                                            class="p-2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <td
+                                        v-if="false"
+                                        class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                    >
+                                        <button
+                                            v-if="
+                                                curso.estado != 'eliminado' &&
+                                                curso.estado != 'inactivo'
+                                            "
+                                            @click="
+                                                Abrirmmodaliamgenes(
+                                                    curso.uuid_curso
+                                                )
+                                            "
+                                            class="p-2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
+                                                class="w-5 h-5"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                                                />
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                                                />
                                             </svg>
                                         </button>
                                     </td>
-                                    <td v-if="$page.props.permissions.includes('editarestadodeletecursos.update')" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-  <span
-    v-if="curso.estado_curso === 'no iniciado'"
-    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/50"
-  >
-    PRÓXIMAMENTE
-  </span>
-  <span
-    v-else-if="curso.estado_curso === 'abierto'"
-    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-green-500/10 text-green-400 border border-green-500/50"
-  >
-    INSCRIPCIONES ABIERTAS
-  </span>
-  <span
-    v-else-if="curso.estado_curso === 'cerrado'"
-    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-orange-500/10 text-orange-400 border border-orange-500/50"
-  >
-    INSCRIPCIONES CERRADAS
-  </span>
-  <span
-    v-else-if="curso.estado_curso === 'curso'"
-    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/50"
-  >
-    EN CURSO
-  </span>
-  <span
-    v-else-if="curso.estado_curso === 'terminado'"
-    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-gray-500/10 text-gray-300 border border-gray-500/50"
-  >
-    TERMINADO
-  </span>
-  <span
-    v-else
-    class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-red-500/10 text-red-400 border border-red-500/50"
-  >
-    SIN ESTADO
-  </span>
-</td>
+                                    <td
+                                        v-if="
+                                            $page.props.permissions.includes(
+                                                'editarestadodeletecursos.update'
+                                            )
+                                        "
+                                        class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                    >
+                                        <span
+                                            v-if="
+                                                curso.estado_curso ===
+                                                'no iniciado'
+                                            "
+                                            class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/50"
+                                        >
+                                            PRÓXIMAMENTE
+                                        </span>
+                                        <span
+                                            v-else-if="
+                                                curso.estado_curso === 'abierto'
+                                            "
+                                            class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-green-500/10 text-green-400 border border-green-500/50"
+                                        >
+                                            INSCRIPCIONES ABIERTAS
+                                        </span>
+                                        <span
+                                            v-else-if="
+                                                curso.estado_curso === 'cerrado'
+                                            "
+                                            class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-orange-500/10 text-orange-400 border border-orange-500/50"
+                                        >
+                                            INSCRIPCIONES CERRADAS
+                                        </span>
+                                        <span
+                                            v-else-if="
+                                                curso.estado_curso === 'curso'
+                                            "
+                                            class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/50"
+                                        >
+                                            EN CURSO
+                                        </span>
+                                        <span
+                                            v-else-if="
+                                                curso.estado_curso ===
+                                                'terminado'
+                                            "
+                                            class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-gray-500/10 text-gray-300 border border-gray-500/50"
+                                        >
+                                            TERMINADO
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-red-500/10 text-red-400 border border-red-500/50"
+                                        >
+                                            SIN ESTADO
+                                        </span>
+                                    </td>
 
-                        
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <div class="flex justify-center space-x-2">
-                                            <button v-if="curso.estado != 'eliminado' && curso.estado != 'inactivo' && $page.props.permissions.includes('cursoseditar.update')"
-                                                @click="handleClickEditar(
-                                                    curso.uuid_curso,
-                                                    curso.tipo_actividad_id,
-                                                    curso.nombre,
-                                                    curso.descripcion,
-                                                    curso.fecha_inicio_inscripcion ,
-                                                    curso.fecha_fin_inscripcion ,
-                                                    curso.fecha_inicio,
-                                                    curso.fecha_fin,
-                                                    curso.img_curso,
-                                                    curso.carga_horaria,
+                                    <td
+                                        class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                    >
+                                        <div
+                                            class="flex justify-center space-x-2"
+                                        >
+                                            <button
+                                                v-if="
+                                                    curso.estado !=
+                                                        'eliminado' &&
+                                                    curso.estado !=
+                                                        'inactivo' &&
+                                                    $page.props.permissions.includes(
+                                                        'cursoseditar.update'
+                                                    )
+                                                "
+                                                @click="
+                                                    handleClickEditar(
+                                                        curso.uuid_curso,
+                                                        curso.tipo_actividad_id,
+                                                        curso.nombre,
+                                                        curso.descripcion,
+                                                        curso.fecha_inicio_inscripcion,
+                                                        curso.fecha_fin_inscripcion,
+                                                        curso.fecha_inicio,
+                                                        curso.fecha_fin,
+                                                        curso.img_curso,
+                                                        curso.carga_horaria,
                                                         curso.tipo_pago,
-    curso.precio
-                                                )"
-                                                class="p-2 text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                                        curso.precio
+                                                    )
+                                                "
+                                                class="p-2 text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="1.5"
+                                                    stroke="currentColor"
+                                                    class="w-5 h-5"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                                                    />
                                                 </svg>
                                             </button>
                                             <button
-  v-if="curso.estado !== 'eliminado' && curso.estado !== 'inactivo' && $page.props.permissions.includes('curso.inscrito.reporte')"
-  @click="generarPDFInscritos(curso.uuid_curso)"
-  class="p-2 text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
-  title="Descargar reporte PDF de inscritos"
->
- <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1.5A2.5 2.5 0 006.5 20h11a2.5 2.5 0 002.5-2.5V16M12 4v12m0 0l-4-4m4 4l4-4" />
-  </svg>
-</button>
-                                            <button v-if="curso.estado != 'eliminado' && curso.estado != 'inactivo' && $page.props.permissions.includes('editarestadodeletecursos.update')"
-                                                @click="handleDelete(curso.uuid_curso, 3, '¿Estás seguro de que deseas eliminar este registro de forma permanente?')"
-                                                class="p-2 text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                v-if="
+                                                    curso.estado !==
+                                                        'eliminado' &&
+                                                    curso.estado !==
+                                                        'inactivo' &&
+                                                    $page.props.permissions.includes(
+                                                        'curso.inscrito.reporte'
+                                                    )
+                                                "
+                                                @click="
+                                                    generarPDFInscritos(
+                                                        curso.uuid_curso
+                                                    )
+                                                "
+                                                class="p-2 text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
+                                                title="Descargar reporte PDF de inscritos"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="w-5 h-5"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                    stroke-width="1.5"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M4 16v1.5A2.5 2.5 0 006.5 20h11a2.5 2.5 0 002.5-2.5V16M12 4v12m0 0l-4-4m4 4l4-4"
+                                                    />
                                                 </svg>
                                             </button>
-                                            <button v-if="false && curso.estado != 'eliminado' && curso.estado != 'inactivo' && $page.props.permissions.includes('editarestadodeletecursos.update')"
-                                                @click="handleClickEditarCertificado(curso.uuid_curso)"
-                                                class="p-2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                            <button
+                                                v-if="
+                                                    curso.estado !=
+                                                        'eliminado' &&
+                                                    curso.estado !=
+                                                        'inactivo' &&
+                                                    $page.props.permissions.includes(
+                                                        'editarestadodeletecursos.update'
+                                                    )
+                                                "
+                                                @click="
+                                                    handleDelete(
+                                                        curso.uuid_curso,
+                                                        3,
+                                                        '¿Estás seguro de que deseas eliminar este registro de forma permanente?'
+                                                    )
+                                                "
+                                                class="p-2 text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="1.5"
+                                                    stroke="currentColor"
+                                                    class="w-5 h-5"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                                    />
                                                 </svg>
                                             </button>
-                                         
-
+                                            <button
+                                                v-if="
+                                                    false &&
+                                                    curso.estado !=
+                                                        'eliminado' &&
+                                                    curso.estado !=
+                                                        'inactivo' &&
+                                                    $page.props.permissions.includes(
+                                                        'editarestadodeletecursos.update'
+                                                    )
+                                                "
+                                                @click="
+                                                    handleClickEditarCertificado(
+                                                        curso.uuid_curso
+                                                    )
+                                                "
+                                                class="p-2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="1.5"
+                                                    stroke="currentColor"
+                                                    class="w-5 h-5"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                                                    />
+                                                </svg>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -888,21 +1381,29 @@ const generarPDFInscritos = (uuidCurso) => {
                     </div>
 
                     <!-- Pagination -->
-                    <div class="px-4 py-3 border-t border-gray-200 dark:border-white/10">
-
+                    <div
+                        class="px-4 py-3 border-t border-gray-200 dark:border-white/10"
+                    >
                         <Pagination :pagination="cursos" :filters="filters" />
                     </div>
                 </div>
             </div>
         </div>
 
-        <ConfirmDelete ref="deleteDialog" :method="'patch'" route-name="editarestadodeletecursos.update"
-            title="¿Eliminar este registro?" />
+        <ConfirmDelete
+            ref="deleteDialog"
+            :method="'patch'"
+            route-name="editarestadodeletecursos.update"
+            title="¿Eliminar este registro?"
+        />
 
-        <ConfirmDelete ref="deleteDialogEstado" :method="'patch'" route-name="estado.update.curso"
-            title="¿Eliminar este registro?" />
+        <ConfirmDelete
+            ref="deleteDialogEstado"
+            :method="'patch'"
+            route-name="estado.update.curso"
+            title="¿Eliminar este registro?"
+        />
     </AppLayout>
-
 </template>
 
 <!-- <style>

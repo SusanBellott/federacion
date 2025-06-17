@@ -22,7 +22,7 @@ Route::get('/', function () {
 
 Route::get('/', function () {
     // Si ya está logueado, lo mandamos directo al dashboard
-    if ( Auth::check() ) {
+    if (Auth::check()) {
         return redirect()->route('dashboard');
     }
 
@@ -39,30 +39,30 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-])->group(function () {    
+])->group(function () {
     Route::get('/dashboard/estadisticas', [Dashboard::class, 'getEstadisticas'])
-    ->middleware(['auth', 'permission:dashboard.estadisticas'])
-    ->name('dashboard.estadisticas');
-Route::get('/dashboard', [Dashboard::class, 'index'])->middleware(['auth'])->name('dashboard');
-// Dashboard para estudiantes
-Route::get('/estudiante/dashboard', function () {
-    return Inertia::render('DashboardEstudiante');
-})->middleware(['auth', 'permission:dashboard'])->name('dashboard.estudiante');
+        ->middleware(['auth', 'permission:dashboard.estadisticas'])
+        ->name('dashboard.estadisticas');
+    Route::get('/dashboard', [Dashboard::class, 'index'])->middleware(['auth'])->name('dashboard');
+    // Dashboard para estudiantes
+    Route::get('/estudiante/dashboard', function () {
+        return Inertia::render('DashboardEstudiante');
+    })->middleware(['auth', 'permission:dashboard'])->name('dashboard.estudiante');
 
-// Dashboard para encargados
-Route::get('/encargado/dashboard', function () {
-    return Inertia::render('DashboardEncargado');
-})->middleware(['auth', 'permission:dashboard'])->name('dashboard.encargado');
+    // Dashboard para encargados
+    Route::get('/encargado/dashboard', function () {
+        return Inertia::render('DashboardEncargado');
+    })->middleware(['auth', 'permission:dashboard'])->name('dashboard.encargado');
 
-// Dashboard para administradores
-Route::get('/admin/dashboard', function () {
-    return Inertia::render('DashboardAdmin');
-})->middleware(['auth', 'permission:dashboard'])->name('dashboard.admin');
-Route::get('/reporte-mensual', [Dashboard::class, 'descargarReporteMensual'])->name('dashboard.reporte.mensual');
+    // Dashboard para administradores
+    Route::get('/admin/dashboard', function () {
+        return Inertia::render('DashboardAdmin');
+    })->middleware(['auth', 'permission:dashboard'])->name('dashboard.admin');
+    Route::get('/reporte-mensual', [Dashboard::class, 'descargarReporteMensual'])->name('dashboard.reporte.mensual');
 
 
-//    Route::get('/dashboard', function () {
-  //      return Inertia::render('Dashboard');
+    //    Route::get('/dashboard', function () {
+    //      return Inertia::render('Dashboard');
     //})->name('dashboard');
     //------------------------------------------------- Usuarios ------------------------------------------------
     Route::prefix('usuarios')->group(function () {
@@ -71,9 +71,8 @@ Route::get('/reporte-mensual', [Dashboard::class, 'descargarReporteMensual'])->n
         Route::put('/{uuid}', [UserController::class, 'update'])->name('usuarioseditar.update');
         Route::patch('/{uuid}/estado/{code}', [UserController::class, 'updateStatus'])->name('editarestadodeleteusuario.update');
         Route::patch('/{uuid}/reiniciar-password', [UserController::class, 'resetPassword'])->name('usuarios.resetearpassword');
+    });
 
-    });   
-    
 
     //------------------------------------------------- recepcion todo ------------------------------------------
     Route::get('recepciones', action: [Recepcion::class, 'index'])->name('recepciones.index');
@@ -88,8 +87,8 @@ Route::get('/reporte-mensual', [Dashboard::class, 'descargarReporteMensual'])->n
     Route::put('inscritoeditar/{id}', [Inscripcion::class, 'update'])->name('inscritoeditar.update');
     Route::get('/reporte-de-curso-inscrito/{uuid}', [Inscripcion::class, 'pdfcurso'])->name('curso.inscrito.reporte');
     Route::get('/reporte/inscritos/curso/{uuid}', [Inscripcion::class, 'reporteInscritosPorCurso'])
-    ->name('reporte.inscritos')
-    ->middleware('permission:curso.inscrito.reporte');
+        ->name('reporte.inscritos')
+        ->middleware('permission:curso.inscrito.reporte');
 
 
     //------------------------------------------------- cursos todo ------------------------------------------
@@ -99,7 +98,7 @@ Route::get('/reporte-mensual', [Dashboard::class, 'descargarReporteMensual'])->n
     Route::post('cursosimagenes',  [Curso::class, 'storeimagen'])->name('cursosimagenes.create');
     Route::patch('cursos/{id}/{cod}', action: [Curso::class, 'updatedelete'])->name('editarestadodeletecursos.update');
     Route::put('cursoseditar/{id}', [Curso::class, 'update'])->name('cursoseditar.update');
-    Route::put('imagenesditar/{id}',action: [Curso::class, 'updateimagen'])->name('imagenesditar.update');
+    Route::put('imagenesditar/{id}', action: [Curso::class, 'updateimagen'])->name('imagenesditar.update');
     Route::patch('estado-curso/{id}/{cod}', action: [Curso::class, 'estadoupdate'])->name('estado.update.curso');
     Route::get('/miscursos', [Curso::class, 'misCursos'])->name('miscursos');
 
@@ -114,16 +113,16 @@ Route::get('/reporte-mensual', [Dashboard::class, 'descargarReporteMensual'])->n
         // Rutas para datos relacionados con distritos
         Route::prefix('distritos')->group(function () {
             // Añadir la ruta correcta que espera el componente Vue
-        Route::get('/{distrito}/datos-relacionados', [InstitucionController::class, 'getDatosRelacionados'])
-        ->name('distritos.datos-relacionados');
+            Route::get('/{distrito}/datos-relacionados', [InstitucionController::class, 'getDatosRelacionados'])
+                ->name('distritos.datos-relacionados');
             // Unidades educativas (usando controlador)
             Route::get('/{distrito}/unidades-educativas', [InstitucionController::class, 'getUnidadesEducativas'])
                 ->name('distritos.unidades-educativas');
-                
+
             // Instituciones (versión mejorada)
             Route::get('/{distrito}/instituciones', [InstitucionController::class, 'getByDistrito'])
                 ->name('distritos.instituciones');
-                
+
             // Códigos SIE (versión mejorada)
             Route::get('/{distrito}/codigos-sie', [CodigoSieController::class, 'getByDistrito'])
                 ->name('distritos.codigos-sie');
@@ -131,8 +130,8 @@ Route::get('/reporte-mensual', [Dashboard::class, 'descargarReporteMensual'])->n
     });
     Route::get('/distritos/{id}/datos', [InstitucionController::class, 'datosRelacionados']);
     Route::get('api/distritos/{id}/datos', [InstitucionController::class, 'getDatosRelacionados']);
-Route::get('/instituciones/{id}/codigos-sie', [CodigoSieController::class, 'getByInstitucion']);
-Route::get('/api/instituciones/{id}/codigos-sie', [CodigoSieController::class, 'getByInstitucion']);
+    Route::get('/instituciones/{id}/codigos-sie', [CodigoSieController::class, 'getByInstitucion']);
+    Route::get('/api/instituciones/{id}/codigos-sie', [CodigoSieController::class, 'getByInstitucion']);
 
     //------------------------------------------------- distritos todo ------------------------------------------
 
@@ -141,13 +140,12 @@ Route::get('/api/instituciones/{id}/codigos-sie', [CodigoSieController::class, '
         Route::post('/', [DistritoController::class, 'store'])->name('distritos.create');
         Route::put('/{uuid}', [DistritoController::class, 'update'])->name('distritoseditar.update');
         Route::patch('/{uuid}/estado/{code}', [DistritoController::class, 'updateStatus'])->name('editarestadodeletedistrito.update');
-
     });
 
-     //------------------------------------------------- vistaestudiantes todo ------------------------------------------
-     Route::get('estudiantes', action: [Vistaestudiante::class, 'index'])->name('estudiantes.index');
-     Route::patch('estudiantes/{id}/{cod}', action: [Vistaestudiante::class, 'updatedelete'])->name('editarestadodeleteestudiantes.update');
-     Route::put('estudianteseditar/{id}', [Vistaestudiante::class, 'update'])->name('estudianteseditar.update');
+    //------------------------------------------------- vistaestudiantes todo ------------------------------------------
+    Route::get('estudiantes', action: [Vistaestudiante::class, 'index'])->name('estudiantes.index');
+    Route::patch('estudiantes/{id}/{cod}', action: [Vistaestudiante::class, 'updatedelete'])->name('editarestadodeleteestudiantes.update');
+    Route::put('estudianteseditar/{id}', [Vistaestudiante::class, 'update'])->name('estudianteseditar.update');
 
     //------------------------------------------------- todo certificados  ------------------------------------------
     Route::get('certificados/{uuid_curso}', [Certificado::class, 'index'])->name('certificados.index');
@@ -156,15 +154,15 @@ Route::get('/api/instituciones/{id}/codigos-sie', [CodigoSieController::class, '
     Route::put('imagencertificadodelete/{id}', [Certificado::class, 'update3'])->name('imagencertificadodelete.delete');
 
 
-// In routes/web.php or a dedicated routes file
-Route::prefix('codigo-sie')->group(function () {
-    Route::get('/', [CodigoSieController::class, 'index'])->name('codigosie.index');
-    Route::post('/create', [CodigoSieController::class, 'store'])->name('codigosie.create');
-    Route::put('/update/{codigo_sie}', [CodigoSieController::class, 'update'])->name('codigosie.update');
+    // In routes/web.php or a dedicated routes file
+    Route::prefix('codigo-sie')->group(function () {
+        Route::get('/', [CodigoSieController::class, 'index'])->name('codigosie.index');
+        Route::post('/create', [CodigoSieController::class, 'store'])->name('codigosie.create');
+        Route::put('/update/{codigo_sie}', [CodigoSieController::class, 'update'])->name('codigosie.update');
 
-    Route::patch('/estado/{uuid}/{code}', [CodigoSieController::class, 'updateStatus'])->name('codigosie.estado.update');
-});
-    
+        Route::patch('/estado/{uuid}/{code}', [CodigoSieController::class, 'updateStatus'])->name('codigosie.estado.update');
+    });
+
 
 
 
@@ -172,14 +170,12 @@ Route::prefix('codigo-sie')->group(function () {
     Route::get('tipos-actividad', [TipoActividades::class, 'index'])->name('tiposactividad.index');
     Route::post('tipos-actividad', [TipoActividades::class, 'store'])->name('tiposactividad.store');
     Route::put('tipos-actividad/{id}', [TipoActividades::class, 'update'])->name('tiposactividad.update');
-    Route::delete('tipos-actividad/{id}', [TipoActividades::class, 'destroy'])->name('tiposactividad.destroy');        
+    Route::delete('tipos-actividad/{id}', [TipoActividades::class, 'destroy'])->name('tiposactividad.destroy');
     Route::patch('tipos-actividad/{uuid}/{code}', [TipoActividades::class, 'updateEstado'])->name('editarestadotipoactividad.update');
-
-
 });
 
-Route::get('/storage-link',function () {
+Route::get('/storage-link', function () {
     $targetFolder = storage_path('app/public');
-    $linkFolder = $_SERVER['DOCUMENT_ROOT'].'/storage';
+    $linkFolder = $_SERVER['DOCUMENT_ROOT'] . '/storage';
     symlink($targetFolder, $linkFolder);
 });

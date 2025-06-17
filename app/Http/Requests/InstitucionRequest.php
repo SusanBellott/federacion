@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+
 class InstitucionRequest extends FormRequest
 {
     public function authorize(): bool
@@ -26,10 +27,10 @@ class InstitucionRequest extends FormRequest
                 'between:5520221,5528626',
                 Rule::unique('instituciones', 'servicio')->ignore($id, 'id_institucion'),
             ],
-            
+
             'servicio_generado' => 'required|numeric',
             'nivel' => 'required|string|in:ALTERNATIVA,ESPECIAL,INICIAL,PERMANENTE,PRIMARIA,SECUNDARIA,SUPERIOR',
-         
+
 
         ];
     }
@@ -48,7 +49,7 @@ class InstitucionRequest extends FormRequest
             'servicio_generado.required' => 'El campo "Servicio Generado" es obligatorio.',
             'nivel.required' => 'El campo "Nivel" es obligatorio.',
             'nivel.in' => 'Seleccione un nivel válido.',
-           
+
         ];
     }
 }
