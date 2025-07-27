@@ -14,11 +14,11 @@ class Vistaestudiante extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:estudiantes.index', ['only' => ['index']]);
-         $this->middleware('permission:editarestadodeleteestudiantes.update', ['only' => ['updatedelete']]);
-         $this->middleware('permission:estudianteseditar.update', ['only' => ['update']]);
+        $this->middleware('permission:estudiantes.index', ['only' => ['index']]);
+        $this->middleware('permission:editarestadodeleteestudiantes.update', ['only' => ['updatedelete']]);
+        $this->middleware('permission:estudianteseditar.update', ['only' => ['update']]);
     }
-     /**
+    /**
      * Muestra la página de mis cursos para el usuario autenticado.
      * Recupera las inscripciones activas del usuario, cargando la información del curso, con opción de búsqueda.
      * También lista los cursos activos a los que el usuario aún no se ha inscrito, con opción de búsqueda.
@@ -56,28 +56,75 @@ class Vistaestudiante extends Controller
         //---------------------------------------------------------------------------------------------------------
         $searchTerm2 = request()->query('searchuser');
         $perPage2 = request()->query('perPage2', 6);
-        $query2 = ModelCurso::where('estado', 'activo')->where('estado_curso','!=','terminado') // 1. Solo cursos activos
-            ->whereDoesntHave('inscripciones', function ($q) use ($user) {
-                $q->where('id_user', $user->id) // 2. Excluye cursos ya inscritos
-                    ->where('estado', 'activo');
-            });
-        // 3. Búsqueda (si hay término)
-        if ($searchTerm2) {
-            $query2->where(function ($q) use ($searchTerm2) {
-                $q->where('nombre', 'like', "%{$searchTerm2}%")
-                    ->orWhere('descripcion', 'like', "%{$searchTerm2}%")
-                    ->orWhere('fecha_inicio', 'like', "%{$searchTerm2}%") // Ajusta según tus campos
-                    ->orWhere('fecha_fin', 'like', "%{$searchTerm2}%"); // Ajusta según tus campos
-            });
-        }
 
-        $cursos = $query2->paginate($perPage2);
+      // Cursos gratuitos (tipo_pago: 'libre')
+$queryGratis = ModelCurso::select('cursos.*')
+    ->withCount([
+        'inscripciones as total_inscritos' => function ($q) {
+            $q->where('estado', 'activo');
+        }
+    ])
+    ->where('estado_curso', '!=', 'terminado')
+    ->where('tipo_pago', 'libre') // o 'gratis', según cómo lo tengas
+    ->whereDoesntHave('inscripciones', function ($q) use ($user) {
+        $q->where('id_user', $user->id)
+            ->where('estado', 'activo');
+    });
+
+if ($searchTerm2) {
+    $queryGratis->where(function ($q) use ($searchTerm2) {
+        $q->where('nombre', 'like', "%{$searchTerm2}%")
+            ->orWhere('descripcion', 'like', "%{$searchTerm2}%")
+            ->orWhere('fecha_inicio', 'like', "%{$searchTerm2}%")
+            ->orWhere('fecha_fin', 'like', "%{$searchTerm2}%");
+    });
+}
+
+$cursos = $queryGratis->paginate($perPage2);
+
+// Cursos de pago (tipo_pago: 'pago')
+$queryPago = ModelCurso::select('cursos.*')
+    ->withCount([
+        'inscripciones as total_inscritos' => function ($q) {
+            $q->where('estado', 'activo');
+        }
+    ])
+    ->where('estado_curso', '!=', 'terminado')
+    ->where('tipo_pago', 'pago')
+    ->whereDoesntHave('inscripciones', function ($q) use ($user) {
+        $q->where('id_user', $user->id)
+            ->where('estado', 'activo');
+    });
+
+if ($searchTerm2) {
+    $queryPago->where(function ($q) use ($searchTerm2) {
+        $q->where('nombre', 'like', "%{$searchTerm2}%")
+            ->orWhere('descripcion', 'like', "%{$searchTerm2}%")
+            ->orWhere('fecha_inicio', 'like', "%{$searchTerm2}%")
+            ->orWhere('fecha_fin', 'like', "%{$searchTerm2}%");
+    });
+}
+
+$pagoCursos = $queryPago->paginate($perPage2);
+
+        // Obtener los IDs de los cursos en los que el usuario ya está inscrito
+        $misCursosIds = ModelInscripcion::where('id_user', $miid)
+            ->where('estado', 'activo')
+            ->pluck('id_curso')
+            ->toArray();
+
+
+
+
+
 
         //--------------------------------------------
         return Inertia::render('Miscursos', [
             'miscursos' => $miscursos,
             'nombre_user' => $nombre_user,
-            'cursos' => $cursos
+            'cursos' => $cursos,
+            'misCursosIds' => $misCursosIds, // Enviar los IDs al frontend
+    'cursos_pago' => $pagoCursos, // 👈 ESTA LÍNEA ES CLAVE
         ]);
     }
     public function update($id)
@@ -110,11 +157,9 @@ class Vistaestudiante extends Controller
                 ->with('success', 'Usuario  inscrito')
                 ->with('datos_array', [$mensaje]);
         }
-
-
     }
 
-     /**
+    /**
      * Actualiza el estado de una inscripción (activo, inactivo o eliminado) basado en el código proporcionado.
      * Busca la inscripción por su UUID y actualiza la columna 'estado' según el valor de '$cod'.
      *

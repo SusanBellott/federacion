@@ -14,7 +14,6 @@ use Spatie\Permission\Models\Permission;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-
 class Dashboard extends Controller
 {
     /**
@@ -34,8 +33,11 @@ class Dashboard extends Controller
         $isStudent = $user->hasRole('Estudiante');
         $misCursosIds = [];
         $cursos = [];
+        $cursosPago = []; // 👈 NECESARIO AQUI
         $stats = [];
+        //esto es para el grafico activiades por tipo 
         $temasPorTipo = [];
+
         $estadisticasTemasPorTipo = [];
 
         if ($isStudent) {
@@ -52,9 +54,15 @@ class Dashboard extends Controller
                 ->with(['tipoActividad', 'imagencertificados'])
                 ->orderBy('fecha_inicio_inscripcion')
                 ->get();
+
+            $cursosPago = Curso::inscripcionesDisponibles()
+                ->where('estado', 'activo')
+                ->where('estado_curso', 'abierto')
+                ->where('tipo_pago', 'pago')
+                ->with(['tipoActividad', 'imagencertificados'])
+                ->orderBy('fecha_inicio_inscripcion')
+                ->get();
         }
-
-
 
         // Si el usuario puede ver estadísticas, preparamos los datos
         if ($canSeeStats) {
@@ -74,25 +82,35 @@ class Dashboard extends Controller
                 $i->estado === 'activo' && $i->estado_ins === 'inscrito'
             );
 
-
             $inscripcionesInactivas = $inscripciones->filter(
                 fn($i) =>
                 $i->estado === 'inactivo'
             );
 
-
-
             //    Agrupamos por nombre de tipo y contamos cada grupo
             $byActivityType = $inscripciones
-                ->groupBy(fn($ins) => $ins->curso->tipoActividad->nombre ?? 'Sin tipo')
-                ->map(fn($group) => $group->count());
+                ->filter(fn($i) => $i->estado === 'activo' && $i->estado_ins === 'inscrito')
+                ->groupBy(fn($i) => $i->curso->tipoActividad->nombre ?? 'Sin tipo')
+                ->map(fn($group) => $group->count()); // cuenta inscripciones, no usuarios únicos
 
             // Agrupamos por tipo de actividad, luego por nombre de curso y contamos inscripciones
             $byCourseInType = $inscripciones
-                ->groupBy(fn($ins) => $ins->curso->tipoActividad->nombre ?? 'Sin tipo')
+                ->filter(
+                    fn($i) =>
+                    $i->estado === 'activo' &&
+                        $i->estado_ins === 'inscrito' &&
+                        $i->curso && $i->curso->estado === 'activo'
+                )
+                ->groupBy(function ($ins) {
+                    $tipo = $ins->curso->tipoActividad;
+                    return $tipo ? "{$tipo->codigo} - {$tipo->nombre}" : 'Sin tipo';
+                })
                 ->map(function ($group) {
                     return $group
-                        ->groupBy(fn($ins) => $ins->curso->nombre)
+                        ->groupBy(function ($ins) {
+                            $curso = $ins->curso;
+                            return $curso ? "{$curso->codigo_curso} - {$curso->nombre}" : 'Sin curso';
+                        })
                         ->map(fn($subgroup) => $subgroup->count());
                 });
 
@@ -123,7 +141,6 @@ class Dashboard extends Controller
                         ->map(fn($subgroup) => $subgroup->count());
                 });
 
-
             // Desinscritos por tipo de actividad y por curso
             $inactivosByTypeAndCourse = $inscripciones
                 ->filter(fn($ins) => $ins->estado === 'inactivo')
@@ -134,10 +151,33 @@ class Dashboard extends Controller
                         ->map(fn($subgroup) => $subgroup->count());
                 });
 
-
-
             // 5) Total de inscripciones
             $totalInscriptions = $inscripciones->count();
+
+            $totalEstudiantes = User::role('Estudiante')->count();
+            $totalEncargados = User::role('Encargado')->count();
+            $totalAdministradores = User::role('Administrador')->count();
+
+            // 👇 Agrupamos las inscripciones por mes y luego por tipo y curso
+            $byCourseInTypePorMes = $inscripciones
+                ->filter(
+                    fn($i) =>
+                    $i->estado === 'activo' &&
+                        $i->estado_ins === 'inscrito' &&
+                        $i->curso && $i->curso->estado === 'activo'
+                )
+                ->groupBy(fn($i) => Carbon::parse($i->created_at)->format('Y-m')) // agrupa por año-mes
+                ->map(function ($group) {
+                    return $group
+                        ->groupBy(function ($ins) {
+                            $curso = $ins->curso;
+                            $tipo = $curso->tipoActividad;
+                            return $tipo && $curso
+                                ? "{$tipo->nombre} - {$curso->codigo_curso}"
+                                : 'Sin tipo';
+                        })
+                        ->map(fn($g) => $g->count());
+                });
 
             $stats = [
                 'totalUsers'         => $totalUsers,
@@ -156,8 +196,16 @@ class Dashboard extends Controller
                 'allActivityType'    => $byActivityType,            // 👈 Esto sí incluye inactivos (para el gráfico detallado)
                 'inactivosByTypeAndCourse' => $inactivosByTypeAndCourse,
 
+                'totalEstudiantes' => $totalEstudiantes,
+                'totalEncargados' => $totalEncargados,
+                'totalAdministradores' => $totalAdministradores,
+
+                'byCourseInTypePorMes' => $byCourseInTypePorMes,
+
             ];
-            // Subcursos por tipo de actividad: cuántos cursos distintos hay en cada tipo
+
+            // esto es para el grafico por tipo de actividades 
+            // Subcursos por tipo de actividad: cuántos cursos distintos hay en cada tipo 
             $temasPorTipo = Curso::with('tipoActividad')
                 ->get()
                 ->groupBy(fn($curso) => $curso->tipoActividad->nombre ?? 'Sin tipo')
@@ -194,15 +242,20 @@ class Dashboard extends Controller
                 }
             }
         }
+        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
 
         return Inertia::render('Dashboard', [
             'isStudent' => $isStudent,
             'canSeeStats' => $canSeeStats,
             'stats' => $stats,
             'cursos' => $cursos,
+            'cursos_pago' => $cursosPago, // 👈 AÑADIDO
             'misCursosIds' => $misCursosIds,
+            // pertenece al grafico de actividades 
             'temasPorTipo'       => $temasPorTipo,
+
             'estadisticasTemasPorTipo' => $estadisticasTemasPorTipo,
+            'permissions' => $permissions,
         ]);
     }
 

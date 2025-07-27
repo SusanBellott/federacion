@@ -2,17 +2,17 @@
     <MainLayout>
         <Head title="Dashboard" />
         <section
-            class="relative bg-transparent text-gray-800 dark:text-white py-24"
+            class="relative bg-transparent text-gray-800 dark:text-white py-8"
         >
-            <div class="max-w-4xl mx-auto px-6 space-y-6 text-center">
-                <p class="text-4xl font-light">
+            <div class="max-w-4xl mx-auto px-4 space-y-4 text-center">
+                <p class="text-2xl font-light">
                     Bienvenido al sistema de emisión de certificados
                 </p>
-                <div class="w-24 h-1 bg-gray-800 dark:bg-white mx-auto"></div>
-                <h1 class="text-8xl sm:text-9xl font-extrabold uppercase">
+                <div class="w-20 h-1 bg-gray-800 dark:bg-white mx-auto"></div>
+                <h1 class="text-5xl sm:text-7xl font-extrabold uppercase">
                     FDTEULP
                 </h1>
-                <p class="text-xl sm:text-2xl font-medium">
+                <p class="text-xl sm:text-1xl font-medium">
                     Federación de Trabajadores de Educación Urbana La Paz
                 </p>
             </div>
@@ -32,12 +32,31 @@
                         formación profesional
                     </p>
                 </div>
+                <!-- Cursos de pago -->
+                <div>
+                    <div class="mb-12">
+                        <h2
+                            class="text-2xl font-bold mb-4 text-slate-800 dark:text-white"
+                        >
+                            Información de Cursos
+                        </h2>
+                        <CursosPago
+                            :cursos_pago="cursos_pago"
+                            :mis-cursos-ids="misCursosIds"
+                        />
+                    </div>
+                    <h2
+                        class="text-2xl font-bold mb-4 text-slate-800 dark:text-white"
+                    >
+                        Cursos Disponibles
+                    </h2>
+                    <!-- Componente de cursos disponibles -->
+                    <CursosDisponibles
+                        :cursos="cursos || []"
+                        :mis-cursos-ids="misCursosIds || []"
+                    />
 
-                <!-- Componente de cursos disponibles -->
-                <CursosDisponibles
-                    :cursos="cursos || []"
-                    :mis-cursos-ids="misCursosIds || []"
-                />
+                </div>
             </div>
         </section>
 
@@ -50,7 +69,7 @@
             >
                 <!-- Cards de estadísticas generales -->
                 <div
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-12"
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12"
                 >
                     <StatCard
                         title="Usuarios"
@@ -58,6 +77,28 @@
                         icon="users"
                         class="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200"
                     />
+
+                    <StatCard
+                        title="Participantes"
+                        :value="stats.totalEstudiantes"
+                        icon="graduation-cap"
+                        class="bg-gradient-to-br from-pink-100 to-pink-200 border-pink-300"
+                    />
+
+                    <StatCard
+                        title="Encargados"
+                        :value="stats.totalEncargados"
+                        icon="user-cog"
+                        class="bg-gradient-to-br from-yellow-100 to-yellow-200 border-yellow-300"
+                    />
+
+                    <StatCard
+                        title="Administradores"
+                        :value="stats.totalAdministradores"
+                        icon="shield-check"
+                        class="bg-gradient-to-br from-gray-100 to-gray-200 border-gray-300"
+                    />
+
                     <StatCard
                         title="Tipos de actividad"
                         :value="stats.totalActivityTypes"
@@ -79,27 +120,21 @@
                     />
 
                     <StatCard
-                        title="Inscripciones Totales"
-                        :value="stats.totalInscriptions"
+                        title="Inscripciones"
+                        :value="stats.inscripcionesActivas"
                         icon="clipboard-list"
                         class="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200"
                     />
-                    <StatCard
-                        title="Inscripciones Activas"
-                        :value="stats.inscripcionesActivas"
-                        icon="user-check"
-                        class="bg-gradient-to-br from-emerald-100 to-emerald-200 border-emerald-300"
-                    />
-                    <StatCard
-                        title="Desinscritos"
-                        :value="stats.inactivas"
-                        icon="user-x"
-                        class="bg-gradient-to-br from-yellow-100 to-yellow-200 border-yellow-300"
-                    />
                 </div>
             </div>
+
             <!-- Componente de gráficos -->
-            <DashboardCharts :stats="stats" />
+            <GraficoActividades :stats="stats" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <GraficoCursos :stats="stats" />
+                <GraficoCertificados :stats="stats" />
+            </div>
+            <!-- Componente padre de aqui sacaremos los graficos -->
         </div>
 
         <!-- Si NO tiene permiso y NO es estudiante, mostrar acceso limitado -->
@@ -114,29 +149,58 @@
 import { usePage } from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import StatCard from "@/Components/StatCard.vue";
-import DashboardCharts from "@/Components/DashboardCharts.vue";
 import { Head } from "@inertiajs/vue3";
-import CursosDisponibles from "@/Components/CursosDisponibles.vue";
 import { ref, onMounted } from "vue";
+/* Componentes para cursos */
+import CursosDisponibles from "@/Components/m_CursosGP/CursosDisponibles.vue";
+import CursosPago from "@/Components/m_CursosGP/CursosPago.vue";
 
+/* Componentes para gráficos */
+
+import GraficoActividades from "@/Components/m_Graficos/GraficoActividades.vue";
+import GraficoCursos from "@/Components/m_Graficos/GraficoCursos.vue";
+import GraficoCertificados from "@/Components/m_Graficos/GraficoCertificados.vue";
 // Invocamos usePage() para obtener todos los props
 const page = usePage();
 
 // Extraemos stats, isStudent y canSeeStats del objeto props
-const { stats, isStudent, canSeeStats, cursos, misCursosIds } = page.props;
+const { stats, isStudent, canSeeStats, cursos, misCursosIds, cursos_pago } =
+    page.props;
 
-// Variable para activar/desactivar modo depuración
-const debug = ref(true); // Cambiar a false en producción
+//  Variable para activar/desactivar modo depuración
+const debug = ref(true);
 
-// Depuración - Para verificar que los datos lleguen correctamente
 onMounted(() => {
+   console.log("=== DEBUGGING DASHBOARD ===");
     console.log("isStudent:", isStudent);
-    console.log("Datos de cursos:", cursos);
-    if (cursos && cursos.length > 0) {
-        console.log("Primer curso:", cursos[0]);
-    } else {
-        console.log("No hay cursos disponibles");
+    console.log("canSeeStats:", canSeeStats);
+
+    console.log("--- CURSOS GRATUITOS ---");
+    console.log("cursos:", cursos);
+    if (cursos && Array.isArray(cursos)) {
+   
+    } else if (cursos && cursos.data) {
+        console.log(
+            "Cantidad de cursos gratuitos (paginados):",
+            cursos.data.length
+        );
     }
+
+    console.log("--- CURSOS DE PAGO ---");
+    console.log("cursosPago:", cursos_pago);
+    if (cursos_pago && Array.isArray(cursos_pago)) {
+        console.log("Cantidad de cursos de pago:", cursos_pago.length);
+    } else if (cursos_pago && cursos_pago.data) {
+        console.log(
+            "Cantidad de cursos de pago (paginados):",
+            cursos_pago.data.length
+        );
+        console.log("Primer curso de pago:", cursos_pago.data[0]);
+    } else {
+        console.log("❌ No hay datos de cursos de pago o formato incorrecto");
+    }
+
     console.log("misCursosIds:", misCursosIds);
+    console.log("=== FIN DEBUG ===");
 });
 </script>

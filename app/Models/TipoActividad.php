@@ -20,7 +20,7 @@ class TipoActividad extends Model
         'horas_minimas',
         'estado',
     ];
-    
+
     protected static function boot()
     {
         parent::boot();

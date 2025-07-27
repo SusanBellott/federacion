@@ -11,10 +11,10 @@ class Certificado extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:certificados.index', ['only' => ['index']]);
-         $this->middleware('permission:estuditarcursocerti.update', ['only' => ['update']]);
-         $this->middleware('permission:estuditarimagencertificado.update', ['only' => ['update2']]);
-         $this->middleware('permission:imagencertificadodelete.delete', ['only' => ['update3']]);
+        $this->middleware('permission:certificados.index', ['only' => ['index']]);
+        $this->middleware('permission:estuditarcursocerti.update', ['only' => ['update']]);
+        $this->middleware('permission:estuditarimagencertificado.update', ['only' => ['update2']]);
+        $this->middleware('permission:imagencertificadodelete.delete', ['only' => ['update3']]);
     }
     /**
      * Muestra la página del certificado para un curso específico.
@@ -43,14 +43,14 @@ class Certificado extends Controller
         $imagenes2 = [];
         // Verifica si se encontró el curso.
         if ($curso) {
-                // Obtiene todas las imágenes de certificado que no estén marcadas como 'eliminado'
-                // y que estén asociadas al ID del curso encontrado.
-                $imagenes2 = Imagencertificado::where('estado', '<>', 'eliminado')
+            // Obtiene todas las imágenes de certificado que no estén marcadas como 'eliminado'
+            // y que estén asociadas al ID del curso encontrado.
+            $imagenes2 = Imagencertificado::where('estado', '<>', 'eliminado')
                 ->where('id_curso', $curso->id_curso) // Compara con el valor de uuid_curso
                 ->get();
-                // Obtiene solo las imágenes de certificado que estén marcadas como 'activo'
-                // y que estén asociadas al ID del curso encontrado.
-                $imagenes = Imagencertificado::where('estado', 'activo')
+            // Obtiene solo las imágenes de certificado que estén marcadas como 'activo'
+            // y que estén asociadas al ID del curso encontrado.
+            $imagenes = Imagencertificado::where('estado', 'activo')
                 ->where('id_curso', $curso->id_curso) // Compara con el valor de id_curso
                 ->get();
         }
@@ -78,11 +78,11 @@ class Certificado extends Controller
         // - where('uuid_curso', $id): Busca un registro donde la columna 'uuid_curso' coincida con el valor del parámetro '$id'.
         // - firstOrFail(): Ejecuta la consulta y, si no se encuentra ningún curso con ese UUID, lanza una excepción NotFoundHttpException (error 404).
         $cursos = ModelCurso::where('uuid_curso', $id)->firstOrFail();
-         // Obtiene solo los datos del request que corresponden a los campos que se van a actualizar.
+        // Obtiene solo los datos del request que corresponden a los campos que se van a actualizar.
         // - 'titulocer': El nuevo título del certificado.
         // - 'contenidocer': El nuevo contenido del certificado.
         // - 'estado': El nuevo estado del curso.
-        $data = $request->only(['titulocer','contenidocer','estado']);
+        $data = $request->only(['titulocer', 'contenidocer', 'estado']);
         // Actualiza los atributos del modelo del curso con los datos obtenidos del request.
         $cursos->update($data);
         // Redirige al usuario a la página anterior (la página desde donde se envió el formulario).
@@ -114,7 +114,7 @@ class Certificado extends Controller
         // - 'img_firma1' a 'img_firma4': Las imágenes de las firmas.
         // - 'img_sello': La imagen del sello.
         // - 'estado': El estado del curso.
-        $data = $request->only(['img_cer','img_cerlogo','img_firma1','img_firma2','img_firma3','img_firma4','img_sello','estado']);
+        $data = $request->only(['img_cer', 'img_cerlogo', 'img_firma1', 'img_firma2', 'img_firma3', 'img_firma4', 'img_sello', 'estado']);
         // Actualiza los atributos del modelo del curso con los datos de las imágenes y el estado obtenidos del request.
         $cursos->update($data);
         // Busca una imagen de certificado específica utilizando el UUID proporcionado en la petición.
@@ -131,7 +131,7 @@ class Certificado extends Controller
             ->with('datos_array', [$data]);
     }
 
-     /**
+    /**
      * Actualiza las imágenes y el estado de un curso, y activa una imagen de certificado específica.
      *
      * @param  \Illuminate\Http\Request  $request El objeto de la petición HTTP que contiene los datos de las imágenes y el estado.
@@ -150,7 +150,7 @@ class Certificado extends Controller
         // - 'img_firma1' a 'img_firma4': Las imágenes de las firmas.
         // - 'img_sello': La imagen del sello.
         // - 'estado': El estado del curso.
-        $data = $request->only(['img_cer','img_cerlogo','img_firma1','img_firma2','img_firma3','img_firma4','img_sello','estado']);
+        $data = $request->only(['img_cer', 'img_cerlogo', 'img_firma1', 'img_firma2', 'img_firma3', 'img_firma4', 'img_sello', 'estado']);
         // Actualiza los atributos del modelo del curso con los datos de las imágenes y el estado obtenidos del request.
         $cursos->update($data);
         // Busca una imagen de certificado específica utilizando el UUID proporcionado en la petición.
@@ -166,5 +166,4 @@ class Certificado extends Controller
             ->with('editado', 'Distrito editada correctamente')
             ->with('datos_array', [$data]);
     }
-
 }

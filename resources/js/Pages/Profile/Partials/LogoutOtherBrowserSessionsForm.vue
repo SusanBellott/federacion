@@ -10,7 +10,7 @@ const props = defineProps({
     },
     class: {
         type: String,
-        default: 'mt-10 sm:mt-0'
+        default: 'mt-14'
     }
 });
 
@@ -22,8 +22,9 @@ const form = useForm({
 });
 
 const containerClasses = computed(() => {
-    return `relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border ${props.class}`;
+  return `relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border`;
 });
+
 
 const confirmLogout = () => {
     confirmingLogout.value = true;
@@ -86,7 +87,8 @@ const getBrowserIcon = (browser) => {
 </script>
 
 <template>
-    <div :class="containerClasses">
+  
+     <div :class="['mt-12', containerClasses]">
       <!-- Header -->
       <div class="p-6 px-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
         <h6 class="mb-0 text-slate-700 dark:text-white/80">Sesiones Activas</h6>

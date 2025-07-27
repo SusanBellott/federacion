@@ -15,6 +15,7 @@ use Laravel\Fortify\Fortify;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -37,6 +38,33 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         Fortify::authenticateUsing(function (Request $request) {
+//codigo capcha
+ $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required',
+       'captcha' => 'required|string|min:6|max:6',
+
+    ], [
+        'email.required' => 'El correo es obligatorio.',
+        'password.required' => 'La contraseña es obligatoria.',
+      'captcha.required' => 'El código captcha es obligatorio.',
+    ]);
+
+    if ($validator->fails()) {
+        throw ValidationException::withMessages($validator->errors()->toArray());
+    }
+
+    // Validar Captcha comparando con lo guardado en la sesión
+    if (
+        !session()->has('captcha_code') ||
+        strtoupper($request->input('captcha')) !== session('captcha_code')
+    ) {
+        throw ValidationException::withMessages([
+            'captcha' => 'El código captcha ingresado es incorrecto.',
+        ]);
+    }
+
+
             // Buscar el usuario ignorando mayúsculas/minúsculas
             $user = User::whereRaw('LOWER(email) = ?', [strtolower($request->email)])->first();
         
@@ -58,11 +86,11 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
-            return Limit::perMinute(5)->by($throttleKey);
+            return Limit::perMinute(500)->by($throttleKey);
         });
 
         RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
+            return Limit::perMinute(500)->by($request->session()->get('login.id'));
         });
     }
 }

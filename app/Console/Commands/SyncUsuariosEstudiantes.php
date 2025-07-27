@@ -16,7 +16,7 @@ class SyncUsuariosEstudiantes extends Command
 
     public function handle()
     {
-        $this->info('🚀 Iniciando sincronización de usuarios...');
+        $this->info(' Iniciando sincronización de usuarios...');
 
         $role = Role::where('name', 'Estudiante')->first();
 
@@ -35,7 +35,7 @@ class SyncUsuariosEstudiantes extends Command
             if (!Str::startsWith($user->password, '$2y$')) {
                 $originalPassword = $user->password;
                 $user->password = Hash::make($originalPassword);
-                $this->info("🔐 Contraseña hasheada para: {$user->email}");
+                $this->info(" Contraseña hasheada para: {$user->email}");
                 $actualizo = true;
             }
 
@@ -52,6 +52,6 @@ class SyncUsuariosEstudiantes extends Command
             }
         }
 
-        $this->info("✅ Proceso completado. Usuarios actualizados: {$count}");
+        $this->info(" Proceso completado. Usuarios actualizados: {$count}");
     }
 }

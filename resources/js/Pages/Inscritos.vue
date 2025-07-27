@@ -8,61 +8,70 @@
             </h2>
         </template>
         <div class="p-3">
+            
             <!-- Alerts & Notifications -->
             <div v-if="flash.success">
                 <useSweetAlert :data="flash.datos_array" />
             </div>
             <editaralerta title="¡Registro editado correctamente!" />
 
+
             <!-- Table Container with Modern Styling -->
             <div class="flex-none w-full max-w-full px-3">
                 <h6 class="text-gray-800 dark:text-white">Inscritos</h6>
                 <div
-                    class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                    class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
                 >
                     <div
-                        class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center"
+                        class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent"
                     >
-                        <!-- Search & Add Btton Row -->
-                        <div class="flex items-center space-x-4">
-                            <!-- Buscador (Search) -->
-                            <div class="relative">
+                        <div
+                            class="flex flex-col lg:flex-row lg:items-center lg:gap-4 w-full"
+                        >
+                            <!-- Buscador -->
+                            <div class="flex-1">
                                 <BuscadorDistritos
                                     :filters="filters"
                                     ruta="inscritos.index"
+                                    placeholder="Buscar inscritos..."
                                 />
                             </div>
-                        </div>
-                        <!-- Add Button -->
-                        <button
-                            v-if="
-                                $page.props.permissions.includes(
-                                    'inscritos.create'
-                                )
-                            "
-                            class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
-                            @click="handleClick"
-                        >
-                            <span class="flex items-center justify-center">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 mr-2"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
+
+                            <!-- Botón agregar -->
+                            <div
+                                class="mt-4 lg:mt-0 flex justify-end lg:justify-start"
+                            >
+                                <button
+                                    v-if="
+                                        $page.props.permissions.includes(
+                                            'inscritos.create'
+                                        )
+                                    "
+                                    class="w-full sm:w-auto lg:w-fit inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm sm:text-base rounded-lg shadow-lg hover:shadow-xl dark:shadow-blue-900/25 dark:hover:shadow-blue-900/40 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800 active:scale-95"
+                                    @click="handleClick"
                                 >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                Agregar Nuevo Inscrito
-                            </span>
-                        </button>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5 mr-2"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                    <span class="whitespace-nowrap"
+                                        >Agregar Nuevo Inscrito</span
+                                    >
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="flex-auto px-0 pt-0 pb-2">
-                        <div class="p-0 overflow-x-auto">
+                        <div class="overflow-x-auto w-full">
                             <table
                                 class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500"
                             >
@@ -94,7 +103,11 @@
                                         >
                                             Fecha de Inscripción
                                         </th>
-
+                                        <th
+                                            class="w-[140px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-nowrap"
+                                        >
+                                            Certificado
+                                        </th>
                                         <th
                                             v-if="
                                                 $page.props.permissions.includes(
@@ -102,12 +115,9 @@
                                                 ) ||
                                                 $page.props.permissions.includes(
                                                     'inscritoeditar.update'
-                                                ) ||
-                                                $page.props.permissions.includes(
-                                                    'curso.inscrito.reporte'
                                                 )
                                             "
-                                            class="px-3 py-3 w-[150px] max-w-[200px] text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-nowrap"
+                                            class="px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-nowrap"
                                         >
                                             Acciones
                                         </th>
@@ -137,7 +147,7 @@
                                                 <div>
                                                     <!-- User Initial Circle -->
                                                     <div
-                                                        class="inline-flex items-center justify-center mr-4 text-white transition-all duration-200 ease-in-out text-sm h-9 w-9 rounded-xl bg-slate-700 dark:bg-slate-600"
+                                                        class="inline-flex items-center justify-center mr-4 text-white text-base font-bold h-10 w-10 rounded-full bg-gradient-to-br from-fuchsia-600 to-purple-700 shadow-md"
                                                     >
                                                         {{
                                                             inscrito.user.name.charAt(
@@ -227,49 +237,60 @@
                                                 }}</span
                                             >
                                         </td>
+
+                                        <!-- Botón Certificado -->
                                         <td
+                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        >
+                                            <!-- Certificado (PDF) -->
+                                            <a
+                                                v-if="
+                                                    mostrarCertificado(
+                                                        inscrito.curso.fecha_fin
+                                                    ) &&
+                                                    $page.props.permissions.includes(
+                                                        'curso.inscrito.reporte'
+                                                    )
+                                                "
+                                                :href="
+                                                    route(
+                                                        'curso.inscrito.reporte',
+                                                        inscrito.uuid_inscripcion
+                                                    )
+                                                "
+                                                target="_blank"
+                                                class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-green-600 rounded hover:bg-green-700 transition"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-4 w-4 mr-1"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                    />
+                                                </svg>
+                                                Descarga disponible
+                                            </a>
+                                        </td>
+                                        <td
+                                            v-if="
+                                                $page.props.permissions.includes(
+                                                    'editarestadodeleteinscritos.update'
+                                                ) ||
+                                                $page.props.permissions.includes(
+                                                    'inscritoeditar.update'
+                                                )
+                                            "
                                             class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent w-[200px] max-w-[200px]"
                                         >
-                                            <div class="flex space-x-3">
-                                                <!-- Certificado (PDF) -->
-                                                <a
-                                                    v-if="
-                                                        mostrarCertificado(
-                                                            inscrito.curso
-                                                                .fecha_fin
-                                                        ) &&
-                                                        $page.props.permissions.includes(
-                                                            'curso.inscrito.reporte'
-                                                        )
-                                                    "
-                                                    :href="
-                                                        route(
-                                                            'curso.inscrito.reporte',
-                                                            inscrito.uuid_inscripcion
-                                                        )
-                                                    "
-                                                    target="_blank"
-                                                    class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-green-600 rounded hover:bg-green-700 transition"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        class="h-4 w-4 mr-1"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                        />
-                                                    </svg>
-                                                    Descargar certificado
-                                                </a>
-
-                                                <!-- Editar -->
-
+                                         <div class="flex justify-center items-center space-x-3">
+                                                <!-- Botón Editar -->
                                                 <button
                                                     v-if="
                                                         inscrito.estado !=
@@ -313,7 +334,7 @@
                                                     </svg>
                                                 </button>
 
-                                                <!-- Eliminar -->
+                                                <!-- Botón Eliminar -->
                                                 <button
                                                     v-if="
                                                         inscrito.estado !=
@@ -369,7 +390,7 @@
                 </div>
             </div>
 
-            <!-- Modal with Form -->
+            <!-- Modal Formulario de inscripción -->
             <Modal :show="showModal" @close="closeModal" max-width="2xl">
                 <form @submit.prevent="submitForm">
                     <div class="p-6">
@@ -395,7 +416,7 @@
                                 />
                                 <div v-if="user_nombre != '' && valorbusqueda">
                                     <!-- Contenedor con scroll cuando hay más de 5 registros -->
-                                    <div class="p-0 overflow-x-auto">
+                                    <div class="overflow-x-auto w-full">
                                         <table
                                             class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500"
                                         >
@@ -608,6 +629,8 @@
                 @confirm="onConfirmDelete"
             />
         </div>
+
+
     </AppLayout>
 </template>
 

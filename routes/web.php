@@ -15,10 +15,13 @@ use App\Http\Controllers\Certificado;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\TipoActividades;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\Estadisticas;
+use App\Http\Controllers\ReporteCursoPorMes;
+use App\Http\Controllers\ReporteCursoPorMesYAnio;
+use App\Http\Controllers\ReporteInscritos;
+use App\Http\Controllers\Reportes;
 
-Route::get('/', function () {
-    return 'Todo listo en producción 🚀';
-});
 
 Route::get('/', function () {
     // Si ya está logueado, lo mandamos directo al dashboard
@@ -31,6 +34,8 @@ Route::get('/', function () {
         'canLogin' => Route::has('login'),
     ]);
 });
+
+Route::get('/custom-captcha', [CaptchaController::class, 'generate']);
 
 Route::get('/verificacion/cursos/{uuid}', [Inscripcion::class, 'verificarCurso'])->name('verificar.curso.inscrito');
 
@@ -86,9 +91,9 @@ Route::middleware([
     Route::patch('inscritos/{id}/{cod}', action: [Inscripcion::class, 'updatedelete'])->name('editarestadodeleteinscritos.update');
     Route::put('inscritoeditar/{id}', [Inscripcion::class, 'update'])->name('inscritoeditar.update');
     Route::get('/reporte-de-curso-inscrito/{uuid}', [Inscripcion::class, 'pdfcurso'])->name('curso.inscrito.reporte');
-    Route::get('/reporte/inscritos/curso/{uuid}', [Inscripcion::class, 'reporteInscritosPorCurso'])
-        ->name('reporte.inscritos')
-        ->middleware('permission:curso.inscrito.reporte');
+   Route::get('/reporte/inscritos/curso/{uuid}', [ReporteInscritos::class, 'reporteInscritosPorCurso'])
+    ->name('reporte.inscritos')
+    ->middleware('permission:curso.inscrito.reporte');
 
 
     //------------------------------------------------- cursos todo ------------------------------------------
@@ -153,8 +158,8 @@ Route::middleware([
     Route::put('estuditarimagencertificado/{id}', [Certificado::class, 'update2'])->name('estuditarimagencertificado.update');
     Route::put('imagencertificadodelete/{id}', [Certificado::class, 'update3'])->name('imagencertificadodelete.delete');
 
+    //------------------------------------------------- Codigo Sie  ------------------------------------------
 
-    // In routes/web.php or a dedicated routes file
     Route::prefix('codigo-sie')->group(function () {
         Route::get('/', [CodigoSieController::class, 'index'])->name('codigosie.index');
         Route::post('/create', [CodigoSieController::class, 'store'])->name('codigosie.create');
@@ -162,17 +167,52 @@ Route::middleware([
 
         Route::patch('/estado/{uuid}/{code}', [CodigoSieController::class, 'updateStatus'])->name('codigosie.estado.update');
     });
-
-
-
-
+    //------------------------------------------------- tipo de actividad  ------------------------------------------
 
     Route::get('tipos-actividad', [TipoActividades::class, 'index'])->name('tiposactividad.index');
     Route::post('tipos-actividad', [TipoActividades::class, 'store'])->name('tiposactividad.store');
     Route::put('tipos-actividad/{id}', [TipoActividades::class, 'update'])->name('tiposactividad.update');
     Route::delete('tipos-actividad/{id}', [TipoActividades::class, 'destroy'])->name('tiposactividad.destroy');
     Route::patch('tipos-actividad/{uuid}/{code}', [TipoActividades::class, 'updateEstado'])->name('editarestadotipoactividad.update');
+
+
+    //------------------------------------------------- Reportes  ------------------------------------------
+
+
+    Route::get('/reportes', [Reportes::class, 'index'])
+        ->middleware('can:reportes.index')
+        ->name('reportes.index');
+
+
+    Route::get('/estadisticas/cursos-por-mes/{año?}', [Estadisticas::class, 'cursosPorMes']);
+
+    Route::get('/reporte/mes/{año}/{mes}', [ReporteCursoPorMesYAnio::class, 'reporteCursosPorMesYAnio'])->name('reporte.mes');
+    Route::get('/reporte/inscritos/{uuidCurso}', [reporteInscritos::class, 'inscritosPorCurso'])
+        ->name('reporte.inscritos');
+
+
+    Route::get('/reporte/verificar-mes/{año}/{mes}', [ReporteCursoPorMesYAnio::class, 'verificarDatosMes']);
+/// reporte año 
+
+    Route::get('/reportes/cursos-por-mes/{año}', [ReporteCursoPorMes::class, 'reporteCursosPorMes'])->name('reportes.cursos.por.mes');
+Route::get('/reportes/anios-disponibles', [ReporteCursoPorMes::class, 'obtenerAniosConReportes']);
+
+/// reporte mes año
+Route::get('/reporte/anios-disponibles', [ReporteCursoPorMesYAnio::class, 'obtenerAniosConReportes']);
+Route::get('/reporte/meses-disponibles/{anio}', [ReporteCursoPorMesYAnio::class, 'obtenerMesesPorAnio']);
+
+//
+
+Route::get('/reporte-inscritos', [ReporteInscritos::class, 'index'])->name('reporte.inscritos.index');
+Route::get('/reporte-inscritos/pdf/{uuidCurso}', [ReporteInscritos::class, 'reporteInscritosPorCurso'])->name('reporte.inscritos.pdf');
+Route::get('/reporte/cursos-disponibles', [ReporteInscritos::class, 'obtenerCursosDisponibles']);
+Route::get('/reportes', [ReporteInscritos::class, 'index'])->name('reportes.index');
+
 });
+
+
+
+
 
 Route::get('/storage-link', function () {
     $targetFolder = storage_path('app/public');

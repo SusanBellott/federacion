@@ -158,16 +158,21 @@ const cursosFiltrados = computed(() => {
         <div class="flex-none w-full max-w-full px-3">
             <h6 class="text-gray-800 dark:text-white">Mis Actividades</h6>
             <div
-                class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
+                <!-- Buscar, mostrar -->
                 <div
-                    class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center"
+                    class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent"
                 >
-                    <div class="flex items-center space-x-4">
-                        <div class="relative">
+                    <div
+                        class="flex flex-col lg:flex-row lg:items-center lg:gap-4 w-full"
+                    >
+                        <!-- Buscador -->
+                        <div class="flex-1">
                             <BuscadorDistritos
                                 :filters="filters"
                                 ruta="estudiantes.index"
+                                placeholder="Buscar estudiantes..."
                             />
                         </div>
                     </div>
@@ -192,6 +197,7 @@ const cursosFiltrados = computed(() => {
                     </div>
                 </div>
 
+                <!-- Tabla de mis cursos -->
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
                         <table

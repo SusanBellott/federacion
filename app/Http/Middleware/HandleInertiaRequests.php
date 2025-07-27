@@ -43,6 +43,16 @@ class HandleInertiaRequests extends Middleware
 
             ],
             'permissions' => $request->user() ? $request->user()->getPermissionsViaRoles()->pluck('name') : [],
+                   
+            
+            // 🔽 Aquí agregamos los datos del usuario autenticado
+        'user' => fn () => $request->user() ? [
+            'name' => $request->user()->name,
+            'primer_apellido' => $request->user()->primer_apellido,
+            'segundo_apellido' => $request->user()->segundo_apellido,
+            'rol' => $request->user()->roles->pluck('name')->first(), // si usas Spatie
+        ] : null,
+        
         ]);
     }
     /*  public function share(Request $request): array

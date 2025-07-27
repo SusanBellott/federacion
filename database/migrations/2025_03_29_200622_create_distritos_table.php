@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('estado')->default('activo');
             $table->timestamps();
             $table->softDeletes();
-            
-    // ✅ Índice único combinado por código + descripción (para evitar duplicados exactos)
-    $table->unique(['codigo', 'descripcion']);
+
+            //  Índice único combinado por código + descripción (para evitar duplicados exactos)
+            $table->unique(['codigo', 'descripcion']);
         });
     }
 

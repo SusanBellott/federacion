@@ -22,7 +22,6 @@ class Cursos extends FormRequest
                 Rule::unique('cursos', 'tipo_actividad_id')->ignore($this->getCursoId(), 'id_curso'),
             ],
 
-
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string|max:255',
 

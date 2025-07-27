@@ -13,7 +13,8 @@
           @input="filterOptions"
           @focus="isOpen = true"
           :placeholder="placeholder"
-          class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border-none bg-transparent px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 dark:placeholder:text-slate-400"
+          
+          class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none pr-10"
 />
         
         <div class="select-arrow">
@@ -166,9 +167,9 @@ const filteredOptions = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #d1d5db;
+  border: 1px solid #7c3aed; /* border-violet-700 */
   border-radius: 0.5rem;
-  background-color: var(--bg-select-field, white);
+  background-color: #2e1065;
   transition: all 0.2s ease;
   padding-right: 0.75rem; 
 }
@@ -266,24 +267,25 @@ const filteredOptions = computed(() => {
   border-radius: 3px;
 }
 .select-dropdown {
-  background-color: #ffffff; /* blanco en modo claro */
-  border-color: #d1d5db;
-  color: #374151; /* texto oscuro en modo claro */
+  background-color: #2e1065; /* violet-950 */
+  border-color: #7c3aed;     /* violet-700 */
+  color: #f1f5f9;            /* blanco */
 }
 
 .dropdown-option {
-  color: #374151; /* texto legible en modo claro */
-  background-color: #ffffff;
+  color: #f1f5f9;
+  background-color: #2e1065;
 }
 
 .dropdown-option:hover {
-  background-color: #f3f4f6;
+  background-color: #3b0764; /* más oscuro al hacer hover */
 }
 
 .dropdown-option.selected {
-  background-color: #e0f2fe;
-  color: #1e3a8a; /* azul visible en claro */
+  background-color: #7c3aed; /* violeta seleccionado */
+  color: white;
 }
+
 
 /* 🌙 DARK MODE con :deep() */
 :deep(html.dark) .select-field {

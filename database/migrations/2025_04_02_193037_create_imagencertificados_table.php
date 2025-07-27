@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('imagencertificados', function (Blueprint $table) {
             $table->id('id_imgcer');
             $table->uuid('uuid_imgcer');
-            $table->unsignedBigInteger('id_curso');  
+            $table->unsignedBigInteger('id_curso');
             $table->string('imagenescer')->nullable();
             $table->string('descripcion')->nullable();
             $table->string('estado')->default('activo');

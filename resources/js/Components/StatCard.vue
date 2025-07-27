@@ -1,14 +1,28 @@
 <template>
     <div :class="['relative rounded-lg shadow-sm border overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1', $attrs.class || 'bg-white border-gray-200']">
-      <div class="p-5">
+      <div class="p-2">
         <div class="flex items-center">
           <!-- Icono -->
           <div class="rounded-full p-3 mr-4 bg-white bg-opacity-50">
             <!-- Users -->
-            <svg v-if="icon === 'users'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg v-if="icon === 'users'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            
+            <!-- Participantes -->
+<svg v-else-if="icon === 'graduation-cap'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m0-6L3.6 9m8.4 5L20.4 9" />
+</svg>
+
+<!-- Encargados -->
+<svg v-else-if="icon === 'user-cog'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232a4 4 0 00-6.464 0M12 14a4 4 0 100-8 4 4 0 000 8zm-7 7a4 4 0 014-4h6a4 4 0 014 4M20 12h.01M4 12h.01M12 20h.01M12 4h.01" />
+</svg>
+
+<!-- Administradores -->
+<svg v-else-if="icon === 'shield-check'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4l8 4v4c0 5.25-3.5 9.75-8 11-4.5-1.25-8-5.75-8-11V8l8-4zm0 8l2 2 4-4" />
+</svg>
+
             <!-- Book open -->
             <svg v-else-if="icon === 'book-open'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -46,13 +60,18 @@
             </svg>
           </div>
           
-          <div>
-            <!-- Título -->
-            <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">{{ title }}</h3>
-            
-            <!-- Valor -->
-            <div class="mt-1 text-3xl font-semibold text-gray-800">{{ formatValue(value) }}</div>
-          </div>
+<div>
+  <!-- Título más pequeño -->
+  <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+    {{ title }}
+  </h3>
+
+  <!-- Valor más compacto -->
+ <div class="mt-1 text-base font-semibold text-gray-800">
+    {{ formatValue(value) }}
+  </div>
+</div>
+
         </div>
       </div>
       
@@ -92,6 +111,12 @@
     switch (props.icon) {
       case 'users':
         return 'bg-blue-600'
+        case 'graduation-cap':
+  return 'bg-pink-600'
+case 'user-cog':
+  return 'bg-yellow-600'
+case 'shield-check':
+  return 'bg-gray-600'
       case 'book-open':
         return 'bg-indigo-600'
       case 'clipboard-list':

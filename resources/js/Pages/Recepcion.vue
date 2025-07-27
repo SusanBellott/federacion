@@ -53,6 +53,7 @@ const form = ref({
     horas: "",
     id_curso: "",
     email: "",
+    celular: "",
 });
 
 // Watch para generar email automáticamente
@@ -86,7 +87,7 @@ watch(
 
                 institucionesOptions.value = response.data.map(
                     (institucion) => ({
-                        label: institucion.nivel, // o el campo que quieras mostrar
+                        label: `${institucion.servicio} - ${institucion.nivel}`,
                         value: institucion.id_institucion,
                     })
                 );
@@ -153,7 +154,8 @@ const handleClickEditar = (
     servicio_generado,
     nivel,
     programa,
-    unidad_educativa
+    unidad_educativa,
+    celular,
 ) => {
     showModal.value = true;
     isEditing.value = true;
@@ -168,6 +170,7 @@ const handleClickEditar = (
     form.value.nivel = nivel;
     form.value.programa = programa;
     form.value.unidad_educativa = unidad_educativa;
+    form.value.celular = celular;
 
     // Cargar datos relacionados para edición
     cargarDatosParaEdicion(distrito_id, institucion_id);
@@ -228,6 +231,7 @@ const resetForm = () => {
         horas: "",
         id_curso: "",
         email: "",
+        celular: "",
     };
     id_user.value = null;
 
@@ -236,7 +240,10 @@ const resetForm = () => {
     codigosSieOptions.value = [];
 };
 
+
 const submitForm = () => {
+    console.log("Formulario antes de enviar:", form.value);
+    
     if (!id_user.value) {
         router.post("/recepciones", form.value, {
             onSuccess: () => {
@@ -283,7 +290,7 @@ const cursosAbiertos = computed(() => {
         </div>
 
         <div
-            class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border p-6"
+            class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border p-6"
         >
             <div v-if="flash.success" class="mb-4">
                 <useSweetAlert :data="flash.datos_array" />
@@ -314,7 +321,7 @@ const cursosAbiertos = computed(() => {
                                 type="text"
                                 id="name"
                                 placeholder="Ingrese primer nombre"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
 
                             <validacioens :message="erroresrecepcion.name" />
@@ -336,7 +343,7 @@ const cursosAbiertos = computed(() => {
                                 type="text"
                                 id="name2"
                                 placeholder="Ingrese segundo nombre (Opcional)"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                         </div>
                     </div>
@@ -357,7 +364,7 @@ const cursosAbiertos = computed(() => {
                                 type="text"
                                 id="primer_apellido"
                                 placeholder="Ingrese apellido paterno"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                         </div>
                     </div>
@@ -378,7 +385,7 @@ const cursosAbiertos = computed(() => {
                                 type="text"
                                 id="segundo_apellido"
                                 placeholder="Ingrese apellido materno"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                         </div>
                     </div>
@@ -399,7 +406,7 @@ const cursosAbiertos = computed(() => {
                                 type="number"
                                 id="ci"
                                 placeholder="Ingrese cédula de identidad"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <validacioens :message="erroresrecepcion.ci" />
                         </div>
@@ -421,7 +428,7 @@ const cursosAbiertos = computed(() => {
                                 id="complemento_ci"
                                 placeholder="Ingresa el complemento (Opcional)"
                                 maxlength="5"
-                                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <datalist id="complementos">
                                 <option value="LP" />
@@ -440,6 +447,29 @@ const cursosAbiertos = computed(() => {
                         </div>
                     </div>
                 </div>
+                 <div
+                        class="w-full max-w-full px-3 shrink-0 md:w-6/12 md:flex-0"
+                    >
+                        <div class="mb-4">
+                            <label
+                                for="celular"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                            >
+                                Numero de celular
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+    v-model="form.celular"
+    type="text"
+    id="celular"
+    maxlength="8"
+    placeholder="Ingrese número de celular"
+    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+/>
+
+                            <validacioens :message="erroresrecepcion.celular" />
+                        </div>
+                    </div>
 
                 <hr
                     class="h-px mx-0 my-4 bg-transparent border-0 opacity-25 bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent"
@@ -467,12 +497,13 @@ const cursosAbiertos = computed(() => {
                                 v-model="form.distrito_id"
                                 :options="
                                     props.distritos.map((d) => ({
-                                        label: d.descripcion,
+                                        label: `${d.codigo} - ${d.descripcion}`,
                                         value: d.id_distrito,
                                     }))
                                 "
                                 placeholder="Buscar distrito"
                             />
+
                             <validacioens
                                 :message="erroresrecepcion.distrito_id"
                             />
@@ -539,7 +570,7 @@ const cursosAbiertos = computed(() => {
                             <select
                                 v-model="form.id_curso"
                                 id="id_curso"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             >
                                 <option disabled value="">
                                     Selecciona un curso
@@ -592,7 +623,7 @@ const cursosAbiertos = computed(() => {
                                 type="number"
                                 id="rda"
                                 placeholder="Ingrese número de RDA"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <validacioens :message="erroresrecepcion.rda" />
                         </div>
@@ -613,7 +644,7 @@ const cursosAbiertos = computed(() => {
                                 type="number"
                                 id="item"
                                 placeholder="Ingrese número de ítem"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <validacioens :message="erroresrecepcion.item" />
                         </div>
@@ -634,7 +665,7 @@ const cursosAbiertos = computed(() => {
                                 type="number"
                                 id="cargo"
                                 placeholder="Ingrese número de cargo"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <validacioens :message="erroresrecepcion.cargo" />
                         </div>
@@ -655,7 +686,7 @@ const cursosAbiertos = computed(() => {
                                 type="number"
                                 id="horas"
                                 placeholder="Ingrese número de horas"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <validacioens :message="erroresrecepcion.horas" />
                         </div>
@@ -696,3 +727,17 @@ const cursosAbiertos = computed(() => {
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+/* Para ocultar flechas en Chrome, Safari, Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Para ocultar flechas en Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+</style>

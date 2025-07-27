@@ -101,6 +101,7 @@ class Recepcion extends Controller
             'cargo' => $request->cargo,
             'horas' => $request->horas,
             'email' => $correo,
+             'celular' => $request->celular,
             'password' => bcrypt($request->ci),
             'estado' => 'activo'
         ])->assignRole('Estudiante');

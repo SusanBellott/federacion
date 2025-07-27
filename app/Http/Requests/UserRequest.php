@@ -76,6 +76,12 @@ class UserRequest extends FormRequest
             'cargo' => 'required|integer|min:20|max:9082',
             'horas' => 'required|integer|min:8|max:160',
             'email' => 'nullable|email|max:255',
+            'celular' => [
+    'nullable',
+    'regex:/^[67][0-9]{7}$/',
+    Rule::unique('users', 'celular')->ignore($userId),
+],
+
             'distrito_id' => 'required|exists:distritos,id_distrito',
             'codigo_sie_id' => 'required|exists:codigo_sies,id_codigo_sie',
             'institucion_id' => 'required|exists:instituciones,id_institucion',
@@ -120,6 +126,9 @@ class UserRequest extends FormRequest
             'email.required' => 'El campo correo electrónico es obligatorio.',
             'email.email' => 'El correo electrónico debe ser una dirección válida.',
             'email.unique' => 'Este correo electrónico ya está registrado. Por favor, ingrese otro.',
+
+            'celular.regex' => 'El número de celular debe tener 8 dígitos y comenzar con 6 o 7.',
+'celular.unique' => 'Este número de celular ya está registrado en el sistema.',
 
             'rda.required' => 'El campo RDA es obligatorio.',
             'rda.numeric' => 'El RDA debe ser un valor numérico.',

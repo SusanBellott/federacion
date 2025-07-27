@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\TipoActividad;
-use Illuminate\Http\Request;
+use App\Http\Requests\TipoActividadRequest;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-
+use Illuminate\Http\Request;
 class TipoActividades extends Controller
 {
     public function __construct()
@@ -37,7 +37,7 @@ class TipoActividades extends Controller
             });
         }
 
-        $tipos = $query->orderBy('id', 'asc')
+        $tipos = $query->orderBy('id', 'desc')
             ->paginate($perPage)
             ->withQueryString();
 
@@ -49,7 +49,7 @@ class TipoActividades extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(TipoActividadRequest $request)
     {
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:100',
@@ -57,16 +57,34 @@ class TipoActividades extends Controller
         ]);
 
         // Generar código incremental tipo AD-001
-        $ultimo = TipoActividad::orderBy('id', 'desc')->first();
-        $nuevoCodigo = 'AD-' . str_pad(($ultimo ? $ultimo->id + 1 : 1), 3, '0', STR_PAD_LEFT);
+$nombre = strtoupper(trim($validatedData['nombre']));
+$primera = substr($nombre, 0, 1);
+$ultima = substr($nombre, -1, 1);
+$prefijo = $primera . $ultima;
 
-        $tipo = TipoActividad::create([
-            'uuid_tipo_actividad' => Str::uuid(),
-            'codigo' => $nuevoCodigo,
-            'nombre' => $validatedData['nombre'],
-            'horas_minimas' => $validatedData['horas_minimas'],
-            'estado' => 'activo',
-        ]);
+// Obtener último código con ese prefijo y ordenarlo numéricamente
+$ultimo = TipoActividad::where('codigo', 'like', "$prefijo-%")
+    ->get()
+    ->sortByDesc(function ($item) use ($prefijo) {
+        return (int)substr($item->codigo, strlen($prefijo) + 1);
+    })
+    ->first();
+
+$nuevoNumero = $ultimo
+    ? ((int)substr($ultimo->codigo, strlen($prefijo) + 1)) + 1
+    : 1;
+
+$nuevoCodigo = $prefijo . '-' . str_pad($nuevoNumero, 3, '0', STR_PAD_LEFT);
+
+// Crear el tipo de actividad
+$tipo = TipoActividad::create([
+    'uuid_tipo_actividad' => Str::uuid(),
+    'codigo' => $nuevoCodigo,
+    'nombre' => $validatedData['nombre'],
+    'horas_minimas' => $validatedData['horas_minimas'],
+    'estado' => 'activo',
+]);
+
 
         return redirect()->back()->with([
             'success' => true,
@@ -78,7 +96,7 @@ class TipoActividades extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(TipoActividadRequest $request, $id)
     {
         $tipo = TipoActividad::findOrFail($id);
 
@@ -87,11 +105,40 @@ class TipoActividades extends Controller
             'horas_minimas' => 'required|integer|min:2',
         ]);
 
+           // Verificamos si el nombre cambió para actualizar el código
+    $nombreAnterior = strtoupper(trim($tipo->nombre));
+    $nombreNuevo = strtoupper(trim($validatedData['nombre']));
+
+    if ($nombreAnterior !== $nombreNuevo && strlen($nombreNuevo) >= 2) {
+        $primera = substr($nombreNuevo, 0, 1);
+        $ultima = substr($nombreNuevo, -1, 1);
+        $prefijo = $primera . $ultima;
+
+        // Buscar el último código que comienza con el nuevo prefijo (excluyendo el actual)
+        $ultimo = TipoActividad::where('codigo', 'like', "$prefijo-%")
+            ->where('id', '!=', $tipo->id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $nuevoNumero = $ultimo
+            ? ((int)substr($ultimo->codigo, strlen($prefijo) + 1)) + 1
+            : 1;
+
+        $nuevoCodigo = $prefijo . '-' . str_pad($nuevoNumero, 3, '0', STR_PAD_LEFT);
+
+        // Actualiza también el código
+        $tipo->update([
+            'nombre' => $validatedData['nombre'],
+            'horas_minimas' => $validatedData['horas_minimas'],
+            'codigo' => $nuevoCodigo,
+        ]);
+    } else {
+
         $tipo->update([
             'nombre' => $validatedData['nombre'],
             'horas_minimas' => $validatedData['horas_minimas'],
         ]);
-
+    }
         return redirect()->back()->with([
             'success' => true,
             'datos_array' => [

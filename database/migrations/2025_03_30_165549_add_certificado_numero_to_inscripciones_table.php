@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::table('inscripcions', function (Blueprint $table) {  // ← plural en inglés
             $table->unsignedInteger('certificado_numero')
-                  ->nullable()
-                  ->after('uuid_inscripcion');
+                ->nullable()
+                ->after('uuid_inscripcion');
         });
     }
-    
+
     public function down(): void
     {
         Schema::table('inscripcions', function (Blueprint $table) {
             $table->dropColumn('certificado_numero');
         });
     }
-    
 };

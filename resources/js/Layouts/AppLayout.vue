@@ -69,7 +69,9 @@ const logout = () => {
                             >
                                 <NavLink
                                     :href="route('recepciones.index')"
-                                    :active="route().current('recepciones.index')"
+                                    :active="
+                                        route().current('recepciones.index')
+                                    "
                                 >
                                     recepcion
                                 </NavLink>
@@ -121,12 +123,13 @@ const logout = () => {
                             >
                                 <NavLink
                                     :href="route('estudiantes.index')"
-                                    :active="route().current('estudiantes.index')"
+                                    :active="
+                                        route().current('estudiantes.index')
+                                    "
                                 >
                                     Mis Actividades
                                 </NavLink>
                             </div>
-                            
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">

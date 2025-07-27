@@ -11,45 +11,54 @@
         <div class="flex-none w-full max-w-full px-3">
             <h6 class="text-gray-800 dark:text-white">Instituciones</h6>
             <div
-                class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
+                <!-- Encabezado de Buscar Mostrar y agregar nueva institucion -->
                 <div
-                    class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center"
+                    class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent"
                 >
-                    <div class="flex items-center space-x-4">
-                        <div class="relative">
+                    <div
+                        class="flex flex-col lg:flex-row lg:items-center lg:gap-4 w-full"
+                    >
+                        <!-- Buscador ocupa todo el espacio en desktop -->
+                        <div class="flex-1">
                             <BuscadorInstituciones
                                 :filters="filters"
                                 ruta="instituciones.index"
                             />
                         </div>
-                    </div>
 
-                    <button
-                        v-if="
-                            $page.props.permissions.includes(
-                                'instituciones.create'
-                            )
-                        "
-                        class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
-                        @click="handleClick"
-                    >
-                        <span class="flex items-center justify-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-5 w-5 mr-2"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
+                        <!-- Botón agregar -->
+                        <div
+                            class="mt-4 lg:mt-0 flex justify-end lg:justify-start"
+                        >
+                            <button
+                                v-if="
+                                    $page.props.permissions.includes(
+                                        'instituciones.create'
+                                    )
+                                "
+                                class="w-full sm:w-auto lg:w-fit inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm sm:text-base rounded-lg shadow-lg hover:shadow-xl dark:shadow-blue-900/25 dark:hover:shadow-blue-900/40 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800 active:scale-95"
+                                @click="handleClick"
                             >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
-                            Agregar Nueva Institución
-                        </span>
-                    </button>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 mr-2"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                <span class="whitespace-nowrap"
+                                    >Agregar Nueva Institución</span
+                                >
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Alerts & Notifications -->
@@ -59,7 +68,7 @@
                     </div>
                     <editaralerta title="¡Registro editado correctamente!" />
                 </div>
-
+                <!-- Tabla de instituciones -->
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
                         <table
@@ -317,7 +326,7 @@
             </div>
         </div>
 
-        <!-- Modal with Form -->
+        <!-- Modal del formulario de instituciones -->
         <Modal :show="showModal" @close="closeModal" max-width="2xl">
             <form @submit.prevent="submitForm">
                 <div class="p-6">
@@ -332,7 +341,6 @@
                     </h2>
 
                     <div class="space-y-4">
-                        <!-- Campo Distrito -->
                         <!-- Campo Distrito -->
                         <div>
                             <label
@@ -353,7 +361,6 @@
                         </div>
 
                         <!-- Campo Unidad Educativa (Nuevo) -->
-
                         <div>
                             <label
                                 class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
@@ -362,8 +369,7 @@
                             </label>
                             <select
                                 v-model="form.subsistema"
-                                required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             >
                                 <option value="">
                                     Seleccione un subsistema
@@ -393,10 +399,10 @@
                             <input
                                 v-model="form.servicio"
                                 type="number"
-                                required
                                 placeholder="Ingrese número de servicio"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
+
                             <validacioens
                                 :message="erroresinstitucion?.value?.servicio"
                             />
@@ -413,15 +419,13 @@
                             <input
                                 v-model="form.servicio_generado"
                                 type="number"
-                                required
                                 disabled
                                 placeholder="Número de servicio generado"
-                                class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                         </div>
 
                         <!-- Campo Nivel -->
-                        <!-- Campo Nivel (Select) -->
                         <div>
                             <label
                                 class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
@@ -430,8 +434,7 @@
                             </label>
                             <select
                                 v-model="form.nivel"
-                                required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             >
                                 <option value="">Seleccione un nivel</option>
                                 <option value="ALTERNATIVA">ALTERNATIVA</option>
@@ -446,10 +449,6 @@
                                 :message="erroresinstitucion?.value?.nivel"
                             />
                         </div>
-
-                        <!-- Campo Programa -->
-
-                        <!-- Campo Unidad Educativa -->
                     </div>
 
                     <div class="mt-6 flex justify-end space-x-3">
@@ -464,9 +463,7 @@
                             type="submit"
                             class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200"
                         >
-                            {{
-                                id_institucion ? "Actualizar" : "Guardar"
-                            }}
+                            {{ id_institucion ? "Actualizar" : "Guardar" }}
                             Institución
                         </button>
                     </div>
@@ -474,6 +471,7 @@
             </form>
         </Modal>
 
+        <!-- Boton de Eliminacion -->
         <ConfirmDelete
             ref="deleteDialog"
             :method="'patch'"
@@ -651,3 +649,17 @@ watch(flash, (nuevoFlash) => {
     }
 });
 </script>
+
+<style scoped>
+/* Para ocultar flechas en Chrome, Safari, Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Para ocultar flechas en Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+</style>

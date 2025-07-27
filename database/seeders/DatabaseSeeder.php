@@ -28,24 +28,24 @@ class DatabaseSeeder extends Seeder
             'estado' => 'activo',
         ]);
 
-            // Ahora que ya existen, crea la Institución correctamente
-    $institucion = Institucion::create([
-        'id_distrito' => $distrito->id_distrito,
-        'servicio' => 987654,
-        'servicio_generado' => 1,
-        'subsistema' => 'Educación Regular',
-        'nivel' => 'Secundaria',
-        'estado' => 'activo',
-    ]);
+        // Ahora que ya existen, crea la Institución correctamente
+        $institucion = Institucion::create([
+            'id_distrito' => $distrito->id_distrito,
+            'servicio' => 987654,
+            'servicio_generado' => 1,
+            'subsistema' => 'Educación Regular',
+            'nivel' => 'Secundaria',
+            'estado' => 'activo',
+        ]);
 
-            // Crear Código SIE después (necesita distrito)
-    $codigoSie = CodigoSie::create([
-        'programa' => 456789,
-        'unidad_educativa' => 'Unidad Educativa Ejemplo',
-        'estado' => 'activo',
-        'distrito_id' => $distrito->id_distrito,
-        'institucion_id' => $institucion->id_institucion,
-    ]);
+        // Crear Código SIE después (necesita distrito)
+        $codigoSie = CodigoSie::create([
+            'programa' => 456789,
+            'unidad_educativa' => 'Unidad Educativa Ejemplo',
+            'estado' => 'activo',
+            'distrito_id' => $distrito->id_distrito,
+            'institucion_id' => $institucion->id_institucion,
+        ]);
 
 
 
@@ -62,6 +62,7 @@ class DatabaseSeeder extends Seeder
             'cargo' => 5,
             'horas' => 40,
             'email' => 'admin@admin.com',
+            'celular' => 78869501,
             'password' => bcrypt('admin'),
             'estado' => 'activo',
             'distrito_id' => $distrito->id_distrito,
@@ -69,6 +70,4 @@ class DatabaseSeeder extends Seeder
             'codigo_sie_id' => $codigoSie->id_codigo_sie,
         ])->assignRole('Administrador');
     }
-    
 }
-    

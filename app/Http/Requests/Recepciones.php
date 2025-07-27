@@ -62,6 +62,9 @@ class Recepciones extends FormRequest
                 },
             ],
 
+           'celular' => 'nullable|regex:/^[67][0-9]{7}$/',
+
+
             'name' => 'required|regex:/^[\pLÁÉÍÓÚáéíóúÑñ]+$/u|max:30',
             'name2' => 'nullable|regex:/^[\pLÁÉÍÓÚáéíóúÑñ]+$/u|max:30',
             'primer_apellido' => 'nullable|regex:/^[\pLÁÉÍÓÚáéíóúÑñ]+$/u|max:30',
@@ -107,6 +110,10 @@ class Recepciones extends FormRequest
             'name2.regex' => 'El nombre solo puede contener letras sin espacios ni caracteres especiales.',
             'primer_apellido.regex' => 'El apellido paterno solo puede contener letras sin espacios ni caracteres especiales.',
             'segundo_apellido.regex' => 'El apellido materno solo puede contener letras sin espacios ni caracteres especiales.',
+
+            'celular.regex' => 'El número de celular debe tener 8 dígitos y comenzar con 6 o 7.',
+'celular.unique' => 'Este número de celular ya está registrado en el sistema.',
+
 
             'email.required' => 'El campo correo electrónico es obligatorio.',
             'email.email' => 'El correo electrónico debe ser una dirección válida.',

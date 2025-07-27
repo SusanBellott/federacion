@@ -13,10 +13,10 @@ class Imagencertificado extends Model
     protected $primaryKey = 'id_imgcer';
     public $incrementing = true;
     protected $keyType = 'int';
-    protected $fillable = [ 'id_curso', 'uuid_imgcer', 'imagenescer','descripcion', 'estado'];
+    protected $fillable = ['id_curso', 'uuid_imgcer', 'imagenescer', 'descripcion', 'estado'];
 
     public function curso()
     {
-        return $this->belongsTo(Curso::class, 'id_curso','id_imgcer');
+        return $this->belongsTo(Curso::class, 'id_curso', 'id_imgcer');
     }
 }

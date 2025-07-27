@@ -52,17 +52,28 @@ class UserController extends Controller
                     ->orWhere('ci', 'like', "%{$searchTerm}%")
                     ->orWhere('email', 'like', "%{$searchTerm}%")
                     ->orWhere('name', 'like', "%{$searchTerm}%")
-                    ->orWhere('primer_apellido', 'like', "%{$searchTerm}%");
+                    ->orWhere('primer_apellido', 'like', "%{$searchTerm}%")
+                    ->orWhereRaw("CONCAT(name, ' ', primer_apellido, ' ', segundo_apellido) ILIKE ?", ["%{$searchTerm}%"])
+                    ->orWhere('rda', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('distrito', function ($dq) use ($searchTerm) {
+                        $dq->where('descripcion', 'like', "%{$searchTerm}%");
+                    })
+                    ->orWhereHas('institucion', function ($iq) use ($searchTerm) {
+                        $iq->where('nivel', 'like', "%{$searchTerm}%");
+                    })
+                    ->orWhereHas('codigoSie', function ($cq) use ($searchTerm) {
+                        $cq->where('unidad_educativa', 'like', "%{$searchTerm}%");
+                    });
             });
         }
 
         return Inertia::render('User', [
             'usuarios' => $query->paginate($perPage),
-            'distritos' => Distrito::select('id_distrito', 'descripcion')->get(),
+            'distritos' => Distrito::select('id_distrito', 'codigo', 'descripcion')->get(),
             'instituciones' => Institucion::select('id_institucion', 'nivel')->get(),
             'codigosSie' => CodigoSie::select('id_codigo_sie', 'unidad_educativa')->get(),
 
-            'roles' => Role::orderBy('id', 'ASC')->get(),
+            'roles' => Role::orderBy('id', 'desc')->get(),
             'filters' => [
                 'search' => $searchTerm,
                 'perPage' => $perPage
@@ -124,7 +135,6 @@ class UserController extends Controller
             ->with('success', 'Usuario actualizado correctamente')
             ->with('datos_array', [$validated]);
     }
-
 
     /**
      * Actualiza el estado de un usuario (activo, inactivo o eliminado).

@@ -1,4 +1,5 @@
 <template>
+ <!-- 
   <div>
     <a @click.stop="toggleSettings"
       class="fixed px-4 py-2 text-xl bg-white shadow-lg cursor-pointer bottom-8 right-8 z-990 rounded-circle text-slate-700">
@@ -11,10 +12,12 @@
       ref="settingsPanel"
     >
     <div class="px-6 pt-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
-  <div class="float-left">
+  
+      <div class="float-left">
     <h5 class="mt-4 mb-0 dark:text-white text-slate-800">Configurar Tema de panel</h5>
     <p class="dark:text-white text-slate-800 dark:opacity-80 opacity-80">Active la opcion</p>
   </div>
+
   <div class="float-right mt-6">
     <button @click.stop="toggleSettings"
       class="inline-block p-0 mb-4 text-sm font-bold leading-normal text-center uppercase align-middle transition-all ease-in bg-transparent border-0 rounded-lg shadow-none cursor-pointer hover:-translate-y-px tracking-tight-rem bg-150 bg-x-25 active:opacity-85 dark:text-white text-slate-800">
@@ -28,7 +31,8 @@
       <div class="flex-auto p-6 pt-0 overflow-auto sm:pt-4">
 
 
-        <!-- Dark Mode Toggle -->
+     
+         
         <hr
           class="h-px my-6 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
           <div class="flex mt-2 mb-12">
@@ -42,14 +46,14 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 
 const isOpen = ref(false);
-const darkMode = ref(false);
+const darkMode = ref(true);
 const navbarFixed = ref(true);
 const sidenavType = ref('white');
 const currentSidebarColor = ref('blue');

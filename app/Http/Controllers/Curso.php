@@ -67,7 +67,9 @@ class Curso extends Controller
         $cursos = $query->with([
             'tipoActividad:id,codigo,nombre',
             'imagencertificados'
-        ])->paginate($perPage);
+        ])->withCount('inscritosActivos as inscritos_count')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
 
         $cursos->getCollection()->transform(function ($curso) {
             $fecha_actual = Carbon::now();
@@ -93,9 +95,6 @@ class Curso extends Controller
             return $curso;
         });
 
-
-
-
         $uuidEnEdicion = $request->query('edit');
         $cursoEditando = null;
 
@@ -106,8 +105,6 @@ class Curso extends Controller
         }
 
         $tipos = TipoActividad::orderBy('codigo')->get();
-
-
 
         return Inertia::render('Cursos', [
             'cursos' => $cursos,
@@ -211,7 +208,6 @@ class Curso extends Controller
 
         return "$codigoBase-V$siguienteVersion";
     }
-
 
     /**
      * Almacena múltiples imágenes de certificado asociadas a un curso específico.

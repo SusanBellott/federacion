@@ -1,6 +1,6 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue'; // Añadido onMounted
+import { Head, Link, useForm } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue"; // Añadido onMounted
 import { driver } from "driver.js"; // Importamos driver.js
 import "driver.js/dist/driver.css"; // Importamos los estilos de driver.js
 
@@ -10,8 +10,9 @@ defineProps({
 });
 
 const form = useForm({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
+      captcha: '',
     remember: false,
 });
 
@@ -20,65 +21,85 @@ const showPassword = ref(false);
 // Estado para controlar si el tour ya se ha mostrado
 const tourShown = ref(false);
 
+const captchaLoaded = ref(true) // controlamos el estado de carga
+// Captcha
+const captchaSrc = ref('/captcha?' + Date.now());
+
+const reloadCaptcha = () => {
+      captchaLoaded.value = false
+  captchaSrc.value = '/custom-captcha?' + Date.now();
+
+};
+
+
+
 const submit = () => {
-    form.transform(data => ({
+    form.transform((data) => ({
         ...data,
-        remember: form.remember ? 'on' : '',
+        remember: form.remember ? "on" : "",
     })).post(route('login'), {
-        onFinish: () => form.reset('password'),
+    onFinish: () => form.reset('password'),
+    onError: () => {
+  reloadCaptcha();
+  form.captcha = '';
+},
     });
 };
 
 // Configuración del tour con Driver.js
 const startTour = () => {
     if (tourShown.value) return;
-    
+
     const driverObj = driver({
         showProgress: true,
         animate: true,
         stagePadding: 10,
-        showButtons: ['next', 'previous', 'close'],
+        showButtons: ["next", "previous", "close"],
         steps: [
             {
-                element: '#login-form',
+                element: "#login-form",
                 popover: {
-                    title: 'Bienvenido al Sistema de Certificación de la Federación Departamental de Trabajadores de Educación Urbana de La Paz (F.D.T.E.U.L.P.)',
-                    description: ' Para ingresar al sistema, por favor sigue los siguientes pasos:',
-                    side: 'bottom',
-                    align: 'center'
-                }
+                    title: "Bienvenido al Sistema de Certificación de la Federación Departamental de Trabajadores de Educación Urbana de La Paz (F.D.T.E.U.L.P.)",
+                    description:
+                        " Para ingresar al sistema, por favor sigue los siguientes pasos:",
+                    side: "bottom",
+                    align: "center",
+                },
             },
             {
-                element: '#email',
+                element: "#email",
                 popover: {
-                    title: 'Correo electrónico institucional',
-                    description: 'Ingresa el correo electrónico institucional asignado. Por ejemplo: Federacion_RDA@fdteulp.com. F_0036054@fdteulp.com',
-                    side: 'bottom',
-                    align: 'start'
-                }
+                    title: "Correo electrónico institucional",
+                    description:
+                        "Ingresa el correo electrónico institucional asignado. Por ejemplo: Federacion_RDA@fdteulp.com. F_0036054@fdteulp.com",
+                    side: "bottom",
+                    align: "start",
+                },
             },
             {
-                element: '#password',
+                element: "#password",
                 popover: {
-                    title: 'Contraseña',
-                    description: 'Ingresa tu contraseña, que corresponde a tu número de carnet de identidad. Puedes mostrar u ocultar la contraseña haciendo clic en el ícono del ojo.',
-                    side: 'bottom',
-                    align: 'start'
-                }
+                    title: "Contraseña",
+                    description:
+                        "Ingresa tu contraseña, que corresponde a tu número de carnet de identidad. Puedes mostrar u ocultar la contraseña haciendo clic en el ícono del ojo.",
+                    side: "bottom",
+                    align: "start",
+                },
             },
-            
+
             {
-                element: '#submitButton',
+                element: "#submitButton",
                 popover: {
-                    title: 'Iniciar sesión',
-                    description: 'Haz clic para ingresar al sistema con tus credenciales',
-                    side: 'top',
-                    align: 'center'
-                }
-            }
-        ]
+                    title: "Iniciar sesión",
+                    description:
+                        "Haz clic para ingresar al sistema con tus credenciales",
+                    side: "top",
+                    align: "center",
+                },
+            },
+        ],
     });
-    
+
     driverObj.drive();
     tourShown.value = true;
 };
@@ -91,133 +112,269 @@ const restartTour = () => {
 
 // Iniciar el tour automáticamente cuando se monte el componente
 onMounted(() => {
+     reloadCaptcha();
     // Pequeño retraso para asegurar que todos los elementos estén renderizados
-   setTimeout(() => {
+    setTimeout(() => {
         //startTour();
     }, 500);
 });
 </script>
 
 <template>
-  <Head title="Sign In" />
-  
-  <section class="min-h-screen 
-  bg-gradient-to-b from-gray-700 to-gray-800
-         text-gray-900 dark:text-gray-100" >
-    <div class="relative flex items-center min-h-screen p-0 overflow-hidden bg-center bg-cover">
-      <div class="container z-1">
-        <div class="flex flex-wrap -mx-3">
-          <!-- Form Column -->
-          <div class="flex flex-col w-full max-w-full px-3 mx-auto lg:mx-0 shrink-0
-            md:flex-0 md:w-7/12 lg:w-5/12 xl:w-4/12">
-            <div class="relative flex flex-col min-w-0 break-words 
-            bg-transparent 
-            border-[3px] border-[#b03a48] dark:border-[#a7363e]
-            shadow-md p-6 rounded-2xl backdrop-blur-sm">
+    <Head title="Sign In" />
 
+    <section
+        class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white relative overflow-hidden"
+    >
+        <!-- Elementos decorativos de fondo -->
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2260%22%20height=%2260%22%20viewBox=%220%200%2060%2060%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill=%22none%22%20fill-rule=%22evenodd%22%3E%3Cg%20fill=%22%23ffffff%22%20fill-opacity=%220.03%22%3E%3Cpath%20d=%22M30%2030c0-11.046-8.954-20-20-20s-20%208.954-20%2020%208.954%2020%2020%2020%2020-8.954%2020-20zm0%200c0%2011.046%208.954%2020%2020%2020s20-8.954%2020-20-8.954-20-20-20-20%208.954-20%2020z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
 
+        
+        <!-- Círculos decorativos -->
+        <div class="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
 
+        <!-- Contenedor principal centrado -->
+ <div class="relative flex items-center justify-center p-6 min-h-[600px]">
 
+            <div class="w-full max-w-md mx-auto">
+                <!-- Formulario de login centrado -->
+                <div class="relative flex flex-col min-w-0 break-words bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl p-6 rounded-3xl">
+                    <div class="pb-4 mb-4 border-b border-white/10">
+                        <!-- Bloque del logo (arriba del título) -->
+                        <div class="flex justify-center items-center gap-10 mb-2">
+                            <img
+                                src="/assets/img/logo_instituto.png"
+                                alt="Logo"
+                                class="h-20"
+                            />
+                        </div>
 
-    <div class="p-6 pb-0 mb-0">
-      <!-- Título claro y un poco más grande -->
-      <h4 class="font-bold text-2xl text-gray-300">
-        Bienvenidos al sistema de Emisión de Certificados
-      </h4>
-      <!-- Párrafo de subtítulo en gris más suave -->
-      <p class="mb-4 text-gray-300">
-        Introduce tu email y contraseña para iniciar sesión
-      </p>
-                <!-- Tour Button -->
-                <button 
-                  @click="restartTour" 
-                  class="mt-2 px-3 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-                >
-                  Ver tutorial
-                </button>
-                
-                <!-- Status Message -->
-                <div v-if="status" class="mt-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">
-                  {{ status }}
+                        <!-- Título del formulario -->
+                        <h4 class="font-bold text-xl text-white text-center mb-4">
+                            <span class="inline-flex items-center gap-2">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                Inicio de sesión
+                            </span>
+                        </h4>
+
+                        <!-- Tour Button reducido -->
+                        <div class="text-center">
+                            <button
+                                @click="restartTour"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-full hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transform hover:scale-105 transition-all duration-200 shadow-md"
+                            >
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Ver tutorial
+                            </button>
+                        </div>
+
+                        <!-- Status Message mejorado -->
+                        <div
+                            v-if="status"
+                            class="mt-4 p-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 text-green-300 rounded-xl text-sm backdrop-blur-sm"
+                        >
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                {{ status }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-auto">
+                        <form
+                            id="login-form"
+                            role="form"
+                            @submit.prevent="submit"
+                            class="space-y-4"
+                        >
+                            <!-- Email Field mejorado -->
+                            <div class="group">
+                                <label for="email" class="block mb-2 text-sm font-semibold text-gray-200">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        </svg>
+                                        Introduce tu correo institucional
+                                    </span>
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        id="email"
+                                        v-model="form.email"
+                                        type="email"
+                                        placeholder="F_0006050@fdteulp.com"
+                                        required
+                                        autofocus
+                                        autocomplete="username"
+                                        class="w-full px-4 py-2.5 text-white placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 hover:bg-white/15"
+                                        :class="{
+                                            'border-red-500 focus:ring-red-500/50': form.errors.email,
+                                        }"
+                                    />
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                        <i class="fi fi-sr-at text-blue-400 text-lg"></i>
+                                    </div>
+                                </div>
+                                <p
+                                    v-if="form.errors.email"
+                                    class="mt-1 text-sm text-red-400 flex items-center gap-1"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    {{ form.errors.email }}
+                                </p>
+                            </div>
+
+                            <!-- Password Field mejorado -->
+                            <div class="group">
+                                <label for="password" class="block mb-2 text-sm font-semibold text-gray-200">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                        </svg>
+                                        Introduce tu contraseña
+                                    </span>
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        id="password"
+                                        v-model="form.password"
+                                        :type="showPassword ? 'text' : 'password'"
+                                        placeholder="Ingrese número de carnet"
+                                        required
+                                        autocomplete="current-password"
+                                        class="w-full px-4 py-2.5 pr-12 text-white placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-200 hover:bg-white/15"
+                                        :class="{
+                                            'border-red-500 focus:ring-red-500/50': form.errors.password,
+                                        }"
+                                    />
+                                    <!-- Botón con íconos Flaticon -->
+                                    <button
+                                        type="button"
+                                        @click="showPassword = !showPassword"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
+                                    >
+                                        <i
+                                            :class="showPassword 
+                                                ? 'fi fi-sr-eye text-blue-400 text-lg' 
+                                                : 'fi fi-sr-eye-crossed text-blue-400 text-lg'"
+                                        ></i>
+                                    </button>
+                                </div>
+                                <p
+                                    v-if="form.errors.password"
+                                    class="mt-1 text-sm text-red-400 flex items-center gap-1"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    {{ form.errors.password }}
+                                </p>
+                            </div>
+
+                            <!-- Remember Me checkbox mejorado -->
+                            <div class="flex items-center group">
+                                <div class="relative">
+                                    <input 
+                                        v-model="form.remember" 
+                                        type="checkbox" 
+                                        id="remember" 
+                                        class="w-4 h-4 text-blue-500 bg-white/10 border-white/20 rounded focus:ring-blue-500/50 focus:ring-2 transition-all duration-200"
+                                    />
+                                </div>
+                                <label for="remember" class="ml-3 text-sm text-gray-200 cursor-pointer group-hover:text-white transition-colors duration-200">
+                                    Recuérdame
+                                </label>
+                            </div>
+
+                            <!-- Captcha section mejorada -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-gray-200">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-6l-3 3m-3-3l3 3m-3-3v6"/>
+                                        </svg>
+                                        Verificación de seguridad
+                                    </span>
+                                </label>
+                                
+                                <div class="flex items-center gap-3">
+                                    <div class="bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl p-2 flex items-center justify-center overflow-hidden shadow-lg">
+                                        <img 
+                                            :src="captchaSrc" 
+                                            alt="captcha"  
+                                            class="w-[120px] h-[35px] object-contain transition-opacity duration-200" 
+                                            @load="captchaLoaded = true" 
+                                            @error="captchaLoaded = false"  
+                                        />
+                                    </div>
+                                    
+                                    <button
+                                        type="button"
+                                        @click="reloadCaptcha"
+                                        class="p-2 w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                                    >
+                                        <i class="fi fi-sr-refresh text-white text-sm"></i>
+                                    </button>
+                                </div>
+
+                                <input
+                                    v-model="form.captcha"
+                                    type="text"
+                                    maxlength="6"
+                                    placeholder="Ingrese el código"
+                                    autocomplete="off"
+                                    class="w-full px-4 py-2.5 text-white placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-200 hover:bg-white/15"
+                                    @input="form.captcha = form.captcha.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6)"
+                                />
+                                
+                                <p 
+                                    v-if="form.errors.captcha" 
+                                    class="text-sm text-red-400 flex items-center gap-1"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    {{ form.errors.captcha }}
+                                </p>
+                            </div>
+
+                            <!-- Submit Button mejorado -->
+                            <div class="pt-2">
+                                <button
+                                    id="submitButton"
+                                    type="submit"
+                                    class="w-full py-2 px-2 font-bold text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transform hover:scale-[1.02] transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                    :disabled="form.processing"
+                                >
+                                    <span v-if="form.processing" class="flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                        </svg>
+                                        Iniciando sesión...
+                                    </span>
+                                    <span v-else class="flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3-3H6a3 3 0 01-3 3v1"/>
+                                        </svg>
+                                        Iniciar sesión
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-              </div>
-              
-              <div class="flex-auto p-6">
-                <form id="login-form" role="form" @submit.prevent="submit">
-                  <!-- Email Field -->
-                  <div class="mb-4">
-                    <input 
-                      id="email"
-                      v-model="form.email"
-                      type="email" 
-                      placeholder="F_0006050@fdteulp.com" 
-                      required
-                      autofocus
-                      autocomplete="username"
-                      class="focus:shadow-primary-outline  dark:bg-gray-950  placeholder-gray-500 dark:placeholder-gray-400 text-gray-700 dark:text-gray-200 text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding p-3 font-normal outline-none transition-all focus:border-fuchsia-300 focus:outline-none"
-                      :class="{ 'border-red-500': form.errors.email }"
-                    />
-                    <p v-if="form.errors.email" class="mt-1 text-xs text-red-500">{{ form.errors.email }}</p>
-                  </div>
-                  
-                  <!-- Password Field -->
-                  <div class="mb-4 relative">
-                    <input 
-                      id="password"
-                      v-model="form.password"
-                      :type="showPassword ? 'text' : 'password'" 
-                      placeholder="Ingrese número de carnet" 
-                      required
-                      autocomplete="current-password"
-                      class="focus:shadow-primary-outline dark:bg-gray-950 placeholder-gray-500 dark:placeholder-gray-400  text-gray-700    dark:text-gray-200 text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding p-3 font-normal outline-none transition-all focus:border-fuchsia-300 focus:outline-none"
-                      :class="{ 'border-red-500': form.errors.password }"
-                    />
-                    <button
-                      type="button"
-                      @click="showPassword = !showPassword"
-                      class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
-                    >
-                      <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                      </svg>
-                    </button>
-                    <p v-if="form.errors.password" class="mt-1 text-xs text-red-500">{{ form.errors.password }}</p>
-                  </div>
-              
-                  
-                  <!-- Submit Button -->
-                  <div class="text-center">
-                    <button 
-                      id="submitButton"
-                      type="submit" 
-                      class="inline-block w-full px-16 py-3.5 mt-6 mb-0 font-bold leading-normal text-center text-white align-middle transition-all bg-blue-500 border-0 rounded-lg cursor-pointer hover:-translate-y-px active:opacity-85 hover:shadow-xs text-sm ease-in tracking-tight-rem shadow-md bg-150 bg-x-25"
-                      :disabled="form.processing"
-                      :class="{ 'opacity-70': form.processing }"
-                    >
-                      <span v-if="form.processing">Iniciando sesión...</span>
-                      <span v-else>Iniciar sesión</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-
             </div>
-          </div>
-          
-          <!-- Right Side Image Column -->
-          <div class="absolute top-0 right-0 flex-col justify-center hidden w-6/12 h-full max-w-full px-3 pr-0 my-auto text-center flex-0 lg:flex">
-            <div 
-              class="relative flex flex-col justify-center h-full bg-cover px-24 m-4 overflow-hidden bg-[url('/assets/img/logo-login.png')] rounded-xl"
-            >
-              <span class="absolute top-0 left-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-blue-500 to-violet-500 opacity-20"></span>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 </template>

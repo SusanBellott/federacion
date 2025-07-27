@@ -22,7 +22,7 @@ class Distrito extends Model
         'updated_at',
         'deleted_at',
     ];
-    
+
     protected static function boot()
     {
         parent::boot();
@@ -32,19 +32,18 @@ class Distrito extends Model
         });
     }
     public function instituciones()
-{
-    return $this->hasMany(Institucion::class, 'distrito_id', 'id_distrito');
-}
-    
-public function codigosSie()
-{
-    return $this->hasMany(CodigoSie::class); // Laravel usará distrito_id automáticamente
-}
+    {
+        return $this->hasMany(Institucion::class, 'distrito_id', 'id_distrito');
+    }
 
-    
+    public function codigosSie()
+    {
+        return $this->hasMany(CodigoSie::class); // Laravel usará distrito_id automáticamente
+    }
+
+
     public function users()
     {
         return $this->hasMany(User::class, 'distrito_id', 'id_distrito');
     }
-    
 }

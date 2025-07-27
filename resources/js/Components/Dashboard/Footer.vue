@@ -10,8 +10,7 @@
         <footer class="pt-4 bg-transparent mb-[1cm]">
             <div class="w-full px-6 mx-auto">
                 <div class="text-sm text-center text-slate-500">
-                    © Federación de Trabajadores de Educación Urbana La Paz
-                    {{ currentYear }} | FDTEULP – Web Developer Tahere Susan
+                    © {{ currentYear }} | F.D.T.E.U.L.P. – Web Developer - Tahere Susan
                     Bellott Huaranca – Todos los Derechos Reservados
                 </div>
             </div>

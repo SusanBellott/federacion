@@ -1,7 +1,8 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 
-defineProps({
+const props = defineProps({
     pagination: {
         type: Object,
         required: true,
@@ -9,15 +10,103 @@ defineProps({
     },
     filters: {
         type: Object,
-        default: () => ({}), 
+        default: () => ({}),
     },
+});
+
+// Reactive screen width
+const screenWidth = ref(window.innerWidth);
+
+const updateScreenWidth = () => {
+    screenWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+    window.addEventListener('resize', updateScreenWidth);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', updateScreenWidth);
+});
+
+// Función para generar links inteligentes según el tamaño de pantalla
+const getVisiblePages = computed(() => {
+    const links = props.pagination.links;
+    if (!links || links.length <= 3) return links.slice(1, -1);
+    
+    const pageLinks = links.slice(1, -1); // Excluir prev/next
+    const currentPageIndex = pageLinks.findIndex(link => link.active);
+    
+    // Responsive: mostrar menos páginas en pantallas pequeñas
+    let maxVisible;
+    if (screenWidth.value < 360) {
+        maxVisible = 1; // Solo página actual en pantallas muy pequeñas
+    } else if (screenWidth.value < 480) {
+        maxVisible = 2; // 2 páginas en móviles pequeños
+    } else if (screenWidth.value < 640) {
+        maxVisible = 3; // 3 páginas en móviles
+    } else {
+        maxVisible = 5; // 5 páginas en desktop
+    }
+    
+    if (pageLinks.length <= maxVisible) {
+        return pageLinks;
+    }
+    
+    const start = Math.max(0, Math.min(
+        currentPageIndex - Math.floor(maxVisible / 2),
+        pageLinks.length - maxVisible
+    ));
+    
+    const visiblePages = pageLinks.slice(start, start + maxVisible);
+    
+    // Para pantallas muy pequeñas, solo mostrar la página actual
+    if (screenWidth.value < 360) {
+        return pageLinks.filter(link => link.active);
+    }
+    
+    // Agregar puntos suspensivos y primera/última página si es necesario
+    const result = [];
+    
+    if (start > 0) {
+        result.push(pageLinks[0]);
+        if (start > 1) {
+            result.push({ label: '...', url: null, active: false });
+        }
+    }
+    
+    result.push(...visiblePages);
+    
+    if (start + maxVisible < pageLinks.length) {
+        if (start + maxVisible < pageLinks.length - 1) {
+            result.push({ label: '...', url: null, active: false });
+        }
+        result.push(pageLinks[pageLinks.length - 1]);
+    }
+    
+    return result;
+});
+
+// Computed para obtener información de la página actual
+const currentPageInfo = computed(() => {
+    const links = props.pagination.links;
+    if (!links) return null;
+    
+    const pageLinks = links.slice(1, -1);
+    const currentPage = pageLinks.find(link => link.active);
+    const totalPages = pageLinks.length;
+    
+    return {
+        current: currentPage ? currentPage.label : '1',
+        total: totalPages
+    };
 });
 </script>
 
 <template>
     <div
         v-if="pagination?.links?.length > 3"
-        class="flex items-center justify-center mt-6 space-x-1"
+        class="flex justify-center items-center mt-4 sm:mt-6 gap-1 px-2 py-1"
     >
         <!-- Botón Atrás -->
         <template v-if="pagination.links[0].url">
@@ -27,11 +116,11 @@ defineProps({
                 preserve-scroll
                 preserve-state
                 replace
-                class="px-3 py-1 bg-gradient-to-r from-blue-800 to-sky-600 text-white rounded-lg hover:from-blue-700 hover:to-sky-500 transition-colors flex items-center"
+                class="group flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-1"
+                    class="h-4 w-4 sm:h-5 sm:w-5 group-hover:-translate-x-0.5 transition-transform duration-200"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                 >
@@ -45,11 +134,11 @@ defineProps({
         </template>
         <span
             v-else
-            class="px-3 py-1 bg-gray-300 text-gray-500 rounded-lg flex items-center cursor-not-allowed"
+            class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 text-gray-400 rounded-lg cursor-not-allowed shadow-sm"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 mr-1"
+                class="h-4 w-4 sm:h-5 sm:w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
             >
@@ -61,48 +150,56 @@ defineProps({
             </svg>
         </span>
 
-        <!-- Números de página -->
-        <template v-for="(link, index) in pagination.links" :key="index">
-            <Link
-                v-if="
-                    index > 0 && index < pagination.links.length - 1 && link.url
-                "
-                :href="link.url"
-                 :data="filters"
-                preserve-scroll
-                preserve-state
-                replace
-                class="px-3 py-1 rounded-md transition-colors"
-                :class="{
-                    'bg-gradient-to-r from-sky-900 to-sky-500 text-white':
-                        link.active,
-                    'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300':
-                        !link.active,
-                }"
-            >
-                {{ link.label }}
-            </Link>
-            <span
-                v-else-if="index > 0 && index < pagination.links.length - 1"
-                class="px-3 py-1 text-gray-400"
-            >
-                {{ link.label }}
-            </span>
+        <!-- Información de página en pantallas muy pequeñas -->
+        <div
+            v-if="screenWidth < 360"
+            class="flex items-center justify-center px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium min-w-[60px]"
+        >
+            {{ currentPageInfo?.current }} / {{ currentPageInfo?.total }}
+        </div>
+
+        <!-- Números de página (solo en pantallas >= 360px) -->
+        <template v-else>
+            <template v-for="(link, index) in getVisiblePages" :key="index">
+                <Link
+                    v-if="link.url"
+                    :href="link.url"
+                    :data="filters"
+                    preserve-scroll
+                    preserve-state
+                    replace
+                    class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-all duration-300 text-center text-xs sm:text-sm font-semibold flex items-center justify-center hover:scale-110 shadow-sm hover:shadow-md"
+                    :class="{
+                        'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-500/30 ring-1 ring-indigo-500/20':
+                            link.active,
+                        'bg-white text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 border border-gray-200 hover:border-indigo-300':
+                            !link.active,
+                    }"
+                >
+                    {{ link.label }}
+                </Link>
+                <span
+                    v-else
+                    class="w-8 h-8 sm:w-10 sm:h-10 text-gray-400 text-center text-xs sm:text-sm font-semibold flex items-center justify-center"
+                >
+                    {{ link.label }}
+                </span>
+            </template>
         </template>
 
         <!-- Botón Siguiente -->
         <template v-if="pagination.links[pagination.links.length - 1].url">
             <Link
                 :href="pagination.links[pagination.links.length - 1].url"
-                  :data="filters"
+                :data="filters"
                 preserve-scroll
                 preserve-state
                 replace
-                class="px-3 py-1 bg-gradient-to-r from-blue-800 to-sky-600 text-white rounded-lg hover:from-blue-700 hover:to-sky-500 transition-colors flex items-center"
+                class="group flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 ml-1"
+                    class="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-0.5 transition-transform duration-200"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                 >
@@ -116,11 +213,11 @@ defineProps({
         </template>
         <span
             v-else
-            class="px-3 py-1 bg-gray-300 text-gray-500 rounded-lg flex items-center cursor-not-allowed"
+            class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 text-gray-400 rounded-lg cursor-not-allowed shadow-sm"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 ml-1"
+                class="h-4 w-4 sm:h-5 sm:w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
             >

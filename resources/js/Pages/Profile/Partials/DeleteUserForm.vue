@@ -35,10 +35,11 @@ const closeModal = () => {
 </script>
 
 <template>
+  <!-- Seccion para eliminar cuentas -->
   <!-- Contenedor raíz que heredará los atributos (como class) -->
   <div v-bind="$attrs">
     <!-- Contenido principal -->
-    <div class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+    <div v-if="false" class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
       <!-- Header -->
       <div class="p-6 px-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
         <h6 class="mb-0 text-slate-700 dark:text-white/80">Eliminar cuenta</h6>

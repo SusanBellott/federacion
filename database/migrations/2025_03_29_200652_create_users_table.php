@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid_user');
             $table->bigInteger('ci');
-$table->string('complemento_ci', 5)->nullable(); // ← nuevo campo
+            $table->string('complemento_ci', 5)->nullable(); // ← nuevo campo
             $table->bigInteger('rda')->unique();;
             $table->string('name');
             $table->string('primer_apellido')->nullable();
@@ -25,6 +25,7 @@ $table->string('complemento_ci', 5)->nullable(); // ← nuevo campo
             $table->integer('horas')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('celular', 20)->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
@@ -33,10 +34,10 @@ $table->string('complemento_ci', 5)->nullable(); // ← nuevo campo
             $table->timestamps();
             $table->softDeletes();
 
-// ✅ Restricción compuesta única (muy importante)
-$table->unique(['ci', 'complemento_ci'], 'users_ci_complemento_unique');
+            // Restricción compuesta única (muy importante)
+            $table->unique(['ci', 'complemento_ci'], 'users_ci_complemento_unique');
 
-             // Relaciones correctas con las tablas
+            // Relaciones correctas con las tablas
             $table->unsignedBigInteger('distrito_id')->nullable();
             $table->unsignedBigInteger('institucion_id')->nullable();
             $table->unsignedBigInteger('codigo_sie_id')->nullable();
@@ -45,7 +46,6 @@ $table->unique(['ci', 'complemento_ci'], 'users_ci_complemento_unique');
             $table->foreign('distrito_id')->references('id_distrito')->on('distritos')->onDelete('set null');
             $table->foreign('institucion_id')->references('id_institucion')->on('instituciones')->onDelete('set null');
             $table->foreign('codigo_sie_id')->references('id_codigo_sie')->on('codigo_sies')->onDelete('set null');
-
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

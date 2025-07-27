@@ -21,13 +21,13 @@ class Curso extends Model
         'codigo_curso',
         'nombre',
         'descripcion',
-        'fecha_inicio_inscripcion',
-        'fecha_fin_inscripcion',
+        'carga_horaria',
+        'tipo_pago',
         'fecha_inicio',
         'fecha_fin',
-        'carga_horaria',
-            'tipo_pago',
-    'precio',
+        'fecha_inicio_inscripcion',
+        'fecha_fin_inscripcion',
+        'precio',
         'img_curso',
         'encargado',
         'grado_academico',
@@ -43,17 +43,33 @@ class Curso extends Model
         'img_firma3',
         'img_firma4',
         'img_sello'
+
     ];
+    /*
+    protected $casts = [
+    'fecha_inicio' => 'date',
+    'fecha_fin' => 'date',
+    'fecha_inicio_inscripcion' => 'date',
+    'fecha_fin_inscripcion' => 'date',
+];*/
+
+    // Asegura que los atributos virtuales estén incluidos cuando el modelo se convierte a array o JSON
+    protected $appends = ['total_inscritos'];
 
     public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'id_curso', 'id_curso');
     }
+    public function inscritosActivos()
+    {
+        return $this->hasMany(Inscripcion::class, 'id_curso')->where('estado', 'activo');
+    }
+
     public function imagencertificados()
     {
         return $this->hasMany(Imagencertificado::class, 'id_curso', 'id_curso');
     }
-   /*  public function imagenescer()
+    /*  public function imagenescer()
     {
         return $this->belongsTo(Imagencertificado::class, 'id_curso','id_curso');
     } */
@@ -61,15 +77,15 @@ class Curso extends Model
     {
         return $this->belongsTo(TipoActividad::class, 'tipo_actividad_id')->withTrashed();
     }
-    
-    
+
+
     public function scopeInscripcionesDisponibles(Builder $query)
     {
         return $query
             ->whereDate('fecha_inicio_inscripcion', '<=', now())
             ->whereDate('fecha_fin_inscripcion', '>=', now());
     }
-    
+
     public function getEstadoCursoAttribute()
     {
         $fecha_actual = now();
@@ -85,4 +101,31 @@ class Curso extends Model
 
         return 'cerrado';
     }
+    public function getTotalInscritosAttribute()
+    {
+        // Devuelve el conteo de inscripciones activas asociadas al curso
+        return $this->inscripciones()->where('estado', 'activo')->count();
+    }
+    /*
+
+public function getFechaInicioFormattedAttribute()
+{
+    return optional($this->fecha_inicio)->format('d/m/Y');
+}
+
+public function getFechaFinFormattedAttribute()
+{
+    return optional($this->fecha_fin)->format('d/m/Y');
+}
+
+public function getFechaInicioInscripcionFormattedAttribute()
+{
+    return optional($this->fecha_inicio_inscripcion)->format('d/m/Y');
+}
+
+public function getFechaFinInscripcionFormattedAttribute()
+{
+    return optional($this->fecha_fin_inscripcion)->format('d/m/Y');
+}
+*/
 }

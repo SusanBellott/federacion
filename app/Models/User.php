@@ -32,7 +32,7 @@ class User extends Authenticatable
     protected $fillable = [
         'uuid_user',
         'ci',
-         'complemento_ci',
+        'complemento_ci',
         'rda',
         'name',
         'primer_apellido',
@@ -41,24 +41,26 @@ class User extends Authenticatable
         'cargo',
         'horas',
         'email',
+        'celular',
         'password',
         'estado',
 
         'distrito_id',
         'institucion_id',
         'codigo_sie_id',
+           'profile_photo_path', 
     ];
 
     public function distrito()
     {
         return $this->belongsTo(Distrito::class, 'distrito_id', 'id_distrito');
     }
-    
+
     public function institucion()
     {
         return $this->belongsTo(Institucion::class, 'institucion_id', 'id_institucion');
     }
-    
+
     public function codigoSie()
     {
         return $this->belongsTo(CodigoSie::class, 'codigo_sie_id', 'id_codigo_sie');
@@ -130,13 +132,12 @@ class User extends Authenticatable
         });
     }
     public function setPasswordAttribute($value)
-{
-    // Evita hashear dos veces si ya está en formato bcrypt
-    if (\Illuminate\Support\Str::startsWith($value, '$2y$')) {
-        $this->attributes['password'] = $value;
-    } else {
-        $this->attributes['password'] = bcrypt($value);
+    {
+        // Evita hashear dos veces si ya está en formato bcrypt
+        if (\Illuminate\Support\Str::startsWith($value, '$2y$')) {
+            $this->attributes['password'] = $value;
+        } else {
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
-}
-
 }

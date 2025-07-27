@@ -46,8 +46,8 @@ class CodigoSieController extends Controller
 
         return Inertia::render('CodigoSie', [
             'codigosie' => $query->paginate($perPage),
-            'distritos' => Distrito::select('id_distrito', 'descripcion')->get(),
-            'instituciones' => \App\Models\Institucion::select('id_institucion', 'id_distrito', 'nivel')->get(),
+            'distritos' => Distrito::select('id_distrito','codigo', 'descripcion')->get(),
+            'instituciones' => \App\Models\Institucion::select('id_institucion', 'id_distrito', 'servicio', 'nivel')->get(),
             'filters' => ['search' => $searchTerm, 'perPage' => $perPage],
         ]);
     }

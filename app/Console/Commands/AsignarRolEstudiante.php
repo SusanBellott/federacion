@@ -24,7 +24,7 @@ class AsignarRolEstudiante extends Command
         $usuariosSinRol = User::whereDoesntHave('roles')->get();
 
         if ($usuariosSinRol->isEmpty()) {
-            $this->info('✅ Todos los usuarios ya tienen al menos un rol asignado.');
+            $this->info(' Todos los usuarios ya tienen al menos un rol asignado.');
             return;
         }
 

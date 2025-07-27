@@ -3,7 +3,7 @@
         <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
 
         <aside
-            class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 sidebar-no-scrollbar"
+            class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full border-0 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 sidebar-no-scrollbar bg-gradient-to-br from-violet-900 to-indigo-900 text-white shadow-xl dark:shadow-dark-xl"
             :class="{ 'translate-x-0': props.sidebarOpen }"
             aria-expanded="false"
         >
@@ -67,8 +67,23 @@
                     </li>
                 </ul>
             </div>
+            <!-- Nombre del usuario al final del sidebar -->
+            <div class="w-full flex justify-center mt-28 px-4">
+                <div class="max-w-xs text-center">
+                    <hr
+                        class="h-px mb-2 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:via-white"
+                    />
+                    <div
+                        class="text-sm font-semibold text-slate-800 dark:text-white break-words"
+                    >
+                        {{ page.props.auth.user?.name }}
+                        {{ page.props.auth.user?.primer_apellido }}
+                    </div>
+                </div>
+            </div>
         </aside>
 
+        <!--
         <div class="fixed bottom-8 right-8 xl:hidden z-990">
             <button
                 @click="toggleSidebar"
@@ -77,6 +92,7 @@
                 <i class="fas fa-bars"></i>
             </button>
         </div>
+        -->
     </div>
 </template>
 
@@ -154,11 +170,10 @@ const menuItems = [
     },
     {
         name: "Usuarios",
-        icon: "text-slate-700 ni ni-single-02",
+        icon: "text-indigo-400 ni ni-single-02",
         link: "/usuarios",
         permissions: ["usuarios.index"],
     },
-
     {
         name: "Códigos SIE",
         icon: "text-green-500 ni ni-key-25",
@@ -176,6 +191,12 @@ const menuItems = [
         icon: "text-red-600 ni ni-world-2",
         link: "/distritos",
         permissions: ["distritos.index"],
+    },
+    {
+        name: "Reportes",
+        icon: "text-yellow-500 ni ni-chart-bar-32", // Puedes cambiar el icono si deseas
+        link: "/reportes",
+        permissions: ["reportes.index"],
     },
 ];
 </script>

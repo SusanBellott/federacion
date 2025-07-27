@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::table('cursos', function (Blueprint $table) {
-        $table->enum('tipo_pago', ['gratuito', 'pago'])->default('gratuito');
-        $table->decimal('precio', 8, 2)->nullable();
-    });
+        Schema::table('cursos', function (Blueprint $table) {
+            $table->enum('tipo_pago', ['gratuito', 'pago'])->default('gratuito');
+            $table->decimal('precio', 8, 2)->nullable();
+        });
     }
 
     /**
@@ -22,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-    Schema::table('cursos', function (Blueprint $table) {
-        $table->dropColumn(['tipo_pago', 'precio']);
-    });
+        Schema::table('cursos', function (Blueprint $table) {
+            $table->dropColumn(['tipo_pago', 'precio']);
+        });
     }
 };

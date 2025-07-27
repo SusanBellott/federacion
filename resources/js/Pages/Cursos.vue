@@ -120,6 +120,14 @@ const handleImagenesChange = (event) => {
         });
     }
 };
+
+function quitarImagen() {
+    imagenPreview.value = null;
+    if (inputFile.value) {
+        inputFile.value.value = "";
+    }
+}
+
 const removePreview = (index) => {
     imagenesPreviews.value.splice(index, 1);
     form2.value.imagenes.splice(index, 1);
@@ -425,7 +433,7 @@ const generarPDFInscritos = (uuidCurso) => {
             </h2>
         </template>
 
-        <!-- Modal con Formulario -->
+        <!-- Modal con Formulario de cursos-->
         <Modal :show="showModal" @close="closeModal" max-width="2xl">
             <form @submit.prevent="submitForm">
                 <div class="p-4 sm:p-6">
@@ -447,8 +455,7 @@ const generarPDFInscritos = (uuidCurso) => {
                             </label>
                             <select
                                 v-model.number="form.tipo_actividad_id"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none max-h-48 overflow-y-auto"
-                                required
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             >
                                 <option value="" disabled>
                                     Seleccione un tipo de actividad
@@ -478,10 +485,9 @@ const generarPDFInscritos = (uuidCurso) => {
                             <input
                                 v-model="form.codigo_curso"
                                 type="text"
-                                required
                                 placeholder="Se genera de manera automatica"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                                 readonly
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                             />
                         </div>
                         <!-- Campo Nombre -->
@@ -495,9 +501,8 @@ const generarPDFInscritos = (uuidCurso) => {
                             <input
                                 v-model="form.nombre"
                                 type="text"
-                                required
                                 placeholder="Ingresa el nombre de la actividad"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <span
                                 v-if="errors.nombre"
@@ -514,19 +519,31 @@ const generarPDFInscritos = (uuidCurso) => {
                                 Describe la actividad
                                 <span class="text-red-500">*</span>
                             </label>
-                            <input
+                            <textarea
                                 v-model="form.descripcion"
-                                type="text"
-                                required
+                                :maxlength="255"
                                 placeholder="Realiza la descripción de la actividad"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                            />
+                                rows="4"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none resize-none"
+                            ></textarea>
+                            <!-- Conteo de caracteres -->
+                            <div
+                                class="text-right text-xs mt-1"
+                                :class="
+                                    form.descripcion.length >= 240
+                                        ? 'text-red-400'
+                                        : 'text-white/80'
+                                "
+                            >
+                                {{ form.descripcion.length }} / 255 caracteres
+                            </div>
                             <span
                                 v-if="errors.descripcion"
                                 class="text-red-500 text-xs"
                                 >{{ errors.descripcion }}</span
                             >
                         </div>
+
                         <!-- Campo Fecha Inicio de Inscripción -->
                         <div class="col-span-1 sm:col-span-2 md:col-span-1">
                             <label
@@ -540,7 +557,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 type="date"
                                 :required="!id_curso"
                                 :min="!id_curso ? today : null"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <span
                                 v-if="errors.fecha_inicio_inscripcion"
@@ -563,7 +580,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 :required="!id_curso"
                                 :min="form.fecha_inicio_inscripcion"
                                 max="2040-12-31"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <span
                                 v-if="errors.fecha_fin_inscripcion"
@@ -586,7 +603,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 :required="!id_curso"
                                 :min="!id_curso ? today : null"
                                 max="2040-12-31"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <span
                                 v-if="errors.fecha_inicio"
@@ -609,7 +626,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 :required="!id_curso"
                                 :min="form.fecha_inicio || today"
                                 max="2040-12-31"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <span
                                 v-if="errors.fecha_fin"
@@ -632,7 +649,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 readonly
                                 disabled
                                 placeholder="Cálculo automático de horas"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-gray-200 bg-clip-padding px-3 py-2 font-normal text-gray-500 outline-none transition-all placeholder:text-gray-500 focus:outline-none cursor-not-allowed"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
 
                             <span
@@ -642,6 +659,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 {{ errors.carga_horaria }}
                             </span>
                         </div>
+
                         <!-- Campo Tipo de curso -->
                         <div>
                             <label
@@ -652,8 +670,7 @@ const generarPDFInscritos = (uuidCurso) => {
                             </label>
                             <select
                                 v-model="form.tipo_pago"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                                required
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             >
                                 <option value="" disabled>
                                     Seleccione costo de actividad
@@ -681,8 +698,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 min="10"
                                 step="0.01"
                                 placeholder="Ingresa el monto"
-                                required
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
                             <span
                                 v-if="errors.precio"
@@ -699,18 +715,47 @@ const generarPDFInscritos = (uuidCurso) => {
                                 <span class="text-red-500">*</span></label
                             >
                             <input
+                                ref="inputFile"
                                 type="file"
                                 @change="handleImageChange"
                                 accept="image/*"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                             />
 
                             <!-- Vista previa -->
-                            <div v-if="imagenPreview" class="mt-2">
+                            <!-- Vista previa -->
+                            <div
+                                v-if="imagenPreview"
+                                class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-6 bg-violet-900/40 p-4 rounded-lg"
+                            >
+                                <!-- Imagen -->
                                 <img
                                     :src="imagenPreview"
-                                    class="h-40 w-auto object-cover rounded"
+                                    class="h-40 w-auto object-cover rounded-md border border-white shadow-md"
                                 />
+
+                                <!-- Botón cancelar -->
+                                <button
+                                    @click="quitarImagen"
+                                    type="button"
+                                    class="flex items-center gap-2 px-4 py-2 !bg-green-600 hover:!bg-red-600 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="w-4 h-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M6 18L18 6M6 6l12 12"
+                                        />
+                                    </svg>
+                                    Cancelar selección
+                                </button>
                             </div>
 
                             <!-- Mostrar imagen existente al editar -->
@@ -855,41 +900,55 @@ const generarPDFInscritos = (uuidCurso) => {
         <div class="flex-none w-full max-w-full px-3">
             <h6 class="text-gray-700 dark:text-white">Cursos</h6>
             <div
-                class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
+                <!-- Buscar, motrar y agregar nuevo curso -->
                 <div
-                    class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center"
+                    class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent"
                 >
-                    <div class="flex items-center space-x-4">
-                        <div class="relative">
+                    <div
+                        class="flex flex-col lg:flex-row lg:items-center lg:gap-4 w-full"
+                    >
+                        <!-- Buscador -->
+                        <div class="flex-1">
                             <BuscadorCursos
                                 :filters="filters"
                                 ruta="cursos.index"
+                                placeholder="Buscar cursos..."
                             />
                         </div>
-                    </div>
 
-                    <button
-                        v-if="$page.props.permissions.includes('cursos.create')"
-                        class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
-                        @click="handleClick"
-                    >
-                        <span class="flex items-center justify-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-5 w-5 mr-2"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
+                        <!-- Botón agregar -->
+                        <div
+                            class="mt-4 lg:mt-0 flex justify-end lg:justify-start"
+                        >
+                            <button
+                                v-if="
+                                    $page.props.permissions.includes(
+                                        'cursos.create'
+                                    )
+                                "
+                                class="w-full sm:w-auto lg:w-fit inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm sm:text-base rounded-lg shadow-lg hover:shadow-xl dark:shadow-blue-900/25 dark:hover:shadow-blue-900/40 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800 active:scale-95"
+                                @click="handleClick"
                             >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
-                            Agregar Nuevo Curso
-                        </span>
-                    </button>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 mr-2"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                <span class="whitespace-nowrap"
+                                    >Agregar Nuevo Curso</span
+                                >
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Alerts & Notifications -->
@@ -900,6 +959,7 @@ const generarPDFInscritos = (uuidCurso) => {
                     <editaralerta title="¡Registro editado correctamente!" />
                 </div>
 
+                <!-- Tabla de cursos -->
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
                         <table
@@ -998,13 +1058,17 @@ const generarPDFInscritos = (uuidCurso) => {
                                         <span class="font-semibold"
                                             >Codigo de actividad:
                                         </span>
-                                        <div class="text-slate-400">
+                                        <div
+                                            class="text-violet-300 dark:text-violet-200"
+                                        >
                                             {{ curso.codigo_curso }}
                                         </div>
                                         <span class="font-semibold"
                                             >Tipo:
                                         </span>
-                                        <div class="text-slate-400">
+                                        <div
+                                            class="text-violet-300 dark:text-violet-200"
+                                        >
                                             {{
                                                 curso.tipo_actividad?.codigo &&
                                                 curso.tipo_actividad?.nombre
@@ -1053,8 +1117,18 @@ const generarPDFInscritos = (uuidCurso) => {
                                         <span class="font-semibold"
                                             >Titulo:
                                         </span>
-                                        <div class="text-slate-400">
+                                        <div
+                                            class="text-violet-300 dark:text-violet-200"
+                                        >
                                             {{ curso.nombre }}
+                                        </div>
+                                        <span class="font-semibold"
+                                            >Inscritos:
+                                        </span>
+                                        <div class="text-xs text-white/70 mt-1">
+                                            <strong>{{
+                                                curso.inscritos_count
+                                            }}</strong>
                                         </div>
                                     </td>
 
@@ -1069,13 +1143,17 @@ const generarPDFInscritos = (uuidCurso) => {
                                         <span class="font-semibold"
                                             >Fecha de inicio:
                                         </span>
-                                        <div class="text-slate-400">
+                                        <div
+                                            class="text-violet-300 dark:text-violet-200"
+                                        >
                                             {{ curso.fecha_inicio_inscripcion }}
                                         </div>
                                         <span class="font-semibold"
                                             >Fecha Fin:
                                         </span>
-                                        <div class="text-slate-400">
+                                        <div
+                                            class="text-violet-300 dark:text-violet-200"
+                                        >
                                             {{ curso.fecha_fin_inscripcion }}
                                         </div>
                                     </td>
@@ -1085,13 +1163,17 @@ const generarPDFInscritos = (uuidCurso) => {
                                         <span class="font-semibold"
                                             >Fecha de inicio:
                                         </span>
-                                        <div class="text-slate-400">
+                                        <div
+                                            class="text-violet-300 dark:text-violet-200"
+                                        >
                                             {{ curso.fecha_inicio }}
                                         </div>
                                         <span class="font-semibold"
                                             >Fecha Fin:
                                         </span>
-                                        <div class="text-slate-400">
+                                        <div
+                                            class="text-violet-300 dark:text-violet-200"
+                                        >
                                             {{ curso.fecha_fin }}
                                         </div>
                                     </td>
@@ -1405,6 +1487,20 @@ const generarPDFInscritos = (uuidCurso) => {
         />
     </AppLayout>
 </template>
+
+<style scoped>
+/* Para ocultar flechas en Chrome, Safari, Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Para ocultar flechas en Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+</style>
 
 <!-- <style>
 :root {

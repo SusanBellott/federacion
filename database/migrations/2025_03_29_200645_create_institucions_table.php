@@ -21,12 +21,12 @@ return new class extends Migration
             $table->string('nivel');
             $table->string('estado')->default('activo');
             $table->timestamps();
-            $table->softDeletes();  
-                      
+            $table->softDeletes();
+
             $table->foreign('id_distrito')->references('id_distrito')->on('distritos')->onDelete('cascade');
         });
     }
-    
+
 
     /**
      * Reverse the migrations.

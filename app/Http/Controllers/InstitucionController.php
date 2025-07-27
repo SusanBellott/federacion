@@ -107,7 +107,7 @@ class InstitucionController extends Controller
         return response()->json(
             Institucion::where('id_distrito', $distritoId)
                 ->where('estado', 'activo')
-                ->get(['id_institucion', 'nivel'])
+                ->get(['id_institucion',  'servicio', 'nivel'])
         );
     }
 
@@ -129,7 +129,7 @@ class InstitucionController extends Controller
             // Obtener instituciones relacionadas activas
             $instituciones = Institucion::where('id_distrito', $id)
                 ->where('estado', 'activo')
-                ->get(['id_institucion', 'nivel']);
+               ->get(['id_institucion',  'servicio', 'nivel']);
 
             // (Opcional) podrías incluir códigos sie relacionados también
             $codigos = CodigoSie::whereIn('institucion_id', $instituciones->pluck('id_institucion'))

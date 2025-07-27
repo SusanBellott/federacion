@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('estado')->default('activo');
             $table->timestamps();
             $table->softDeletes();
-/// 🔗 Clave foránea a distritos
+            ///  Clave foránea a distritos
             $table->unsignedBigInteger('distrito_id');
             $table->foreign('distrito_id')->references('id_distrito')->on('distritos')->onDelete('cascade');
 
-            // 🔗 Clave foránea a instituciones
+            //  Clave foránea a instituciones
             $table->unsignedBigInteger('institucion_id');
             $table->foreign('institucion_id')->references('id_institucion')->on('instituciones')->onDelete('cascade');
         });

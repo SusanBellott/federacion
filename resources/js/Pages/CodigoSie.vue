@@ -54,14 +54,18 @@ const form = ref({
 const distritosOptions = computed(() => {
   return props.distritos.map(d => ({
     value: d.id_distrito,
-    label: d.descripcion
+    label: `${d.codigo} - ${d.descripcion}`
   }));
 });
 const institucionesFiltradas = computed(() => {
-  return props.instituciones.filter(
-    i => i.id_distrito === form.value.distrito_id
-  );
+  return props.instituciones
+    .filter(i => i.id_distrito === form.value.distrito_id)
+    .map(i => ({
+      value: i.id_institucion,
+      label: `${i.servicio} - ${i.nivel}`
+    }));
 });
+
 
 const handleClick = () => {
   showModal.value = true;
@@ -114,9 +118,6 @@ const submitForm = () => {
 
   }
 };
-
-
-
 </script>
 
 <template>
@@ -129,27 +130,57 @@ const submitForm = () => {
 
     <div class="flex-none w-full max-w-full px-3">
       <h6 class="text-gray-800 dark:text-white">Códigos SIE</h6>
-      <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-        <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-between items-center">
-          <div class="flex items-center space-x-4">
-            <div class="relative">
-              <BuscadorCodigosSIE :filters="filters" ruta="codigosie.index" />
-            </div>
-          </div>
-          <button v-if="$page.props.permissions.includes('codigosie.create')"
-                  class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all bg-blue-500 rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
-                  @click="handleClick">
-            <span class="flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                  fill="currentColor">
-                <path fill-rule="evenodd"
-                      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                      clip-rule="evenodd" />
-              </svg>
-              Agregar Nuevo Código SIE
-            </span>
-          </button>
-        </div>
+      <div  class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border">    
+        <!-- Encabezado de buscar mostrar y agregar nuevo codigo sie  -->
+        <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+  <div class="flex flex-col lg:flex-row lg:items-center lg:gap-4 w-full">
+
+    <!-- Buscador ocupa más espacio en escritorio -->
+    <div class="flex-1">
+      <BuscadorCodigosSIE
+        :filters="filters"
+        ruta="codigosie.index"
+      />
+    </div>
+
+    <!-- Botón agregar -->
+    <div class="mt-4 lg:mt-0 flex justify-end lg:justify-start">
+      <button
+        v-if="$page.props.permissions.includes('codigosie.create')"
+        class="w-full sm:w-auto lg:w-fit
+               inline-flex items-center justify-center
+               px-4 py-2.5 sm:px-6 sm:py-3
+               bg-blue-500 hover:bg-blue-600
+               dark:bg-blue-600 dark:hover:bg-blue-700
+               text-white font-semibold
+               text-sm sm:text-base
+               rounded-lg shadow-lg hover:shadow-xl
+               dark:shadow-blue-900/25 dark:hover:shadow-blue-900/40
+               transform hover:-translate-y-0.5
+               transition-all duration-200
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+               dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800
+               active:scale-95"
+        @click="handleClick"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <span class="whitespace-nowrap">Agregar Nuevo Código SIE</span>
+      </button>
+    </div>
+
+  </div>
+</div>
 
         <!-- Alerts & Notifications -->
         <div class="px-6 pt-4">
@@ -158,7 +189,7 @@ const submitForm = () => {
           </div>
           <editaralerta title="¡Registro editado correctamente!" />
         </div>
-
+<!-- Tabla de codigo sie -->
         <div class="flex-auto px-0 pt-0 pb-2">
           <div class="p-0 overflow-x-auto">
             <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
@@ -245,7 +276,7 @@ const submitForm = () => {
       </div>
     </div>
 
-    <!-- Modal with Form -->
+    <!-- Modal de formulario de codigo sie -->
     <Modal :show="showModal" @close="closeModal" max-width="2xl">
       <form @submit.prevent="submitForm">
         <div class="p-6">
@@ -254,6 +285,7 @@ const submitForm = () => {
           </h2>
 
           <div class="space-y-4">
+
             <!-- Campo Distrito -->
             <div>
               <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
@@ -267,6 +299,7 @@ const submitForm = () => {
       />
               <validaciones :message="errores.distrito_id" />
             </div>
+
 <!-- Campo Institución -->
 <div>
   <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
@@ -274,7 +307,7 @@ const submitForm = () => {
   </label>
   <SearchableSelect
     v-model="form.institucion_id"
-    :options="institucionesFiltradas.map(i => ({ value: i.id_institucion, label: i.nivel }))"
+   :options="institucionesFiltradas"
     placeholder="Seleccionar nivel"
   />
   <validaciones :message="errores.institucion_id" />
@@ -285,11 +318,13 @@ const submitForm = () => {
               <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                 Codigo SIE <span class="text-red-500">*</span>
               </label>
-              <input v-model="form.programa" type="number" required
+              <input v-model="form.programa" type="number" 
                      placeholder="Ingrese código SIE" 
-                     class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
-                     dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
-              <validaciones :message="errores.programa" />
+                         class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none 
+           rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none 
+           transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+  />             
+   <validaciones :message="errores.programa" />
             </div>
 
             <!-- Campo Unidad Educativa -->
@@ -297,11 +332,13 @@ const submitForm = () => {
               <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
                 Unidad Educativa <span class="text-red-500">*</span>
               </label>
-              <input v-model="form.unidad_educativa" type="text" required
+              <input v-model="form.unidad_educativa" type="text" 
                      placeholder="Ingrese nombre de unidad educativa" 
-                     class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder-gray-500 
-                     dark:bg-slate-850 dark:text-white focus:border-blue-500 focus:shadow-primary-outline focus:outline-none transition-all"/>
-              <validaciones :message="errores.unidad_educativa" />
+                         class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none 
+           rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none 
+           transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+  />
+                <validaciones :message="errores.unidad_educativa" />
             </div>
           </div>
 
@@ -309,7 +346,7 @@ const submitForm = () => {
             <button type="button" @click="closeModal"
                     class="inline-block px-6 py-3 mr-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-slate-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
               Cancelar
-            </button>F
+            </button>
             <button type="submit"
                     class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-200">
               {{ editing ? 'Actualizar' : 'Guardar' }} Código SIE
@@ -318,7 +355,7 @@ const submitForm = () => {
         </div>
       </form>
     </Modal>
-
+       <!-- Boton de Eliminacion -->
     <ConfirmDelete
       ref="deleteDialog"
       :method="'patch'"
@@ -327,3 +364,17 @@ const submitForm = () => {
       title="¿Eliminar este registro?" />
   </AppLayout>
 </template>
+
+<style scoped>
+/* Para ocultar flechas en Chrome, Safari, Edge */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para ocultar flechas en Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+</style>
