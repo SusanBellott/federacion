@@ -45,7 +45,7 @@
                                 <i class="ml-1 fa fa-caret-down"></i>
                             </a>
                             <ul
-                                v-show="userMenuOpen"
+                                 v-if="userMenuOpen"
                                 class="absolute right-0 z-50 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-slate-850"
                             >
                                 <li>

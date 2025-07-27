@@ -16,9 +16,9 @@ const form = useForm({
 
 const verificationLinkSent = ref(null);
 /*const photoPreview = ref(null);
-const photoInput = ref(null);
+const photoInput = ref(null);*/
 
-const updateProfileInformation = () => {
+/*const updateProfileInformation = () => {
     // Asegurarse de que el archivo se adjunte correctamente
     if (photoInput.value?.files[0]) {
         form.photo = photoInput.value.files[0];
@@ -115,22 +115,22 @@ const clearPhotoFileInput = () => {
                             class="w-32 h-32 object-cover border-2 border-white rounded-full mx-auto"
                         />
 
-                        <!-- New Profile Photo Preview -->
+                        <!-- New Profile Photo Preview 
                         <img
                             v-else
                             :src="photoPreview"
                             :alt="user.name"
                             class="w-32 h-32 object-cover border-2 border-white rounded-full mx-auto"
-                        />
+                        />-->
                     </a>
 
-                    <!-- Error Message -->
+                    <!-- Error Message 
                     <p
                         v-if="form.errors.photo"
                         class="mt-2 text-xs text-red-500 text-center"
                     >
                         {{ form.errors.photo }}
-                    </p>
+                    </p>-->
                 </div>
             </div>
         </div>
@@ -158,7 +158,7 @@ const clearPhotoFileInput = () => {
                 >
                     <i class="ni ni-check-bold text-2.8"></i>
                 </button>
- <!-- Profile Stats
+ <!-- Profile Stats-->
                 <button
                     v-if="user.profile_photo_path"
                     type="button"
@@ -175,7 +175,7 @@ const clearPhotoFileInput = () => {
                     @click.prevent="deletePhoto"
                 >
                     <i class="ni ni-fat-remove text-2.8"></i>
-                </button>-->
+                </button>
             </div>
         </div>
 
