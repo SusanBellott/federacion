@@ -3,8 +3,14 @@
         <div class="absolute w-full bg-transparent min-h-75"></div>
 
         <aside
-            class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 sidebar-no-scrollbar bg-red-600/15 backdrop-blur-md border border-red-600/60 text-black shadow-2xl"
-            :class="{ 'translate-x-0': props.sidebarOpen }"
+              class="fixed inset-y-0 left-0
+         -translate-x-full transition-transform duration-200 ease-nav-brand
+         w-full max-w-64
+         bg-red-600/15 backdrop-blur-md border border-red-600/60 text-black shadow-2xl
+         rounded-2xl xl:ml-6 xl:translate-x-0
+         z-[9999] 
+         sidebar-no-scrollbar"
+          :class="{ 'translate-x-0': props.sidebarOpen }"
             aria-expanded="false"
         >
             <div class="h-32">

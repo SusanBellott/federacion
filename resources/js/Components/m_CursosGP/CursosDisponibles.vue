@@ -307,7 +307,7 @@ const createInfoIcon = () => `
             <div
                 v-for="curso in cursosFiltrados"
                 :key="`curso-${curso.id_curso}`"
-                class="flex flex-col rounded-2xl border-2 border-transparent transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-br from-sky-700 to-sky-500"
+                class="flex flex-col rounded-2xl border-2 border-transparent transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-br from-red-700 to-red-500"
             >
                 <!-- Header del curso -->
                 <div class="w-full p-4 overflow-hidden rounded-t-2xl bg-white/20 flex items-center justify-center min-h-[80px]">

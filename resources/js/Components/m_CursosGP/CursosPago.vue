@@ -291,7 +291,7 @@ const createInfoIcon = () => `
             <div
                 v-for="curso in cursosFiltrados"
                 :key="`curso-${curso.id_curso}`"
-                class="flex flex-col rounded-2xl border-2 border-transparent transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-br from-sky-700 to-sky-500"
+                class="flex flex-col rounded-2xl border-2 border-transparent transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-br from-red-700 to-red-500"
             >
                 <!-- Header del curso -->
                 <div
@@ -430,15 +430,15 @@ const createInfoIcon = () => `
                     >
                         <!-- Caja del modal con el color principal -->
                         <div
-                            class="bg-gradient-to-br from-sky-800 to-sky-950 p-4 rounded-3xl shadow-2xl w-[90%] max-w-sm text-white"
+                            class="bg-gradient-to-br from-red-700 to-red-500 p-4 rounded-3xl shadow-2xl w-[90%] max-w-sm text-white"
                         >
                             <h3
-                                class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4"
+                                class="text-lg font-semibold text-white dark:text-gray-200 mb-4"
                             >
                                 Información del curso
                             </h3>
                             <p
-                                class="text-sm text-gray-600 dark:text-gray-400 mb-4"
+                                class="text-sm text-white dark:text-gray-400 mb-4"
                             >
                                 Para inscribirte en el curso
                                 <strong>{{ curso.nombre }}</strong
