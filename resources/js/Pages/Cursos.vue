@@ -438,7 +438,7 @@ const generarPDFInscritos = (uuidCurso) => {
             <form @submit.prevent="submitForm">
                 <div class="p-4 sm:p-6">
                     <h2
-                        class="px-4 sm:px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                        class="px-4 sm:px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-black"
                     >
                         {{ id_curso ? "Editar Curso" : "Agregar Nuevo Curso" }}
                     </h2>
@@ -448,14 +448,14 @@ const generarPDFInscritos = (uuidCurso) => {
                     >
                         <div class="col-span-1 sm:col-span-2 md:col-span-1">
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Tipo de actividad
-                                <span class="text-red-500">*</span>
+                                <span class="text-red-300">*</span>
                             </label>
                             <select
                                 v-model.number="form.tipo_actividad_id"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-600 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             >
                                 <option value="" disabled>
                                     Seleccione un tipo de actividad
@@ -477,23 +477,23 @@ const generarPDFInscritos = (uuidCurso) => {
                         </div>
                         <div class="col-span-1 sm:col-span-2 md:col-span-1">
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Código de Curso
-                                <span class="text-red-500">*</span>
+                                <span class="text-red-300">*</span>
                             </label>
                             <input
                                 v-model="form.codigo_curso"
                                 type="text"
-                                placeholder="Se genera de manera automatica"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
                                 readonly
+                                placeholder="Se genera de manera automatica"
+                                class="block w-full rounded-lg border border-red-300 bg-gray-100 text-black text-sm px-3 py-2 placeholder:text-gray-500 outline-none"
                             />
                         </div>
                         <!-- Campo Nombre -->
                         <div class="col-span-1 sm:col-span-2 md:col-span-1">
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Nombre de la actividad
                                 <span class="text-red-500">*</span>
@@ -502,7 +502,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 v-model="form.nombre"
                                 type="text"
                                 placeholder="Ingresa el nombre de la actividad"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <span
                                 v-if="errors.nombre"
@@ -514,7 +514,7 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Campo Descripción -->
                         <div class="col-span-1 sm:col-span-2 md:col-span-1">
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Describe la actividad
                                 <span class="text-red-500">*</span>
@@ -524,15 +524,16 @@ const generarPDFInscritos = (uuidCurso) => {
                                 :maxlength="255"
                                 placeholder="Realiza la descripción de la actividad"
                                 rows="4"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none resize-none"
-                            ></textarea>
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-600 resize-none focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
+                            >
+                            </textarea>
                             <!-- Conteo de caracteres -->
                             <div
                                 class="text-right text-xs mt-1"
                                 :class="
                                     form.descripcion.length >= 240
                                         ? 'text-red-400'
-                                        : 'text-white/80'
+                                        : 'text-black/80'
                                 "
                             >
                                 {{ form.descripcion.length }} / 255 caracteres
@@ -547,7 +548,7 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Campo Fecha Inicio de Inscripción -->
                         <div class="col-span-1 sm:col-span-2 md:col-span-1">
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Fecha de inicio de inscripción
                                 <span class="text-red-500">*</span>
@@ -557,7 +558,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 type="date"
                                 :required="!id_curso"
                                 :min="!id_curso ? today : null"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <span
                                 v-if="errors.fecha_inicio_inscripcion"
@@ -569,7 +570,7 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Campo Fecha Fin de Inscripción -->
                         <div class="col-span-1 sm:col-span-2 md:col-span-1">
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Fecha de fin de inscripción
                                 <span class="text-red-500">*</span>
@@ -580,7 +581,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 :required="!id_curso"
                                 :min="form.fecha_inicio_inscripcion"
                                 max="2040-12-31"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <span
                                 v-if="errors.fecha_fin_inscripcion"
@@ -592,7 +593,7 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Campo Fecha de Inicio -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Fecha de Inicio de actividad
                                 <span class="text-red-500">*</span>
@@ -603,7 +604,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 :required="!id_curso"
                                 :min="!id_curso ? today : null"
                                 max="2040-12-31"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <span
                                 v-if="errors.fecha_inicio"
@@ -615,7 +616,7 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Campo Fecha de Culminación -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Fecha de Culminación de actividad
                                 <span class="text-red-500">*</span>
@@ -626,7 +627,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 :required="!id_curso"
                                 :min="form.fecha_inicio || today"
                                 max="2040-12-31"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <span
                                 v-if="errors.fecha_fin"
@@ -638,7 +639,7 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Campo Carga Horaria -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Carga Horaria
                                 <span class="text-red-500">*</span>
@@ -649,9 +650,9 @@ const generarPDFInscritos = (uuidCurso) => {
                                 readonly
                                 disabled
                                 placeholder="Cálculo automático de horas"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-gray-100 text-black text-sm px-3 py-2 placeholder:text-gray-500 outline-none"
                             />
-
+                            
                             <span
                                 v-if="errors.carga_horaria"
                                 class="text-red-500 text-xs"
@@ -663,14 +664,14 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Campo Tipo de curso -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Tipo de curso
                                 <span class="text-red-500">*</span>
                             </label>
                             <select
                                 v-model="form.tipo_pago"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-600 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             >
                                 <option value="" disabled>
                                     Seleccione costo de actividad
@@ -688,7 +689,7 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Campo Precio (solo visible si es de paga) -->
                         <div v-if="form.tipo_pago === 'pago'">
                             <label
-                                class="inline-block mt-4 mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mt-4 mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Precio (Bs) <span class="text-red-500">*</span>
                             </label>
@@ -698,7 +699,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                 min="10"
                                 step="0.01"
                                 placeholder="Ingresa el monto"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <span
                                 v-if="errors.precio"
@@ -710,7 +711,7 @@ const generarPDFInscritos = (uuidCurso) => {
                         <!-- Imagen del Curso -->
                         <div class="col-span-1 sm:col-span-2">
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >Imagen del certificado
                                 <span class="text-red-500">*</span></label
                             >
@@ -719,14 +720,14 @@ const generarPDFInscritos = (uuidCurso) => {
                                 type="file"
                                 @change="handleImageChange"
                                 accept="image/*"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 file:mr-3 file:py-2 file:px-3 file:border-0 file:text-sm file:font-semibold file:bg-red-100 file:text-red-700 hover:file:bg-red-200"
                             />
 
                             <!-- Vista previa -->
                             <!-- Vista previa -->
                             <div
                                 v-if="imagenPreview"
-                                class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-6 bg-violet-900/40 p-4 rounded-lg"
+                                class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-6 bg-transparent p-4 rounded-lg"
                             >
                                 <!-- Imagen -->
                                 <img
@@ -898,9 +899,9 @@ const generarPDFInscritos = (uuidCurso) => {
         </Modal>
 
         <div class="flex-none w-full max-w-full px-3">
-            <h6 class="text-gray-700 dark:text-white">Cursos</h6>
+            <h6 class="text-black">Cursos</h6>
             <div
-                class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-md border border-red-600/60 shadow-xl rounded-2xl p-6 text-slate-800"
             >
                 <!-- Buscar, motrar y agregar nuevo curso -->
                 <div
@@ -968,42 +969,42 @@ const generarPDFInscritos = (uuidCurso) => {
                             <thead class="align-bottom">
                                 <tr>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Nro
                                     </th>
                                     <th
-                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Actividad
                                     </th>
                                     <th
-                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Descripción
                                     </th>
                                     <th
-                                        class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Inscripción
                                     </th>
                                     <th
-                                        class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[150px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Duración de actividad
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Carga Horaria
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Imagen
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         v-if="false"
                                     >
                                         Certificados
@@ -1014,7 +1015,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                                 'editarestadodeletecursos.update'
                                             )
                                         "
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Estado de Curso
                                     </th>
@@ -1027,7 +1028,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                                 'cursoseditar.update'
                                             )
                                         "
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Acciones
                                     </th>
@@ -1037,14 +1038,14 @@ const generarPDFInscritos = (uuidCurso) => {
                                 <tr
                                     v-for="(curso, index) in cursos.data"
                                     :key="curso.id"
-                                    class="border-b dark:border-white/40"
+                                    class="border-b border-red-500"
                                 >
                                     {{
                                         console.log(curso.tipoActividad)
                                     }}
 
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{
                                             (currentPage - 1) * perPage +
@@ -1053,22 +1054,18 @@ const generarPDFInscritos = (uuidCurso) => {
                                         }}
                                     </td>
                                     <td
-                                        class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[200px] p-2 text-left align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         <span class="font-semibold"
                                             >Codigo de actividad:
                                         </span>
-                                        <div
-                                            class="text-violet-300 dark:text-violet-200"
-                                        >
+                                        <div class="text-black">
                                             {{ curso.codigo_curso }}
                                         </div>
                                         <span class="font-semibold"
                                             >Tipo:
                                         </span>
-                                        <div
-                                            class="text-violet-300 dark:text-violet-200"
-                                        >
+                                        <div class="text-black">
                                             {{
                                                 curso.tipo_actividad?.codigo &&
                                                 curso.tipo_actividad?.nombre
@@ -1101,7 +1098,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                             v-if="curso.tipo_pago === 'pago'"
                                             class="font-semibold mt-1 block"
                                         >
-                                            <span class="text-white"
+                                            <span class="text-black"
                                                 >Precio:</span
                                             >
                                             <span class="text-yellow-400">
@@ -1117,15 +1114,13 @@ const generarPDFInscritos = (uuidCurso) => {
                                         <span class="font-semibold"
                                             >Titulo:
                                         </span>
-                                        <div
-                                            class="text-violet-300 dark:text-violet-200"
-                                        >
+                                        <div class="text-black">
                                             {{ curso.nombre }}
                                         </div>
                                         <span class="font-semibold"
                                             >Inscritos:
                                         </span>
-                                        <div class="text-xs text-white/70 mt-1">
+                                        <div class="text-xs text-black mt-1">
                                             <strong>{{
                                                 curso.inscritos_count
                                             }}</strong>
@@ -1133,61 +1128,53 @@ const generarPDFInscritos = (uuidCurso) => {
                                     </td>
 
                                     <td
-                                        class="w-[200px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[200px] p-2 text-left align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ curso.descripcion }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-left align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         <span class="font-semibold"
                                             >Fecha de inicio:
                                         </span>
-                                        <div
-                                            class="text-violet-300 dark:text-violet-200"
-                                        >
+                                        <div class="text-black">
                                             {{ curso.fecha_inicio_inscripcion }}
                                         </div>
                                         <span class="font-semibold"
                                             >Fecha Fin:
                                         </span>
-                                        <div
-                                            class="text-violet-300 dark:text-violet-200"
-                                        >
+                                        <div class="text-black">
                                             {{ curso.fecha_fin_inscripcion }}
                                         </div>
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-left align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-left align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         <span class="font-semibold"
                                             >Fecha de inicio:
                                         </span>
-                                        <div
-                                            class="text-violet-300 dark:text-violet-200"
-                                        >
+                                        <div class="text-black">
                                             {{ curso.fecha_inicio }}
                                         </div>
                                         <span class="font-semibold"
                                             >Fecha Fin:
                                         </span>
-                                        <div
-                                            class="text-violet-300 dark:text-violet-200"
-                                        >
+                                        <div class="text-black">
                                             {{ curso.fecha_fin }}
                                         </div>
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         <span
-                                            class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                            class="text-xs font-semibold leading-tight text-black"
                                             >{{ curso.carga_horaria }} hrs</span
                                         >
                                     </td>
 
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         <img
                                             v-if="
@@ -1206,7 +1193,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                         />
                                         <span
                                             v-else
-                                            class="text-xs italic text-gray-500 dark:text-gray-400"
+                                            class="text-xs italic text-black"
                                             >Sin imagen</span
                                         >
                                     </td>
@@ -1254,7 +1241,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                                 'editarestadodeletecursos.update'
                                             )
                                         "
-                                        class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <span
                                             v-if="
@@ -1294,7 +1281,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                                 curso.estado_curso ===
                                                 'terminado'
                                             "
-                                            class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-gray-500/10 text-gray-300 border border-gray-500/50"
+                                            class="px-2 py-0.5 text-xxs rounded-full font-semibold bg-gray-500/10 text-black-300 border border-gray-500/50"
                                         >
                                             TERMINADO
                                         </span>
@@ -1307,7 +1294,7 @@ const generarPDFInscritos = (uuidCurso) => {
                                     </td>
 
                                     <td
-                                        class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <div
                                             class="flex justify-center space-x-2"

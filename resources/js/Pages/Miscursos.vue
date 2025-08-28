@@ -156,9 +156,9 @@ const cursosFiltrados = computed(() => {
         </template>
 
         <div class="flex-none w-full max-w-full px-3">
-            <h6 class="text-gray-800 dark:text-white">Mis Actividades</h6>
+            <h6 class="text-black">Mis Actividades</h6>
             <div
-                class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-md border border-red-600/60 shadow-xl rounded-xl p-6 text-slate-800"
             >
                 <!-- Buscar, mostrar -->
                 <div
@@ -201,37 +201,37 @@ const cursosFiltrados = computed(() => {
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
                         <table
-                            class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500"
+                            class="items-center w-full mb-0 align-top border-collapse border-red-500 text-black"
                         >
                             <thead class="align-bottom">
                                 <tr>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Nro
                                     </th>
                                     <th
-                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Título de actividad
                                     </th>
                                     <th
-                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[200px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Descripción de actividad
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Costo
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Estado
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Acciones
                                     </th>
@@ -241,10 +241,10 @@ const cursosFiltrados = computed(() => {
                                 <tr
                                     v-for="(micurso, index) in miscursos.data"
                                     :key="micurso.id_inscripcion"
-                                    class="border-b dark:border-white/40"
+                                    class="border-b border-red-500"
                                 >
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{
                                             (currentPage - 1) * perPage +
@@ -253,10 +253,10 @@ const cursosFiltrados = computed(() => {
                                         }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         <p
-                                            class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80 max-w-xs break-words"
+                                            class="text-xs font-semibold leading-tight text-black max-w-xs break-words"
                                         >
                                             {{
                                                 micurso.curso
@@ -266,10 +266,10 @@ const cursosFiltrados = computed(() => {
                                         </p>
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         <p
-                                            class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80 max-w-xs break-words"
+                                            class="text-xs font-semibold leading-tight text-black max-w-xs break-words"
                                         >
                                             {{
                                                 micurso.curso
@@ -279,7 +279,7 @@ const cursosFiltrados = computed(() => {
                                         </p>
                                     </td>
                                     <td
-                                        class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap text-xs font-semibold text-gray-700 dark:text-white dark:opacity-80"
+                                        class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap text-xs font-semibold text-black"
                                     >
                                         <span
                                             :class="{
@@ -302,7 +302,7 @@ const cursosFiltrados = computed(() => {
                                     </td>
 
                                     <td
-                                        class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <span
                                             v-if="
@@ -328,7 +328,7 @@ const cursosFiltrados = computed(() => {
                                         </span>
                                     </td>
                                     <td
-                                        class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap"
+                                        class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap"
                                     >
                                         <div class="flex justify-center">
                                             <button

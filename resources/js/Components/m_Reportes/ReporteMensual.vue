@@ -2,29 +2,29 @@
     <div class="max-w-3xl mx-auto px-3 py-3">
         <!-- Contenedor principal más compacto -->
         <div
-            class="bg-gradient-to-br from-violet-900 to-indigo-900 p-3 rounded-lg shadow-lg border border-purple-500/20"
+            class="bg-red-600/15 backdrop-blur-md p-3 rounded-lg shadow-2xl border border-red-600/60"
         >
             <div class="text-center mb-2">
-                <h3 class="text-sm font-bold text-white mb-1">
+                <h3 class="text-sm font-bold text-black mb-1">
                     📅 Reporte Mensual
                 </h3>
             </div>
             <!-- Reporte Mensual -->
             <div
-                class="bg-gradient-to-br from-violet-900 to-indigo-900 p-3 rounded-md shadow-md border border-purple-600/50"
+                class="bg-red-600/10 backdrop-blur-md p-3 rounded-md shadow-md border border-red-600/50"
             >
                 <!-- Selectores compactos -->
                 <div class="grid grid-cols-3 gap-3 mb-2">
                     <!-- Selector de Año -->
                     <div>
                         <label
-                            class="block text-white text-xs font-medium text-center mb-1"
+                            class="block text-black text-xs font-medium text-center mb-1"
                         >
                             Año
                         </label>
                         <select
                             v-model="selectedYear"
-                            class="w-full bg-violet-950 text-white border border-violet-700 rounded text-xs px-2 py-1.5 focus:ring-1 focus:ring-purple-400"
+                            class="w-full bg-white text-slate-800 border border-red-600/50 rounded text-xs px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-600 shadow-sm appearance-none pr-7 bg-no-repeat bg-[length:14px_14px] bg-[right_0.5rem_center] bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23dc2626%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M6 9l6 6 6-6%22/></svg>')]"
                         >
                             <option
                                 v-for="year in years"
@@ -39,14 +39,14 @@
                     <!-- Selector de Mes en formato radio -->
                     <div>
                         <label
-                            class="block text-white text-xs font-medium text-center mb-1"
+                            class="block text-black text-xs font-medium text-center mb-1"
                             >Mes</label
                         >
                         <div class="grid grid-cols-2 gap-1">
                             <label
                                 v-for="(mes, index) in meses"
                                 :key="index"
-                                class="flex items-center text-white text-xs"
+                                class="flex items-center text-black text-xs"
                             >
                                 <input
                                     type="radio"
@@ -64,20 +64,20 @@
                             @click="generarReporte"
                             class="w-full px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded text-xs font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center gap-1"
                         >
-                             <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-3 w-3"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                            />
-                        </svg>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-3 w-3"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                />
+                            </svg>
                             Generar PDF
                         </button>
                     </div>

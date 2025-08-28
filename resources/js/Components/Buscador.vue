@@ -76,27 +76,31 @@ function buscar() {
                 v-model="searchTerm"
                 type="text"
                 :placeholder="placeholder"
-                class="pl-10 pr-3 py-2 block w-full rounded-lg border border-violet-700 bg-violet-950 bg-clip-padding text-sm text-white placeholder:text-violet-300 outline-none transition-all focus:border-blue-400 focus:shadow-primary-outline"
+                class="pl-10 pr-3 py-2 block w-full rounded-lg border border-red-300 bg-white bg-clip-padding text-sm text-black placeholder:text-gray-600 outline-none transition-all focus:border-red-500 focus:ring focus:ring-red-200"
             />
         </div>
 
         <!-- Selector "Mostrar" -->
-          <div class="relative flex-1 min-w-[10px]">
-        <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-            <span
-                class="text-sm text-gray-700 dark:text-white whitespace-nowrap"
-            >
-                Mostrar:
-            </span>
-            <select
-                v-model="perPage"
-                class="block w-full appearance-none rounded-lg border border-violet-700 bg-violet-950 bg-clip-padding px-3 py-2 font-normal text-sm leading-5.6 text-white placeholder:text-violet-300 outline-none transition-all focus:border-blue-400 focus:outline-none focus:shadow-primary-outline cursor-pointer"
-            >
-                <option v-for="opt in perPageOptions" :key="opt" :value="opt">
-                    {{ opt }}
-                </option>
-            </select>
+        <div class="relative flex-1 min-w-[10px]">
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <span
+                    class="text-sm text-gray-700 dark:text-white whitespace-nowrap"
+                >
+                    Mostrar:
+                </span>
+                <select
+                    v-model="perPage"
+                    class="block w-full appearance-none rounded-lg border border-red-300 bg-white bg-clip-padding px-3 py-2 font-normal text-sm leading-5.6 text-black placeholder:text-gray-600 outline-none transition-all focus:border-red-500 focus:ring focus:ring-red-200 cursor-pointer"
+                >
+                    <option
+                        v-for="opt in perPageOptions"
+                        :key="opt"
+                        :value="opt"
+                    >
+                        {{ opt }}
+                    </option>
+                </select>
+            </div>
         </div>
-         </div>
     </div>
 </template>

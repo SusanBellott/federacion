@@ -9,9 +9,9 @@
         </template>
 
         <div class="flex-none w-full max-w-full px-3">
-            <h6 class="text-gray-800 dark:text-white">Instituciones</h6>
+            <h6 class="text-black">Instituciones</h6>
             <div
-                class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-md border border-red-600/60 shadow-xl rounded-xl p-6 text-slate-800"
             >
                 <!-- Encabezado de Buscar Mostrar y agregar nueva institucion -->
                 <div
@@ -77,32 +77,32 @@
                             <thead class="align-bottom">
                                 <tr>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Nro
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Distrito
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Subsistema
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Servicio
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Servicio Generado
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Nivel
                                     </th>
@@ -112,7 +112,7 @@
                                                 'editarestadodelete.update'
                                             )
                                         "
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Estado
                                     </th>
@@ -125,7 +125,7 @@
                                                 'editarestadodelete.update'
                                             )
                                         "
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Acciones
                                     </th>
@@ -140,7 +140,7 @@
                                     class="border-b dark:border-white/40"
                                 >
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{
                                             (currentPage - 1) * perPage +
@@ -149,7 +149,7 @@
                                         }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{
                                             institucion.distrito?.descripcion ||
@@ -157,22 +157,22 @@
                                         }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ institucion.subsistema }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ institucion.servicio }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ institucion.servicio_generado }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ institucion.nivel }}
                                     </td>
@@ -183,7 +183,7 @@
                                                 'editarestadodelete.update'
                                             )
                                         "
-                                        class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <span
                                             v-if="
@@ -230,7 +230,7 @@
                                         </span>
                                     </td>
                                     <td
-                                        class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <div
                                             class="flex justify-center space-x-2"
@@ -331,7 +331,7 @@
             <form @submit.prevent="submitForm">
                 <div class="p-6">
                     <h2
-                        class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                        class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-black opacity-70"
                     >
                         {{
                             id_institucion
@@ -344,7 +344,7 @@
                         <!-- Campo Distrito -->
                         <div>
                             <label
-                                class="px-6 inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="px-6 inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Distrito <span class="text-red-500">*</span>
                             </label>
@@ -363,13 +363,13 @@
                         <!-- Campo Unidad Educativa (Nuevo) -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Subsistema <span class="text-red-500">*</span>
                             </label>
                             <select
                                 v-model="form.subsistema"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             >
                                 <option value="">
                                     Seleccione un subsistema
@@ -392,7 +392,7 @@
                         <!-- Campo Servicio -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Servicio <span class="text-red-500">*</span>
                             </label>
@@ -400,7 +400,7 @@
                                 v-model="form.servicio"
                                 type="number"
                                 placeholder="Ingrese número de servicio"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
 
                             <validacioens
@@ -411,7 +411,7 @@
                         <!-- Campo Servicio Generado -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Servicio Generado
                                 <span class="text-red-500">*</span>
@@ -421,20 +421,20 @@
                                 type="number"
                                 disabled
                                 placeholder="Número de servicio generado"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-gray-100 text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                         </div>
 
                         <!-- Campo Nivel -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Nivel <span class="text-red-500">*</span>
                             </label>
                             <select
                                 v-model="form.nivel"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             >
                                 <option value="">Seleccione un nivel</option>
                                 <option value="ALTERNATIVA">ALTERNATIVA</option>

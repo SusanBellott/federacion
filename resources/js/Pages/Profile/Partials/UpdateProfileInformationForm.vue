@@ -10,7 +10,7 @@ const form = useForm({
     _method: "PUT",
     name: props.user.name,
     email: props.user.email,
-      celular: props.user.celular ?? "", 
+    celular: props.user.celular ?? "",
     //photo: null,
 });
 
@@ -84,8 +84,8 @@ const clearPhotoFileInput = () => {
 
 <template>
     <div
-        class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border">
-    
+        class="relative flex flex-col min-w-0 break-words bg-red-600/15 border border-red-600/60 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
+    >
         <!-- Cover Image -->
         <img
             class="w-full rounded-t-2xl"
@@ -158,7 +158,7 @@ const clearPhotoFileInput = () => {
                 >
                     <i class="ni ni-check-bold text-2.8"></i>
                 </button>
- <!-- Profile Stats-->
+                <!-- Profile Stats-->
                 <button
                     v-if="user.profile_photo_path"
                     type="button"
@@ -167,7 +167,7 @@ const clearPhotoFileInput = () => {
                 >
                     Eliminar Foto
                 </button>
- 
+
                 <button
                     v-if="user.profile_photo_path"
                     type="button"
@@ -193,10 +193,8 @@ const clearPhotoFileInput = () => {
                         type="text"
                         :value="`${user.name}`"
                         readonly
-                               class="bg-violet-950 text-white text-sm leading-5.6 block w-full appearance-none rounded-lg 
-               border border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all 
-               duration-200 ease-in-out placeholder:text-violet-300 focus:border-blue-400 focus:outline-none 
-               focus:shadow-primary-outline pr-10 cursor-text"                    />
+                        class="block w-full rounded-lg border border-red-300 bg-gray-100 text-black text-sm px-3 py-2 outline-none transition focus:border-red-500 focus:ring focus:ring-red-200 placeholder:text-gray-600 cursor-default"
+                    />
                 </div>
 
                 <!-- Apellidos (solo lectura) -->
@@ -209,10 +207,8 @@ const clearPhotoFileInput = () => {
                         type="text"
                         :value="`${user.primer_apellido} ${user.segundo_apellido}`"
                         readonly
-                        class="bg-violet-950 text-white text-sm leading-5.6 block w-full appearance-none rounded-lg 
-               border border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all 
-               duration-200 ease-in-out placeholder:text-violet-300 focus:border-blue-400 focus:outline-none 
-               focus:shadow-primary-outline pr-10 cursor-text"                    />
+                        class="block w-full rounded-lg border border-red-300 bg-gray-100 text-black text-sm px-3 py-2 outline-none transition focus:border-red-500 focus:ring focus:ring-red-200 placeholder:text-gray-600 cursor-default"
+                    />
                 </div>
 
                 <!-- CI (solo lectura) -->
@@ -225,10 +221,8 @@ const clearPhotoFileInput = () => {
                         type="text"
                         :value="user.ci"
                         readonly
-                       class="bg-violet-950 text-white text-sm leading-5.6 block w-full appearance-none rounded-lg 
-               border border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all 
-               duration-200 ease-in-out placeholder:text-violet-300 focus:border-blue-400 focus:outline-none 
-               focus:shadow-primary-outline pr-10 cursor-text"                    />
+                        class="block w-full rounded-lg border border-red-300 bg-gray-100 text-black text-sm px-3 py-2 outline-none transition focus:border-red-500 focus:ring focus:ring-red-200 placeholder:text-gray-600 cursor-default"
+                    />
                 </div>
 
                 <!-- RDA (solo lectura) -->
@@ -241,10 +235,8 @@ const clearPhotoFileInput = () => {
                         type="text"
                         :value="user.rda"
                         readonly
-                       class="bg-violet-950 text-white text-sm leading-5.6 block w-full appearance-none rounded-lg 
-               border border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all 
-               duration-200 ease-in-out placeholder:text-violet-300 focus:border-blue-400 focus:outline-none 
-               focus:shadow-primary-outline pr-10 cursor-text"                    />
+                        class="block w-full rounded-lg border border-red-300 bg-gray-100 text-black text-sm px-3 py-2 outline-none transition focus:border-red-500 focus:ring focus:ring-red-200 placeholder:text-gray-600 cursor-default"
+                    />
                 </div>
 
                 <!-- Número de celular editable -->
@@ -259,7 +251,11 @@ const clearPhotoFileInput = () => {
                         type="text"
                         class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none pr-10"
                         autocomplete="cel"
-                        :class="{ 'border-red-500': form.errors.celular }"
+                        :class="[
+                            'block w-full rounded-lg border bg-white text-black text-sm px-3 py-2 outline-none transition',
+                            'border-red-300 placeholder:text-gray-600 focus:border-red-500 focus:ring focus:ring-red-200',
+                            form.errors.celular ? 'border-red-500' : '',
+                        ]"
                     />
                     <p
                         v-if="form.errors.celular"
@@ -282,7 +278,11 @@ const clearPhotoFileInput = () => {
                         class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none pr-10"
                         required
                         autocomplete="email"
-                        :class="{ 'border-red-500': form.errors.email }"
+                        :class="[
+                            'block w-full rounded-lg border bg-white text-black text-sm px-3 py-2 outline-none transition',
+                            'border-red-300 placeholder:text-gray-600 focus:border-red-500 focus:ring focus:ring-red-200',
+                            form.errors.email ? 'border-red-500' : '',
+                        ]"
                     />
                     <p
                         v-if="form.errors.email"

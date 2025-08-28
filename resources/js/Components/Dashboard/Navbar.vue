@@ -1,7 +1,7 @@
 <template>
     <nav
-         class="mt-4 relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all ease-in duration-250 shadow-xl rounded-2xl lg:flex-nowrap lg:justify-start border border-transparent bg-gradient-to-br from-violet-900 to-indigo-900 text-white"
->
+        class="mt-4 relative z-[999] overflow-visible flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all duration-200 shadow-2xl rounded-2xl lg:flex-nowrap lg:justify-start bg-red-600/15 backdrop-blur-md border border-red-600/60 text-slate-800"
+    >
         <div
             class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit"
         >
@@ -30,7 +30,7 @@
                         <div class="dropdown">
                             <a
                                 href="javascript:;"
-                                class="block px-0 py-2 text-sm font-semibold dark:text-white text-slate-800 transition-all ease-nav-brand"
+                                class="block px-0 py-2 text-sm font-semibold dark:text-white text-black transition-all ease-nav-brand"
                                 @click="toggleUserMenu"
                             >
                                 <i class="fa fa-user sm:mr-2"></i>
@@ -45,13 +45,13 @@
                                 <i class="ml-1 fa fa-caret-down"></i>
                             </a>
                             <ul
-                                 v-if="userMenuOpen"
-                                class="absolute right-0 z-50 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-slate-850"
+                                v-if="userMenuOpen"
+                                class="absolute right-0 top-full mt-2 z-[1000] w-48 py-1 origin-top-right bg-white rounded-md shadow-lg dark:bg-slate-850"
                             >
                                 <li>
                                     <Link
                                         href="/user/profile"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900"
+                                        class="block px-4 py-2 text-sm text-black hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900"
                                     >
                                         <i class="mr-2 fa fa-user"></i> Perfil
                                     </Link>
@@ -61,7 +61,7 @@
                                         href="/logout"
                                         method="post"
                                         as="button"
-                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900"
+                                        class="block w-full text-left px-4 py-2 text-sm text-black hover:bg-gray-100 dark:text-white dark:hover:bg-slate-900"
                                     >
                                         <i class="mr-2 fa fa-sign-out"></i>
                                         Cerrar Sesion

@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <!-- ✅ Este script debe ir antes de los estilos CSS -->
-    <script>
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-    
+  
+      <script>
+  (() => {
+    const root = document.documentElement;
+    root.classList.remove('dark');
+    localStorage.setItem('darkMode','false');
+    localStorage.setItem('theme','light');
+    localStorage.setItem('color-theme','light');
+    new MutationObserver(() => {
+      if (root.classList.contains('dark')) root.classList.remove('dark');
+    }).observe(root, { attributes:true, attributeFilter:['class'] });
+  })();
+  </script>
+      <!-- Recomendado para agentes de usuario -->
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -44,7 +52,7 @@
     @inertiaHead
 </head>
 
-<body class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default bg-gray-50 text-slate-500">
+<body class="m-0 font-sans text-base antialiased font-normal leading-default bg-white text-slate-700">
     @inertia
 
     <!-- Popper JS -->

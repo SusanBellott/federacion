@@ -135,9 +135,10 @@ const editing = computed(() => !!id_tipo.value);
         </template>
 
         <div class="flex-none w-full max-w-full px-3">
-            <h6 class="text-gray-800 dark:text-white">Tipos de Actividad</h6>
+            <h6 class="text-black">Tipos de Actividad</h6>
             <div
-                 class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-md border border-red-600/60 shadow-xl rounded-2xl p-6 text-slate-800"
+            >
                 <!-- Buscar, mostrar y agregar tipo de actividad  -->
                 <div
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent"
@@ -202,22 +203,22 @@ const editing = computed(() => !!id_tipo.value);
                             <thead class="align-bottom">
                                 <tr>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Nro
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Código
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Nombre
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Carga horaria
                                     </th>
@@ -227,7 +228,7 @@ const editing = computed(() => !!id_tipo.value);
                                                 'editarestadotipoactividad.update'
                                             )
                                         "
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Estado
                                     </th>
@@ -241,7 +242,7 @@ const editing = computed(() => !!id_tipo.value);
                                                 'tiposactividad.update'
                                             )
                                         "
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Acciones
                                     </th>
@@ -254,7 +255,7 @@ const editing = computed(() => !!id_tipo.value);
                                     class="border-b dark:border-white/40"
                                 >
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{
                                             (currentPage - 1) * perPage +
@@ -263,17 +264,17 @@ const editing = computed(() => !!id_tipo.value);
                                         }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ tipo.codigo }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ tipo.nombre }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ tipo.horas_minimas }}
                                     </td>
@@ -283,7 +284,7 @@ const editing = computed(() => !!id_tipo.value);
                                                 'editarestadotipoactividad.update'
                                             )
                                         "
-                                        class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <span
                                             v-if="tipo.estado == 'activo'"
@@ -328,7 +329,7 @@ const editing = computed(() => !!id_tipo.value);
                                         </span>
                                     </td>
                                     <td
-                                        class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <div
                                             class="flex justify-center space-x-2"
@@ -418,12 +419,11 @@ const editing = computed(() => !!id_tipo.value);
         </div>
 
         <!-- Modal formulario de tipo de actividad -->
-    <Modal :show="showModal" @close="closeModal">
-
-    <form @submit.prevent="submitForm">
+        <Modal :show="showModal" @close="closeModal">
+            <form @submit.prevent="submitForm">
                 <div class="p-6">
                     <h2
-                        class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none break-words whitespace-normal text-slate-400 opacity-70"
+                        class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none break-words whitespace-normal text-black opacity-70"
                     >
                         {{
                             editing
@@ -436,7 +436,7 @@ const editing = computed(() => !!id_tipo.value);
                         <!-- Campo Nombre -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Tipo de Actividad
                                 <span class="text-red-500">*</span>
@@ -445,16 +445,15 @@ const editing = computed(() => !!id_tipo.value);
                                 v-model="form.nombre"
                                 type="text"
                                 placeholder="Ingrese tipo de actividad"
-                          class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
-           />
-                 <validaciones :message="erroresTipo.nombre" />
-
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
+                            />
+                            <validaciones :message="erroresTipo.nombre" />
                         </div>
 
                         <!-- Campo Horas Mínimas -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Carga horaria
                                 <span class="text-red-500">*</span>
@@ -463,14 +462,12 @@ const editing = computed(() => !!id_tipo.value);
                                 id="horas_minimas"
                                 v-model="form.horas_minimas"
                                 type="number"
-                            
                                 placeholder="Ingrese horas mínimas"
-                            
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
-           />
-
-                           <validaciones :message="erroresTipo.horas_minimas" />
-
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
+                            />
+                            <validaciones
+                                :message="erroresTipo.horas_minimas"
+                            />
                         </div>
                     </div>
 
@@ -491,7 +488,6 @@ const editing = computed(() => !!id_tipo.value);
                     </div>
                 </div>
             </form>
-       
         </Modal>
 
         <!-- Boton de eliminar -->
@@ -511,14 +507,14 @@ const editing = computed(() => !!id_tipo.value);
 
 <style scoped>
 /* Para ocultar flechas en Chrome, Safari, Edge */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Para ocultar flechas en Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 </style>

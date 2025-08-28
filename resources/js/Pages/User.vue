@@ -192,7 +192,7 @@ const handleClickEditar = async (
         name: name || "",
         primer_apellido: primer_apellido || "",
         segundo_apellido: segundo_apellido || "",
-         celular: celular || "",
+        celular: celular || "",
         item: item || "",
         cargo: cargo || "",
         horas: horas || "",
@@ -391,9 +391,9 @@ const resetPassword = (id, cod, texto) => {
 
             <!-- Table Container with Modern Styling -->
             <div class="flex-none w-full max-w-full px-3">
-                <h6 class="text-gray-800 dark:text-white">Usuarios</h6>
+                <h6 class="text-black">Usuarios</h6>
                 <div
-                    class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                    class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-md border border-red-600/60 shadow-xl rounded-2xl p-6 text-slate-800"
                 >
                     <!-- Mostrar agregar y buscar  -->
                     <div
@@ -452,22 +452,22 @@ const resetPassword = (id, cod, texto) => {
                                 <thead class="align-bottom">
                                     <tr>
                                         <th
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Nro
                                         </th>
                                         <th
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Datos Personales
                                         </th>
                                         <th
-                                            class="w-[250px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[250px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Datos Institucionales
                                         </th>
                                         <th
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Rol
                                         </th>
@@ -477,7 +477,7 @@ const resetPassword = (id, cod, texto) => {
                                                     'editarestadodeleteusuario.update'
                                                 )
                                             "
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Estado
                                         </th>
@@ -490,7 +490,7 @@ const resetPassword = (id, cod, texto) => {
                                                     'usuarioseditar.update'
                                                 )
                                             "
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Acciones
                                         </th>
@@ -503,7 +503,7 @@ const resetPassword = (id, cod, texto) => {
                                         class="border-b dark:border-white/40"
                                     >
                                         <td
-                                            class="p-6 text-sm font-bold text-violet-100 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap"
+                                            class="p-6 text-sm font-bold text-black text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap"
                                         >
                                             {{
                                                 (currentPage - 1) * perPage +
@@ -512,7 +512,7 @@ const resetPassword = (id, cod, texto) => {
                                             }}
                                         </td>
                                         <td
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                            class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                         >
                                             <div class="flex px-2 py-1">
                                                 <div>
@@ -529,12 +529,12 @@ const resetPassword = (id, cod, texto) => {
                                                     class="flex flex-col justify-center"
                                                 >
                                                     <h6
-                                                        class="text-xs font-semibold leading-tight text-violet-100 dark:text-white dark:opacity-90"
+                                                        class="text-xs font-semibold leading-tight text-black"
                                                     >
                                                         {{ user.name }}
                                                     </h6>
                                                     <p
-                                                        class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400"
+                                                        class="mb-0 text-xs leading-tight text-black"
                                                     >
                                                         {{
                                                             user.primer_apellido
@@ -544,7 +544,7 @@ const resetPassword = (id, cod, texto) => {
                                                         }}
                                                     </p>
                                                     <p
-                                                        class="text-xs text-violet-300 dark:text-white dark:opacity-75"
+                                                        class="text-xs text-black"
                                                     >
                                                         {{ user.ci
                                                         }}<span
@@ -563,12 +563,10 @@ const resetPassword = (id, cod, texto) => {
                                                             >R.D.A.:</span
                                                         >
                                                         {{ user.rda }}
-                                                        
                                                     </p>
-                                                    <p  
-                                                    class="text-xs text-violet-300 dark:text-white dark:opacity-75"
+                                                    <p
+                                                        class="text-xs text-black"
                                                     >
-                                                        
                                                         <span
                                                             class="font-semibold"
                                                             >Celular:</span
@@ -576,7 +574,7 @@ const resetPassword = (id, cod, texto) => {
                                                         {{ user.celular }}
                                                     </p>
                                                     <p
-                                                        class="text-xs text-violet-300 dark:text-white dark:opacity-75"
+                                                        class="text-xs text-black"
                                                     >
                                                         <span
                                                             class="font-semibold"
@@ -585,7 +583,7 @@ const resetPassword = (id, cod, texto) => {
                                                         {{ user.email }}
                                                     </p>
                                                     <p
-                                                        class="text-xs text-violet-300 dark:text-white dark:opacity-75"
+                                                        class="text-xs text-black"
                                                     >
                                                         <span
                                                             class="font-semibold"
@@ -607,22 +605,19 @@ const resetPassword = (id, cod, texto) => {
                                             </div>
                                         </td>
                                         <td
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent whitespace-normal"
+                                            class="p-2 align-middle bg-transparent border-b border-red-500 shadow-transparent whitespace-normal"
                                         >
                                             <div
-                                                class="flex flex-col justify-center text-xs leading-tight text-violet-100 dark:text-white dark:opacity-90"
+                                                class="flex flex-col justify-center text-xs leading-tight text-black"
                                             >
                                                 <div class="mb-1">
                                                     <h6
-                                                        class="text-xs font-semibold leading-tight text-violet-100 dark:text-white dark:opacity-90"
+                                                        class="text-xs font-semibold leading-tight text-black"
                                                     >
-                                                        <span
-                                                            class="text-violet-200 dark:text-white"
+                                                        <span class="text-black"
                                                             >Distrito:</span
                                                         >
-                                                        <div
-                                                            class="text-violet-300 dark:text-white/80"
-                                                        >
+                                                        <div class="text-black">
                                                             {{
                                                                 user.distrito
                                                                     ?.descripcion ||
@@ -631,16 +626,13 @@ const resetPassword = (id, cod, texto) => {
                                                         </div>
                                                     </h6>
                                                     <h6
-                                                        class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                                        class="text-xs font-semibold leading-tight text-black"
                                                     >
-                                                        <span
-                                                            class="text-violet-200 dark:text-white"
+                                                        <span class="text-black"
                                                             >Unidad
                                                             Educativa:</span
                                                         >
-                                                        <div
-                                                            class="text-violet-300 dark:text-white/80"
-                                                        >
+                                                        <div class="text-black">
                                                             {{
                                                                 user.codigo_sie
                                                                     ?.unidad_educativa ||
@@ -649,15 +641,12 @@ const resetPassword = (id, cod, texto) => {
                                                         </div>
                                                     </h6>
                                                     <h6
-                                                        class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                                        class="text-xs font-semibold leading-tight text-black"
                                                     >
-                                                        <span
-                                                            class="text-violet-200 dark:text-white"
+                                                        <span class="text-black"
                                                             >Nivel:</span
                                                         >
-                                                        <div
-                                                            class="text-violet-300 dark:text-white/80"
-                                                        >
+                                                        <div class="text-black">
                                                             {{
                                                                 user.institucion
                                                                     ?.nivel ||
@@ -670,7 +659,7 @@ const resetPassword = (id, cod, texto) => {
                                         </td>
 
                                         <td
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                            class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                         >
                                             <div
                                                 class="flex flex-col space-y-1"
@@ -695,7 +684,7 @@ const resetPassword = (id, cod, texto) => {
                                                     'editarestadodeleteusuario.update'
                                                 )
                                             "
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                            class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                         >
                                             <span
                                                 v-if="user.estado == 'activo'"
@@ -740,7 +729,7 @@ const resetPassword = (id, cod, texto) => {
                                             </span>
                                         </td>
                                         <td
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                            class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                         >
                                             <div class="flex space-x-3">
                                                 <!-- Editar -->
@@ -887,7 +876,7 @@ const resetPassword = (id, cod, texto) => {
                 <form @submit.prevent="submitForm">
                     <div class="p-6">
                         <h2
-                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-black opacity-70"
                         >
                             {{
                                 id_user
@@ -900,23 +889,23 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo CI -->
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
-                                    Carnet <span class="text-red-500">*</span>
+                                    Carnet <span class="text-red-300">*</span>
                                 </label>
                                 <input
                                     id="codigo"
                                     v-model="form.ci"
                                     type="number"
                                     placeholder="Ingrese cédula de identidad"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError :message="errors.ci" class="mt-2" />
                             </div>
 
                             <!-- Campo Complemento CI -->
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Complemento CI
                                 <span class="text-red-500"></span>
@@ -927,7 +916,7 @@ const resetPassword = (id, cod, texto) => {
                                 id="complemento_ci"
                                 placeholder="Ingresa el complemento (Opcional)"
                                 maxlength="5"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <datalist id="complementos">
                                 <option value="LP" />
@@ -948,7 +937,7 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo RDA -->
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     RDA <span class="text-red-500">*</span>
                                 </label>
@@ -957,7 +946,7 @@ const resetPassword = (id, cod, texto) => {
                                     v-model="form.rda"
                                     type="number"
                                     placeholder="Ingrese número de RDA"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.rda"
@@ -968,7 +957,7 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo Nombre -->
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Nombre Completo
                                     <span class="text-red-500">*</span>
@@ -977,7 +966,7 @@ const resetPassword = (id, cod, texto) => {
                                     v-model="form.name"
                                     type="text"
                                     placeholder="Ingrese nombre completo"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.name"
@@ -988,7 +977,7 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo Primer Apellido -->
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Apellido Paterno
                                     <span class="text-red-500">*</span>
@@ -997,7 +986,7 @@ const resetPassword = (id, cod, texto) => {
                                     v-model="form.primer_apellido"
                                     type="text"
                                     placeholder="Ingrese apellido paterno"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.primer_apellido"
@@ -1008,7 +997,7 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo Segundo Apellido -->
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Apellido Materno
                                     <span class="text-red-500">*</span>
@@ -1017,7 +1006,7 @@ const resetPassword = (id, cod, texto) => {
                                     v-model="form.segundo_apellido"
                                     type="text"
                                     placeholder="Ingrese apellido materno"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.segundo_apellido"
@@ -1027,7 +1016,7 @@ const resetPassword = (id, cod, texto) => {
 
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Numero de celular
                                     <span class="text-red-500">*</span>
@@ -1036,7 +1025,7 @@ const resetPassword = (id, cod, texto) => {
                                     v-model="form.celular"
                                     type="text"
                                     placeholder="Ingrese número de celular"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.celular"
@@ -1047,7 +1036,7 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo Correo -->
                             <div v-if="id_user">
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Correo Institucional<span
                                         class="text-red-500"
@@ -1057,7 +1046,7 @@ const resetPassword = (id, cod, texto) => {
                                 <input
                                     v-model="form.email"
                                     type="email"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.email"
@@ -1068,7 +1057,7 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo Item -->
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Ítem <span class="text-red-500">*</span>
                                 </label>
@@ -1076,7 +1065,7 @@ const resetPassword = (id, cod, texto) => {
                                     v-model="form.item"
                                     type="number"
                                     placeholder="Ingrese número de ítem"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.item"
@@ -1087,7 +1076,7 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo Cargo -->
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Cargo <span class="text-red-500">*</span>
                                 </label>
@@ -1095,7 +1084,7 @@ const resetPassword = (id, cod, texto) => {
                                     v-model="form.cargo"
                                     type="number"
                                     placeholder="Ingrese número de cargo"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.cargo"
@@ -1106,7 +1095,7 @@ const resetPassword = (id, cod, texto) => {
                             <!-- Campo Horas -->
                             <div>
                                 <label
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Horas <span class="text-red-500">*</span>
                                 </label>
@@ -1114,7 +1103,7 @@ const resetPassword = (id, cod, texto) => {
                                     v-model="form.horas"
                                     type="number"
                                     placeholder="Ingrese número de horas"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 />
                                 <InputError
                                     :message="errors.horas"
@@ -1126,7 +1115,7 @@ const resetPassword = (id, cod, texto) => {
                             <div class="mb-4">
                                 <label
                                     for="distrito_id"
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Distrito <span class="text-red-500">*</span>
                                 </label>
@@ -1142,7 +1131,7 @@ const resetPassword = (id, cod, texto) => {
                             <div class="mb-4">
                                 <label
                                     for="institucion_id"
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Nivel <span class="text-red-500">*</span>
                                 </label>
@@ -1158,7 +1147,7 @@ const resetPassword = (id, cod, texto) => {
                             <div class="mb-4">
                                 <label
                                     for="codigo_sie_id"
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                 >
                                     Unidad Educativa
                                     <span class="text-red-500">*</span>
@@ -1174,14 +1163,14 @@ const resetPassword = (id, cod, texto) => {
                             <div class="mb-4">
                                 <label
                                     for="role"
-                                    class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                    class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                                     >Roles
                                     <span class="text-red-500">*</span></label
                                 >
                                 <select
                                     v-model="form.role"
                                     id="id_curso"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none pr-10"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                                 >
                                     <option disabled value="">
                                         Selecciona un Rol

@@ -129,8 +129,8 @@ const submitForm = () => {
     </template>
 
     <div class="flex-none w-full max-w-full px-3">
-      <h6 class="text-gray-800 dark:text-white">Códigos SIE</h6>
-      <div  class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border">    
+      <h6 class="text-black">Códigos SIE</h6>
+      <div  class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-md border border-red-600/60 shadow-xl rounded-2xl p-6 text-slate-800">    
         <!-- Encabezado de buscar mostrar y agregar nuevo codigo sie  -->
         <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
   <div class="flex flex-col lg:flex-row lg:items-center lg:gap-4 w-full">
@@ -195,33 +195,33 @@ const submitForm = () => {
             <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
               <thead class="align-bottom">
                 <tr>
-                  <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nro</th>
-                  <th class="w-[250px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Distrito</th>
-                   <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Nivel</th>
-                  <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Codigo SIE</th>
-                  <th class="w-[250px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Unidad Educativa</th>
-                  <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Estado</th>
-                  <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update') || $page.props.permissions.includes('distritoseditar.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words">Acciones</th>
+                  <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words">Nro</th>
+                  <th class="w-[250px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words">Distrito</th>
+                   <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words">Nivel</th>
+                  <th class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words">Codigo SIE</th>
+                  <th class="w-[250px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words">Unidad Educativa</th>
+                  <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words">Estado</th>
+                  <th v-if="$page.props.permissions.includes('editarestadodeletedistrito.update') || $page.props.permissions.includes('distritoseditar.update')" class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in codigosie.data" :key="item.id_codigo_sie" class="border-b dark:border-white/40">
-                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                <tr v-for="(item, index) in codigosie.data" :key="item.id_codigo_sie" class="border-b border-red-500">
+                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase">
                     {{ (currentPage - 1) * perPage + index + 1 }}</td>
-                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase">
                     {{ item.distrito?.descripcion || 'Sin distrito' }}
                   </td>
-                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase">
                    <td>{{ item.institucion?.nivel || 'Sin institución' }}</td>
 
                   </td>
-                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase">
                     {{ item.programa }}
                   </td>
-                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase">
+                  <td class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase">
                     {{ item.unidad_educativa }}
                   </td>
-                  <td v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                  <td v-if="$page.props.permissions.includes('editarestadodeletedistrito.update')" class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent">
                     <span v-if="item.estado == 'activo'"
                           class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
                           @click="handleDelete(item, 2, '¿Estás seguro de que deseas deshabilitar este registro?')">
@@ -238,7 +238,7 @@ const submitForm = () => {
                       Registrar
                     </span>
                   </td>
-                  <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                  <td class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent">
                     <div class="flex justify-center space-x-2">
                       <button v-if="item.estado != 'eliminado' && item.estado != 'inactivo' && $page.props.permissions.includes('distritoseditar.update')"
                               @click="handleClickEditar(
@@ -280,7 +280,7 @@ const submitForm = () => {
     <Modal :show="showModal" @close="closeModal" max-width="2xl">
       <form @submit.prevent="submitForm">
         <div class="p-6">
-          <h2 class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+          <h2 class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-black opacity-70">
             {{ editing ? 'Editar Código SIE' : 'Agregar Nuevo Código SIE' }}
           </h2>
 
@@ -288,7 +288,7 @@ const submitForm = () => {
 
             <!-- Campo Distrito -->
             <div>
-              <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+              <label class="inline-block mb-2 ml-1 font-bold text-xs text-black">
                 Distrito <span class="text-red-500">*</span>
               </label>
               <SearchableSelect
@@ -302,7 +302,7 @@ const submitForm = () => {
 
 <!-- Campo Institución -->
 <div>
-  <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+  <label class="inline-block mb-2 ml-1 font-bold text-xs text-black">
     Institución <span class="text-red-500">*</span>
   </label>
   <SearchableSelect
@@ -315,29 +315,33 @@ const submitForm = () => {
 
             <!-- Campo Codigo SIE -->
             <div>
-              <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+              <label class="inline-block mb-2 ml-1 font-bold text-xs text-black">
                 Codigo SIE <span class="text-red-500">*</span>
               </label>
               <input v-model="form.programa" type="number" 
                      placeholder="Ingrese código SIE" 
-                         class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none 
-           rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none 
-           transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
-  />             
+                        class="block w-full rounded-lg border border-red-300 
+         bg-white text-black text-sm px-3 py-2 
+         placeholder:text-gray-500
+         focus:border-red-500 focus:ring focus:ring-red-200 
+         outline-none transition-all"
+/>     
    <validaciones :message="errores.programa" />
             </div>
 
             <!-- Campo Unidad Educativa -->
             <div>
-              <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">
+              <label class="inline-block mb-2 ml-1 font-bold text-xs text-black">
                 Unidad Educativa <span class="text-red-500">*</span>
               </label>
               <input v-model="form.unidad_educativa" type="text" 
                      placeholder="Ingrese nombre de unidad educativa" 
-                         class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none 
-           rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none 
-           transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
-  />
+                   class="block w-full rounded-lg border border-red-300 
+         bg-white text-black text-sm px-3 py-2 
+         placeholder:text-gray-500
+         focus:border-red-500 focus:ring focus:ring-red-200 
+         outline-none transition-all"
+/>
                 <validaciones :message="errores.unidad_educativa" />
             </div>
           </div>

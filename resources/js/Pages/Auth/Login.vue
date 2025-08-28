@@ -124,23 +124,25 @@ onMounted(() => {
     <Head title="Sign In" />
 
     <section
-        class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white relative overflow-hidden"
+        class="min-h-screen bg-white text-slate-800 relative overflow-hidden"
+
     >
         <!-- Elementos decorativos de fondo -->
         <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2260%22%20height=%2260%22%20viewBox=%220%200%2060%2060%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill=%22none%22%20fill-rule=%22evenodd%22%3E%3Cg%20fill=%22%23ffffff%22%20fill-opacity=%220.03%22%3E%3Cpath%20d=%22M30%2030c0-11.046-8.954-20-20-20s-20%208.954-20%2020%208.954%2020%2020%2020%2020-8.954%2020-20zm0%200c0%2011.046%208.954%2020%2020%2020s20-8.954%2020-20-8.954-20-20-20-20%208.954-20%2020z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
 
         
         <!-- Círculos decorativos -->
-        <div class="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
+       <div class="absolute top-20 left-20 w-72 h-72 bg-slate-200 rounded-full mix-blend-multiply blur-xl opacity-40 animate-pulse"></div>
+<div class="absolute bottom-20 right-20 w-96 h-96 bg-slate-300 rounded-full mix-blend-multiply blur-xl opacity-35 animate-pulse"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-slate-100 rounded-full mix-blend-multiply blur-xl opacity-30 animate-pulse"></div>
 
         <!-- Contenedor principal centrado -->
  <div class="relative flex items-center justify-center p-6 min-h-[600px]">
 
             <div class="w-full max-w-md mx-auto">
                 <!-- Formulario de login centrado -->
-                <div class="relative flex flex-col min-w-0 break-words bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl p-6 rounded-3xl">
+                <div class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-lg border border-red-600/50 shadow-2xl p-6 rounded-3xl">
+
                     <div class="pb-4 mb-4 border-b border-white/10">
                         <!-- Bloque del logo (arriba del título) -->
                         <div class="flex justify-center items-center gap-10 mb-2">
@@ -152,7 +154,7 @@ onMounted(() => {
                         </div>
 
                         <!-- Título del formulario -->
-                        <h4 class="font-bold text-xl text-white text-center mb-4">
+                        <h4 class="font-bold text-xl text-black text-center mb-4">
                             <span class="inline-flex items-center gap-2">
                                 <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -166,7 +168,7 @@ onMounted(() => {
                         <div class="text-center">
                             <button
                                 @click="restartTour"
-                                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-full hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transform hover:scale-105 transition-all duration-200 shadow-md"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-black bg-gradient-to-r from-blue-500 to-purple-500 rounded-full hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transform hover:scale-105 transition-all duration-200 shadow-md"
                             >
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -198,7 +200,7 @@ onMounted(() => {
                         >
                             <!-- Email Field mejorado -->
                             <div class="group">
-                                <label for="email" class="block mb-2 text-sm font-semibold text-gray-200">
+                                <label for="email" class="block mb-2 text-sm font-semibold text-black-200">
                                     <span class="flex items-center gap-2">
                                         <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -215,7 +217,7 @@ onMounted(() => {
                                         required
                                         autofocus
                                         autocomplete="username"
-                                        class="w-full px-4 py-2.5 text-white placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 hover:bg-white/15"
+                                        class="w-full px-4 py-2.5 text-black placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 hover:bg-white/15"
                                         :class="{
                                             'border-red-500 focus:ring-red-500/50': form.errors.email,
                                         }"
@@ -237,7 +239,7 @@ onMounted(() => {
 
                             <!-- Password Field mejorado -->
                             <div class="group">
-                                <label for="password" class="block mb-2 text-sm font-semibold text-gray-200">
+                                <label for="password" class="block mb-2 text-sm font-semibold text-black-200">
                                     <span class="flex items-center gap-2">
                                         <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -253,7 +255,7 @@ onMounted(() => {
                                         placeholder="Ingrese número de carnet"
                                         required
                                         autocomplete="current-password"
-                                        class="w-full px-4 py-2.5 pr-12 text-white placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-200 hover:bg-white/15"
+                                        class="w-full px-4 py-2.5 pr-12 text-black placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-200 hover:bg-white/15"
                                         :class="{
                                             'border-red-500 focus:ring-red-500/50': form.errors.password,
                                         }"
@@ -289,17 +291,17 @@ onMounted(() => {
                                         v-model="form.remember" 
                                         type="checkbox" 
                                         id="remember" 
-                                        class="w-4 h-4 text-blue-500 bg-white/10 border-white/20 rounded focus:ring-blue-500/50 focus:ring-2 transition-all duration-200"
-                                    />
+                                        class="w-4 h-4 text-blue-500 bg-white/10 border border-red-600 rounded focus:ring-blue-500/50 focus:ring-2 transition-all duration-200"
+         />
                                 </div>
-                                <label for="remember" class="ml-3 text-sm text-gray-200 cursor-pointer group-hover:text-white transition-colors duration-200">
+                                <label for="remember" class="ml-3 text-sm text-black-200 cursor-pointer group-hover:text-white transition-colors duration-200">
                                     Recuérdame
                                 </label>
                             </div>
 
                             <!-- Captcha section mejorada -->
                             <div class="space-y-2">
-                                <label class="block text-sm font-semibold text-gray-200">
+                                <label class="block text-sm font-semibold text-black-200">
                                     <span class="flex items-center gap-2">
                                         <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-6l-3 3m-3-3l3 3m-3-3v6"/>
@@ -334,7 +336,7 @@ onMounted(() => {
                                     maxlength="6"
                                     placeholder="Ingrese el código"
                                     autocomplete="off"
-                                    class="w-full px-4 py-2.5 text-white placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-200 hover:bg-white/15"
+                                    class="w-full px-4 py-2.5 text-black placeholder-gray-400 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-200 hover:bg-white/15"
                                     @input="form.captcha = form.captcha.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6)"
                                 />
                                 

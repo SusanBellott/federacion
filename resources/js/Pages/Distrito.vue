@@ -123,13 +123,13 @@ const submitForm = () => {
         </template>
 
         <div class="flex-none w-full max-w-full px-3">
-            <h6 class="text-gray-800 dark:text-white">Distritos</h6>
+            <h6 class="text-black">Distritos</h6>
             <div
-                class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-md border border-red-600/60 shadow-xl rounded-xl p-6 text-slate-800"
             >
                 <!-- Header de Distritos -->
                 <div
-                   class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent"
+                    class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent"
                 >
                     <!-- Filtros y botón -->
                     <div
@@ -198,17 +198,17 @@ const submitForm = () => {
                             <thead class="align-bottom">
                                 <tr>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Nro
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Código
                                     </th>
                                     <th
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Distrito
                                     </th>
@@ -218,7 +218,7 @@ const submitForm = () => {
                                                 'editarestadodeletedistrito.update'
                                             )
                                         "
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Estado
                                     </th>
@@ -231,7 +231,7 @@ const submitForm = () => {
                                                 'distritoseditar.update'
                                             )
                                         "
-                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                     >
                                         Acciones
                                     </th>
@@ -244,7 +244,7 @@ const submitForm = () => {
                                     class="border-b dark:border-white/40"
                                 >
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words"
                                     >
                                         {{
                                             (currentPage - 1) * perPage +
@@ -253,12 +253,12 @@ const submitForm = () => {
                                         }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words"
                                     >
                                         {{ distrito.codigo }}
                                     </td>
                                     <td
-                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words uppercase"
+                                        class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words uppercase"
                                     >
                                         {{ distrito.descripcion }}
                                     </td>
@@ -268,7 +268,7 @@ const submitForm = () => {
                                                 'editarestadodeletedistrito.update'
                                             )
                                         "
-                                        class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <span
                                             v-if="distrito.estado == 'activo'"
@@ -313,7 +313,7 @@ const submitForm = () => {
                                         </span>
                                     </td>
                                     <td
-                                        class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                        class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                     >
                                         <div
                                             class="flex justify-center space-x-2"
@@ -411,7 +411,7 @@ const submitForm = () => {
             <form @submit.prevent="submitForm">
                 <div class="p-6">
                     <h2
-                        class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                        class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-black opacity-70"
                     >
                         {{
                             editing
@@ -424,7 +424,7 @@ const submitForm = () => {
                         <!-- Campo Código -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Código de Distrito
                                 <span class="text-red-500">*</span>
@@ -434,7 +434,7 @@ const submitForm = () => {
                                 v-model="form.codigo"
                                 type="number"
                                 placeholder="Ingrese código de distrito"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <InputError :message="erroresdistrito.codigo" />
                         </div>
@@ -442,7 +442,7 @@ const submitForm = () => {
                         <!-- Campo Descripción -->
                         <div>
                             <label
-                                class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80"
+                                class="inline-block mb-2 ml-1 font-bold text-xs text-black"
                             >
                                 Nombre de Distrito
                                 <span class="text-red-500">*</span>
@@ -451,7 +451,7 @@ const submitForm = () => {
                                 v-model="form.descripcion"
                                 type="text"
                                 placeholder="Ingrese nombre de distrito"
-                                class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none pr-10"
+                                class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 placeholder:text-gray-500 focus:border-red-500 focus:ring focus:ring-red-200 outline-none transition-all"
                             />
                             <InputError
                                 :message="erroresdistrito.descripcion"

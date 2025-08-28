@@ -52,14 +52,13 @@ defineExpose({ searchTerm2 });
 
 <template>
     <div class="flex items-center md:ml-auto md:pr-4 gap-4 w-full flex-wrap">
-        
         <!-- Input de búsqueda -->
         <div class="relative flex-1 min-w-[200px]">
             <div
                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
             >
                 <svg
-                    class="h-5 w-5 text-violet-300"
+                    class="h-5 w-5 text-black"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                 >
@@ -74,7 +73,7 @@ defineExpose({ searchTerm2 });
                 v-model="searchTerm2"
                 type="text"
                 :placeholder="placeholder"
-                class="pl-10 pr-3 py-2 block w-full rounded-lg border border-violet-700 bg-violet-950 bg-clip-padding text-sm text-white placeholder:text-violet-300 outline-none transition-all focus:border-blue-400 focus:shadow-primary-outline"
+                class="pl-10 pr-3 py-2 block w-full rounded-lg border border-red-300 bg-white bg-clip-padding text-sm text-black placeholder:text-gray-600 outline-none transition-all focus:border-red-500 focus:ring focus:ring-red-200"
             />
         </div>
 
@@ -83,12 +82,12 @@ defineExpose({ searchTerm2 });
             <div
                 class="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-0 sm:w-auto"
             >
-                <span class="text-sm text-white whitespace-nowrap"
+                <span class="text-sm text-black whitespace-nowrap"
                     >Mostrar:</span
                 >
                 <select
                     v-model="perPage2"
-                    class="block w-full sm:w-auto appearance-none rounded-lg border border-violet-700 bg-violet-950 bg-clip-padding px-3 py-2 text-sm text-white placeholder:text-violet-300 outline-none transition-all focus:border-blue-400 focus:shadow-primary-outline cursor-pointer min-w-[80px]"
+                    class="block w-full sm:w-auto appearance-none rounded-lg border border-red-300 bg-white bg-clip-padding px-3 py-2 text-sm text-black outline-none transition-all focus:border-red-500 focus:ring focus:ring-red-200 cursor-pointer min-w-[80px]"
                 >
                     <option
                         v-for="option in perPageOptions2"

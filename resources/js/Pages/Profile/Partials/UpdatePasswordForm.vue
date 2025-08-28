@@ -85,7 +85,7 @@ const updatePassword = () => {
 
 <template>
     <div
-        class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
+        class="relative flex flex-col min-w-0 break-words bg-red-600/15 border border-red-600/60 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
     >
         <div class="flex-auto p-6">
             <hr
@@ -122,7 +122,7 @@ const updatePassword = () => {
                                             : 'password'
                                     "
                                     autocomplete="current-password"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none pr-10"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 outline-none transition placeholder:text-gray-600 focus:border-red-500 focus:ring focus:ring-red-200 pr-10"
                                     :class="{
                                         'border-red-500':
                                             form.errors.current_password,
@@ -140,8 +140,8 @@ const updatePassword = () => {
                                     <i
                                         :class="
                                             showCurrentPassword
-                                                ? 'fi fi-sr-eye text-blue-400 text-lg'
-                                                : 'fi fi-sr-eye-crossed text-blue-400 text-lg'
+                                                ? 'fi fi-sr-eye text-red-400 text-lg'
+                                                : 'fi fi-sr-eye-crossed text-red-400 text-lg'
                                         "
                                     ></i>
                                 </span>
@@ -169,7 +169,7 @@ const updatePassword = () => {
                                     v-model="form.password"
                                     :type="showPassword ? 'text' : 'password'"
                                     autocomplete="new-password"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none pr-10"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 outline-none transition placeholder:text-gray-600 focus:border-red-500 focus:ring focus:ring-red-200 pr-10"
                                     :class="{
                                         'border-red-500': form.errors.password,
                                     }"
@@ -183,8 +183,8 @@ const updatePassword = () => {
                                     <i
                                         :class="
                                             showPassword
-                                                ? 'fi fi-sr-eye text-blue-400 text-lg'
-                                                : 'fi fi-sr-eye-crossed text-blue-400 text-lg'
+                                                ? 'fi fi-sr-eye text-red-400 text-lg'
+                                                : 'fi fi-sr-eye-crossed text-red-400 text-lg'
                                         "
                                     ></i>
                                 </span>
@@ -215,7 +215,7 @@ const updatePassword = () => {
                                             : 'password'
                                     "
                                     autocomplete="new-password"
-                                    class="focus:shadow-primary-outline bg-violet-950 text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-violet-700 bg-clip-padding px-3 py-2 font-normal outline-none transition-all placeholder:text-violet-300 focus:border-blue-400 focus:outline-none pr-10"
+                                    class="block w-full rounded-lg border border-red-300 bg-white text-black text-sm px-3 py-2 outline-none transition placeholder:text-gray-600 focus:border-red-500 focus:ring focus:ring-red-200 pr-10"
                                     :class="{
                                         'border-red-500':
                                             form.errors.password_confirmation,
@@ -233,8 +233,8 @@ const updatePassword = () => {
                                     <i
                                         :class="
                                             showPasswordConfirm
-                                                ? 'fi fi-sr-eye text-blue-400 text-lg'
-                                                : 'fi fi-sr-eye-crossed text-blue-400 text-lg'
+                                                ? 'fi fi-sr-eye text-red-400 text-lg'
+                                                : 'fi fi-sr-eye-crossed text-red-400 text-lg'
                                         "
                                     ></i>
                                 </span>

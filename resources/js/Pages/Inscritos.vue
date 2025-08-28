@@ -8,19 +8,17 @@
             </h2>
         </template>
         <div class="p-3">
-            
             <!-- Alerts & Notifications -->
             <div v-if="flash.success">
                 <useSweetAlert :data="flash.datos_array" />
             </div>
             <editaralerta title="¡Registro editado correctamente!" />
 
-
             <!-- Table Container with Modern Styling -->
             <div class="flex-none w-full max-w-full px-3">
-                <h6 class="text-gray-800 dark:text-white">Inscritos</h6>
+                <h6 class="text-black">Inscritos</h6>
                 <div
-                    class="relative flex flex-col min-w-0 break-words bg-gradient-to-br from-violet-900 to-indigo-900 border-0 shadow-xl dark:shadow-dark-xl rounded-2xl bg-clip-border"
+                    class="relative flex flex-col min-w-0 break-words bg-red-600/15 backdrop-blur-md border border-red-600/60 shadow-xl rounded-2xl p-6 text-slate-800"
                 >
                     <div
                         class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent"
@@ -78,33 +76,33 @@
                                 <thead class="align-bottom">
                                     <tr>
                                         <th
-                                            class="w-[50px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[50px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Nro
                                         </th>
                                         <th
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Usuario
                                         </th>
                                         <th
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Título de actividad
                                         </th>
                                         <th
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Costo
                                         </th>
 
                                         <th
-                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-normal break-words"
                                         >
                                             Fecha de Inscripción
                                         </th>
                                         <th
-                                            class="w-[140px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-nowrap"
+                                            class="w-[140px] px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-nowrap"
                                         >
                                             Certificado
                                         </th>
@@ -117,7 +115,7 @@
                                                     'inscritoeditar.update'
                                                 )
                                             "
-                                            class="px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-gray-300 text-gray-700 dark:border-white/40 dark:text-white dark:opacity-80 whitespace-nowrap"
+                                            class="px-3 py-3 text-[11px] font-bold text-center uppercase align-middle bg-transparent border-b border-red-500 text-black whitespace-nowrap"
                                         >
                                             Acciones
                                         </th>
@@ -129,10 +127,10 @@
                                             inscrito, index
                                         ) in inscritos.data"
                                         :key="inscrito.id_inscripcion"
-                                        class="border-b dark:border-white/40"
+                                        class="border-b border-red-500"
                                     >
                                         <td
-                                            class="w-[100px] p-2 text-center align-middle bg-transparent border-b dark:border-white/40 text-[11px] font-semibold text-gray-700 dark:text-white dark:opacity-80 whitespace-normal break-words"
+                                            class="w-[100px] p-2 text-center align-middle bg-transparent border-b border-red-500 text-[11px] font-semibold text-black whitespace-normal break-words"
                                         >
                                             {{
                                                 (currentPage - 1) * perPage +
@@ -141,7 +139,7 @@
                                             }}
                                         </td>
                                         <td
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                            class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                         >
                                             <div class="flex px-2 py-1">
                                                 <div>
@@ -160,12 +158,12 @@
                                                     class="flex flex-col justify-center"
                                                 >
                                                     <h6
-                                                        class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                                        class="text-xs font-semibold leading-tight text-black"
                                                     >
                                                         {{ inscrito.user.name }}
                                                     </h6>
                                                     <p
-                                                        class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400"
+                                                        class="mb-0 text-xs leading-tight text-black"
                                                     >
                                                         {{
                                                             inscrito.user
@@ -180,13 +178,13 @@
                                             </div>
                                         </td>
                                         <td
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                            class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                         >
                                             <p
-                                                class="mb-0 text-xs font-semibold leading-tight dark:text-white dark:opacity-80"
+                                                class="mb-0 text-xs font-semibold leading-tight text-black"
                                             >
                                                 <span
-                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                                    class="text-xs font-semibold leading-tight text-black"
                                                     v-if="
                                                         inscrito.id_curso ===
                                                         null
@@ -194,7 +192,7 @@
                                                     >No asignado</span
                                                 >
                                                 <span
-                                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                                    class="text-xs font-semibold leading-tight text-black"
                                                     v-else
                                                     >{{
                                                         inscrito.curso.nombre
@@ -204,7 +202,7 @@
                                         </td>
 
                                         <td
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap text-xs font-semibold text-gray-700 dark:text-white dark:opacity-80"
+                                            class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap text-xs font-semibold text-blacck"
                                         >
                                             <span
                                                 :class="{
@@ -228,10 +226,10 @@
                                         </td>
 
                                         <td
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                            class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                         >
                                             <span
-                                                class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400"
+                                                class="text-xs font-semibold leading-tight text-black"
                                                 >{{
                                                     inscrito.fecha_inscripcion
                                                 }}</span
@@ -240,7 +238,7 @@
 
                                         <!-- Botón Certificado -->
                                         <td
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                                            class="p-2 text-center align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent"
                                         >
                                             <!-- Certificado (PDF) -->
                                             <a
@@ -287,9 +285,11 @@
                                                     'inscritoeditar.update'
                                                 )
                                             "
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent w-[200px] max-w-[200px]"
+                                            class="p-2 align-middle bg-transparent border-b border-red-500 whitespace-nowrap shadow-transparent w-[200px] max-w-[200px]"
                                         >
-                                         <div class="flex justify-center items-center space-x-3">
+                                            <div
+                                                class="flex justify-center items-center space-x-3"
+                                            >
                                                 <!-- Botón Editar -->
                                                 <button
                                                     v-if="
@@ -395,7 +395,7 @@
                 <form @submit.prevent="submitForm">
                     <div class="p-6">
                         <h2
-                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-base border-b-solid tracking-none whitespace-nowrap text-black opacity-70"
                         >
                             Agregar Nuevo Inscrito
                         </h2>
@@ -404,7 +404,7 @@
                             <!-- Campo Nombre -->
                             <div>
                                 <label
-                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                    class="text-xs font-semibold leading-tight text-black"
                                 >
                                     Usuario a Inscribir
                                 </label>
@@ -427,7 +427,7 @@
                                                     class="border-b dark:border-white/40"
                                                 >
                                                     <td
-                                                        class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                                        class="text-xs font-semibold leading-tight text-black dark:text-white dark:opacity-80"
                                                     >
                                                         {{ usuario.name }}
                                                         {{
@@ -475,9 +475,7 @@
                                     </button>
 
                                     <!-- Párrafo con color sky hermoso -->
-                                    <p
-                                        class="text-xl text-sky-500 dark:text-sky-400"
-                                    >
+                                    <p class="text-xl text-black">
                                         {{ user_nombre_completo }}
                                     </p>
                                 </div>
@@ -487,7 +485,7 @@
                             <!-- Campo Nombre -->
                             <div>
                                 <label
-                                    class="text-xs font-semibold leading-tight text-gray-700 dark:text-white dark:opacity-80"
+                                    class="text-xs font-semibold leading-tight text-black"
                                 >
                                     Seleccionar Curso
                                 </label>
@@ -512,7 +510,7 @@
                                         -
                                     </button>
                                     <p
-                                        class="text-xl text-sky-500 dark:text-sky-400"
+                                        class="text-xl text-black dark:text-sky-400"
                                     >
                                         {{ curso_nombre }}
                                     </p>
@@ -629,8 +627,6 @@
                 @confirm="onConfirmDelete"
             />
         </div>
-
-
     </AppLayout>
 </template>
 
@@ -668,14 +664,13 @@ const id_inscripcion = ref(null);
 //)
 
 //---------------------------busqueda de ususarios -----------------
-const inscritosComponent = ref("");
+const inscritosComponent = ref(null);
 const user_nombre = ref("");
 const user_nombre_completo = ref("");
 const id_usuariof = ref(null);
 const valorbusqueda = ref(true);
 //---------------------------busqueda de cursos -----------------
-const buscadorCursoRef = ref("");
-
+const buscadorCursoRef = ref(null);
 const curso_nombre = ref("");
 const id_cursof = ref(null);
 const valorbusquedacurso = ref(true);
@@ -759,6 +754,7 @@ const handleClickEditar = (uuid, id_user, nombre, mat, pat, id_curso, nom) => {
 const closeModal = () => {
     showModal.value = false;
     resetForm();
+    resetInscripcion();
     if (previousRoute.value) {
         router.visit(previousRoute.value, {
             preserveState: true, // Mantiene el estado de la página
@@ -769,6 +765,30 @@ const closeModal = () => {
         console.warn("No hay ruta anterior definida.");
     }
 };
+
+function resetInscripcion() {
+    // limpiar seleccion usuario
+    user_nombre.value = "";
+    user_nombre_completo.value = "";
+    id_usuariof.value = null;
+    valorbusqueda.value = true;
+
+    // limpiar seleccion curso
+    curso_nombre.value = "";
+    id_cursof.value = null;
+    valorbusquedacurso.value = true;
+
+    // limpiar buscadores hijos (si exponen propiedades o métodos)
+    // si en tu Buscadoruser/Buscadorcurso manejas 'searchTerm2'/'searchTerm3':
+    if (inscritosComponent.value) {
+        inscritosComponent.value.searchTerm2 = "";
+        inscritosComponent.value?.clear?.(); // si expones un método clear()
+    }
+    if (buscadorCursoRef.value) {
+        buscadorCursoRef.value.searchTerm3 = "";
+        buscadorCursoRef.value?.clear?.(); // si expones un método clear()
+    }
+}
 
 const resetForm = () => {
     form.value = {
@@ -830,6 +850,7 @@ const mostrarCertificado = (fechaFin) => {
 
     return fechaActual >= fechaFinCurso;
 };
+
 // 2️⃣ Reemplaza aquí tu antiguo handleDelete si quieres, pero lo importante es esto:
 const onConfirmDelete = async (uuid, cod) => {
     await router.patch(

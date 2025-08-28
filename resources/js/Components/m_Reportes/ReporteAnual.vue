@@ -2,29 +2,28 @@
     <div class="max-w-3xl mx-auto px-3 py-3">
         <!-- Contenedor principal más compacto -->
         <div
-            class="bg-gradient-to-br from-violet-900 to-indigo-900 p-3 rounded-lg shadow-lg border border-purple-500/20"
+            class="relative z-30 bg-red-600/15 backdrop-blur-md p-3 rounded-lg shadow-2xl border border-red-600/60"
         >
-            <!-- Grid responsive más compacto -->
             <div class="text-center mb-2 col-span-2">
-                <h3 class="text-sm font-bold text-white mb-1">
+                <h3 class="text-sm font-bold text-black mb-1">
                     📊 Reporte Anual
                 </h3>
             </div>
             <!-- Reporte Anual -->
             <div
-                class="bg-gradient-to-br from-violet-900 to-indigo-900 p-3 rounded-md shadow-md border border-purple-600/50"
+                class="bg-red-600/10 backdrop-blur-md p-3 rounded-md shadow-md border border-red-600/50"
             >
                 <!-- Selección de año -->
                 <div class="grid grid-cols-2 gap-3 items-end">
                     <div>
                         <label
-                            class="block text-xs font-semibold text-purple-200 mb-1"
+                            class="block text-xs font-semibold text-black mb-1"
                         >
                             Seleccionar año
                         </label>
                         <select
                             v-model="selectedYear"
-                            class="w-full px-2 py-1 text-sm rounded bg-violet-950 text-white border border-violet-700 focus:outline-none focus:ring focus:ring-purple-300"
+                            class="w-full bg-white text-black border border-red-600/50 rounded text-sm px-2 py-1 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-600 shadow-sm appearance-none pr-7 bg-no-repeat bg-[length:14px_14px] bg-[right_0.5rem_center] bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23dc2626%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M6 9l6 6 6-6%22/></svg>')]"
                         >
                             <option
                                 v-for="year in añosDisponibles"

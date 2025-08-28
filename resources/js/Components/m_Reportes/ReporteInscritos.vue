@@ -1,20 +1,20 @@
 <template>
     <div class="max-w-3xl mx-auto px-3 py-3">
         <div
-            class="bg-gradient-to-br from-violet-900 to-indigo-900 p-4 rounded-lg shadow-lg border border-purple-500/20"
+            class="relative z-50 overflow-visible bg-red-600/15 backdrop-blur-md p-4 rounded-lg shadow-2xl border border-red-600/60"
         >
             <div class="text-center mb-2">
-                <h3 class="text-sm font-bold text-white mb-1">
+                <h3 class="text-sm font-bold text-black mb-1">
                     📅 Generar Lista de Inscritos
                 </h3>
             </div>
 
             <div
-                class="bg-gradient-to-br from-violet-900 to-indigo-900 p-3 rounded-md shadow-md border border-purple-600/50"
+                class="bg-red-600/10 backdrop-blur-md p-3 rounded-md shadow-md border border-red-600/50"
             >
                 <!-- Encabezado -->
-                <label class="block text-purple-300 text-sm mb-2 font-semibold"
-                    >Buscar Cursos</label
+                <label class="block text-black text-sm mb-2 font-semibold">
+                    Buscar Cursos</label
                 >
 
                 <!-- Grid dinámico -->
@@ -34,19 +34,19 @@
                             @input="dropdownVisible = true"
                             type="text"
                             placeholder="Escriba el nombre del curso"
-                            class="w-full px-4 py-2 rounded-md bg-violet-950 text-white text-sm border border-violet-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+                            class="w-full px-4 py-2 rounded-md bg-white text-black text-sm border border-red-600/50 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-600 transition"
                         />
 
                         <!-- Lista desplegable -->
                         <ul
                             v-if="dropdownVisible && cursosFiltrados.length > 0"
-                            class="absolute z-20 w-full bg-violet-950 border border-violet-700 rounded mt-1 max-h-64 overflow-y-auto shadow-lg"
+                            class="absolute z-50 w-full bg-white border border-red-600/50 rounded mt-1 max-h-64 overflow-y-auto shadow-lg"
                         >
                             <li
                                 v-for="curso in cursosFiltrados"
                                 :key="curso.uuid_curso"
                                 @click="seleccionarCurso(curso)"
-                                class="px-4 py-2 text-sm text-white hover:bg-purple-700 cursor-pointer transition"
+                                class="px-4 py-2 text-sm text-black hover:bg-red-50 cursor-pointer transition"
                             >
                                 {{ curso.nombre }} ({{ curso.codigo_curso }})
                             </li>
@@ -57,7 +57,7 @@
                             v-if="
                                 dropdownVisible && cursosFiltrados.length === 0
                             "
-                            class="absolute z-10 w-full bg-violet-950 border border-violet-700 rounded mt-1 px-4 py-2 text-pink-300 text-sm"
+                            class="absolute z-50 w-full bg-white border border-red-600/50 rounded mt-1 px-4 py-2 text-slate-500 text-sm"
                         >
                             No se encontraron cursos.
                         </div>
@@ -66,9 +66,9 @@
                     <!-- Resultado seleccionado -->
                     <div
                         v-if="cursoSeleccionado"
-                        class="flex items-center justify-between bg-violet-950 px-4 py-3 rounded-md border border-violet-700"
+                        class="flex items-center justify-between bg-white px-4 py-3 rounded-md border border-red-600/50"
                     >
-                        <span class="text-white text-sm font-medium">
+                        <span class="text-black text-sm font-medium">
                             {{ cursoSeleccionado.nombre }}
                         </span>
 

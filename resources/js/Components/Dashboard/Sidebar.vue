@@ -1,19 +1,19 @@
 <template>
     <div>
-        <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+        <div class="absolute w-full bg-transparent min-h-75"></div>
 
         <aside
-            class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full border-0 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 sidebar-no-scrollbar bg-gradient-to-br from-violet-900 to-indigo-900 text-white shadow-xl dark:shadow-dark-xl"
+            class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 sidebar-no-scrollbar bg-red-600/15 backdrop-blur-md border border-red-600/60 text-black shadow-2xl"
             :class="{ 'translate-x-0': props.sidebarOpen }"
             aria-expanded="false"
         >
             <div class="h-32">
                 <i
-                    class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden"
+                    class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-black xl:hidden"
                     @click="toggleSidebar"
                 ></i>
                 <a
-                    class="flex items-center px-8 py-6 m-0 text-base whitespace-nowrap dark:text-white text-slate-700"
+                    class="flex items-center px-8 py-6 m-0 text-base whitespace-nowrap dark:text-white text-black"
                     href="/dashboard"
                 >
                     <img
@@ -49,7 +49,7 @@
                     >
                         <InertiaLink
                             :href="item.link"
-                            class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white text-slate-800"
+                            class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white text-black"
                             :class="activeClass(item.link)"
                         >
                             <div
@@ -74,7 +74,7 @@
                         class="h-px mb-2 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:via-white"
                     />
                     <div
-                        class="text-sm font-semibold text-slate-800 dark:text-white break-words"
+                        class="text-sm font-semibold text-black dark:text-white break-words"
                     >
                         {{ page.props.auth.user?.name }}
                         {{ page.props.auth.user?.primer_apellido }}
@@ -120,8 +120,8 @@ const toggleSidebar = () => {
 
 const activeClass = (link) => {
     return props.activeRoute === link
-        ? "bg-blue-500/13 font-semibold text-slate-700 dark:text-white dark:opacity-80"
-        : "dark:text-white dark:opacity-80";
+        ? "bg-red-500/10 border border-red-500/40 rounded-lg font-semibold text-black"
+        : "text-black";
 };
 
 const hasPermission = (itemPermissions) => {
